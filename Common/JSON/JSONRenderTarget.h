@@ -9,22 +9,27 @@ class CustomCommandList;
 class Shader;
 class FileCache;
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-   RenderTargetFormatData, 
-   format,
-   clearOnSet,
-   clearColor
-   );
+//NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+//   RenderTargetFormatData, 
+//   format,
+//   clearOnSet,
+//   clearColor
+//   );
+void to_json(nlohmann::json& j, const RenderTargetFormatData& p);
+void from_json(const nlohmann::json& j, RenderTargetFormatData& p);
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-   RenderTargetDepthData, 
-   format,
-   clearDepthOnSet,
-   clearDepth,
-   clearStencilOnSet,
-   clearStencil,
-   shaderResource
-   );
+//NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+//   RenderTargetDepthData, 
+//   format,
+//   clearDepthOnSet,
+//   clearDepth,
+//   clearStencilOnSet,
+//   clearStencil,
+//   shaderResource
+//   );
+void to_json(nlohmann::json& j, const RenderTargetDepthData& p);
+void from_json(const nlohmann::json& j, RenderTargetDepthData& p);
+
 
 struct JSONRenderTarget
 {

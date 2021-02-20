@@ -26,7 +26,12 @@ struct JSONGeometryData
    int floatPerVertex;
    std::vector< float > vertexData;
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(JSONGeometryData, topology, floatPerVertex, vertexData);
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+   JSONGeometryData, 
+   topology, 
+   floatPerVertex, 
+   vertexData
+   );
 
 std::shared_ptr< Geometry > JSONGeometry::Factory(
    DrawSystem* const pDrawSystem,
@@ -35,11 +40,11 @@ std::shared_ptr< Geometry > JSONGeometry::Factory(
    )
 {
    auto geometryData = json.get< JSONGeometryData >();
-   std::vector< D3D12_INPUT_ELEMENT_DESC > inputElementDescArray = JSONInputElementDesc::Factory(json);
+   std::vector< D3D12_INPUT_ELEMENT_DESC > inputElementDesc = JSONInputElementDesc::Factory(json);
    auto pResult = pDrawSystem->GeometryFactory(
       pCommandList,
       geometryData.topology,
-      inputElementDescArray,
+      inputElementDesc,
       geometryData.floatPerVertex,
       geometryData.vertexData
       );

@@ -10,17 +10,18 @@
                   "format": "DXGI_FORMAT_R32G32_FLOAT"
                },
                {
-                  "semantic": "COLOR",
-                  "format": "DXGI_FORMAT_R32G32B32A32_FLOAT"
+                  "semantic": "TEXCOORD",
+                  "format": "DXGI_FORMAT_R32G32_FLOAT"
                }
             ],
-            "floatPerVertex": 6,
+            "floatPerVertex": 4,
             "vertexData": [
-               0.0, 0.5,  1.0, 0.0, 0.0, 1.0, 
-               0.5, -0.5,   0.0, 1.0, 0.0, 1.0, 
-               -0.5, -0.5,  0.0, 0.0, 1.0, 1.0 
+               -1.0, 1.0, 0.0, 1.0, 
+                1.0, 1.0, 1.0, 1.0, 
+               -1.0,-1.0, 0.0, 0.0, 
+                1.0,-1.0, 1.0, 0.0
             ],
-            "topology": "D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST"
+            "topology": "D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP"
          }
       },
       {
@@ -31,16 +32,16 @@
                "topologyType": "D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE",
                "renderTargetFormat": [ "DXGI_FORMAT_B8G8R8A8_UNORM" ]
             },
-            "vertexShader": "Resources\\Shader\\SimpleTriangleVertex.cso",
-            "pixelShader": "Resources\\Shader\\SimpleTrianglePixel.cso",
+            "vertexShader": "Resources\\Shader\\SphereGrid00Vertex.cso",
+            "pixelShader": "Resources\\Shader\\SphereGrid00Pixel.cso",
             "inputElementDesc": [
                {
                   "semantic": "POSITION",
                   "format": "DXGI_FORMAT_R32G32_FLOAT"
                },
                {
-                  "semantic": "COLOR",
-                  "format": "DXGI_FORMAT_R32G32B32A32_FLOAT"
+                  "semantic": "TEXCOORD",
+                  "format": "DXGI_FORMAT_R32G32_FLOAT"
                }
             ]
          }

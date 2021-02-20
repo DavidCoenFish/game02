@@ -13,6 +13,14 @@ public:
    const size_t GetBufferSize() const { return m_data.size(); }
    const void* const GetBufferData() const { return m_data.data(); }
 
+   template <class TYPE>
+   TYPE& GetBufferDataAsType()
+   {
+      assert(sizeof(TYPE) == GetBufferSize());
+      TYPE* pData = &m_data[0];
+      return *pData;
+   }
+
 private:
    const D3D12_SHADER_VISIBILITY m_visiblity;
    std::vector< uint8_t > m_data;

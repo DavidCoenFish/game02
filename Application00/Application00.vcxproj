@@ -168,8 +168,18 @@
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">$(OutDir)Resources\DAG\</DestinationFolders>
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">$(OutDir)Resources\DAG\</DestinationFolders>
     </CopyFileToFolders>
-    <None Include="Resources\DAG\RenderTargetApplication.json" />
-    <None Include="Resources\DAG\RenderTargetDag.json" />
+    <CopyFileToFolders Include="Resources\DAG\SphereGrid00Application.json">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Resources\DAG\SphereGrid00Dag.json">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">true</DeploymentContent>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
@@ -240,6 +250,16 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\Shader\SimpleTriangleVertex.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\SphereGrid00Pixel.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\SphereGrid00Vertex.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">Vertex</ShaderType>

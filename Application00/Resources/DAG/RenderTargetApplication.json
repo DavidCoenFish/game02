@@ -1,8 +1,0 @@
-{
-   "DrawSystem": {
-      "backBufferFormat": "DXGI_FORMAT_B8G8R8A8_UNORM"
-   },
-   "DagFiles": [
-      "Resources\\DAG\\RenderTargetDag.json"
-   ]
-}

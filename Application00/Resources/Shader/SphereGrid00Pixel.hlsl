@@ -1,7 +1,7 @@
 struct Interpolants
 {
     float4 position : SV_POSITION;
-    float4 color    : COLOR;
+    float2 uv       : TEXCOORD;
 };
 
 struct Pixel
@@ -9,10 +9,14 @@ struct Pixel
     float4 color    : SV_TARGET0;
 };
 
+cbuffer PixelConstants : register(b0)
+{
+    float4 m_test;
+};
+
 Pixel main( Interpolants In )
 {
     Pixel Out;
-    Out.color = In.color;
-    //Out.color = float4(1.0f,1.0f,1.0f,1.0f);
+    Out.color = m_test;
     return Out;
 }

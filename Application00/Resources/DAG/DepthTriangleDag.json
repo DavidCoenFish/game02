@@ -33,9 +33,6 @@
          "data": {
             "vertexShader": "Resources\\Shader\\DepthTriangleVertex.cso",
             "pixelShader": "Resources\\Shader\\DepthTrianglePixel.cso",
-            "topologyType": "D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE",
-            "depthFormat": "DXGI_FORMAT_D32_FLOAT",
-            "renderTargetFormat": [ "DXGI_FORMAT_B8G8R8A8_UNORM" ],
             "inputElementDesc": [
                {
                   "semantic": "POSITION",
@@ -46,11 +43,16 @@
                   "format": "DXGI_FORMAT_R32G32B32A32_FLOAT"
                }
             ],
-            "depthStencilState": {
-               "DepthEnable": true,
-               "DepthWriteMask": "D3D12_DEPTH_WRITE_MASK_ALL",
-               "DepthFunc": "D3D12_COMPARISON_FUNC_LESS",
-               "StencilEnable": false
+            "pipelineState": {
+               "topologyType": "D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE",
+               "depthFormat": "DXGI_FORMAT_D32_FLOAT",
+               "renderTargetFormat": [ "DXGI_FORMAT_B8G8R8A8_UNORM" ],
+               "depthStencilState": {
+                  "DepthEnable": true,
+                  "DepthWriteMask": "D3D12_DEPTH_WRITE_MASK_ALL",
+                  "DepthFunc": "D3D12_COMPARISON_FUNC_LESS",
+                  "StencilEnable": false
+               }
             }
          }
       }

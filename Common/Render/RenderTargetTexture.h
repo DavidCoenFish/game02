@@ -10,8 +10,6 @@ class HeapWrapperItem;
 class RenderTargetTexture : public iRenderTarget
 {
 public:
-   static const D3D12_CLEAR_VALUE s_defaultClearRenderTarget;
-
    RenderTargetTexture(
       DrawSystem* const pDrawSystem,
       const std::vector< RenderTargetFormatData >& targetFormatDataArray,
@@ -69,7 +67,7 @@ private:
    struct Resource
    {
       explicit Resource( 
-         const D3D12_CLEAR_VALUE& clearValue = s_defaultClearRenderTarget,
+         const D3D12_CLEAR_VALUE& clearValue,
          const DXGI_FORMAT format = DXGI_FORMAT_UNKNOWN,
          const Microsoft::WRL::ComPtr<ID3D12Resource>& renderTarget = nullptr,
          const std::shared_ptr<HeapWrapperItem>& pRenderTargetViewDescriptor = nullptr,

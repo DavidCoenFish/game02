@@ -1,12 +1,3 @@
-//--------------------------------------------------------------------------------------
-// VertexShader.hlsl
-//
-// Simple vertex shader for rendering a triangle
-//
-// Advanced Technology Group (ATG)
-// Copyright (C) Microsoft Corporation. All rights reserved.
-//--------------------------------------------------------------------------------------
-
 struct Vertex
 {
     float2 position     : POSITION;

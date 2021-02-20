@@ -44,8 +44,7 @@ std::unique_ptr<DrawSystem> JSONDrawSystem::Factory(
    JSONDrawSystemData data;
    if (jsonParent.contains("DrawSystem"))
    {
-      const nlohmann::json& json = jsonParent["DrawSystem"];
-      data = json.get< JSONDrawSystemData >();
+      jsonParent.at("DrawSystem").get_to(data);
    }
 
    return std::make_unique< DrawSystem >(

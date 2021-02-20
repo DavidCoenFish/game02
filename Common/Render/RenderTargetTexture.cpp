@@ -4,11 +4,6 @@
 #include "Common/Render/DrawSystem.h"
 #include "Common/Render/HeapWrapperItem.h"
 
-const D3D12_CLEAR_VALUE RenderTargetTexture::s_defaultClearRenderTarget({
-   DXGI_FORMAT_UNKNOWN,
-   { 0.0f, 0.0f, 0.0f, 0.0f }
-   });
-
 RenderTargetTexture::Resource::Resource( 
    const D3D12_CLEAR_VALUE& clearValue,
    const DXGI_FORMAT format,

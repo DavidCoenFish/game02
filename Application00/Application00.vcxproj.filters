@@ -19,12 +19,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Application00.props" />
-    <None Include="Resources\DAG\RenderTargetDag.json">
-      <Filter>Resources\DAG</Filter>
-    </None>
-    <None Include="Resources\DAG\RenderTargetApplication.json">
-      <Filter>Resources\DAG</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -70,6 +64,12 @@
     <CopyFileToFolders Include="Resources\DAG\DepthTriangleApplication.json">
       <Filter>Resources\DAG</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="Resources\DAG\SphereGrid00Application.json">
+      <Filter>Resources\DAG</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Resources\DAG\SphereGrid00Dag.json">
+      <Filter>Resources\DAG</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\SimpleTriangleVertex.hlsl">
@@ -82,6 +82,12 @@
       <Filter>Resources\Shader</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\DepthTrianglePixel.hlsl">
+      <Filter>Resources\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\SphereGrid00Pixel.hlsl">
+      <Filter>Resources\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\SphereGrid00Vertex.hlsl">
       <Filter>Resources\Shader</Filter>
     </FxCompile>
   </ItemGroup>
