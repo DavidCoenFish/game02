@@ -1,0 +1,92 @@
+{
+   "dagValues": [
+      {
+         "name": "GeometryTriangle",
+         "type": "Geometry",
+         "data": {
+            "inputElementDesc": [
+               {
+                  "semantic": "POSITION",
+                  "format": "DXGI_FORMAT_R32G32B32_FLOAT"
+               },
+               {
+                  "semantic": "COLOR",
+                  "format": "DXGI_FORMAT_R32G32B32A32_FLOAT"
+               }
+            ],
+            "floatPerVertex": 7,
+            "vertexData": [
+               0.0, 0.5, 0.5,  1.0, 0.0, 0.0, 1.0, 
+               0.5, -0.5, 0.0,   0.0, 1.0, 0.0, 1.0, 
+               -0.5, -0.5, 0.5,  0.0, 0.0, 1.0, 1.0,
+            
+               0.0, -0.5, 0.5,  1.0, 0.0, 0.0, 1.0, 
+               -0.5, 0.5, 0.0,   0.0, 1.0, 0.0, 1.0, 
+               0.5, 0.5, 0.5,  0.0, 0.0, 1.0, 1.0
+            ],
+            "topology": "D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST"
+         }
+      },
+      {
+         "name": "ShaderSimple",
+         "type": "Shader",
+         "data": {
+            "vertexShader": "Resources\\Shader\\DepthTriangleVertex.cso",
+            "pixelShader": "Resources\\Shader\\DepthTrianglePixel.cso",
+            "topologyType": "D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE",
+            "depthFormat": "DXGI_FORMAT_D32_FLOAT",
+            "renderTargetFormat": [ "DXGI_FORMAT_B8G8R8A8_UNORM" ],
+            "inputElementDesc": [
+               {
+                  "semantic": "POSITION",
+                  "format": "DXGI_FORMAT_R32G32B32_FLOAT"
+               },
+               {
+                  "semantic": "COLOR",
+                  "format": "DXGI_FORMAT_R32G32B32A32_FLOAT"
+               }
+            ],
+            "depthStencilState": {
+               "DepthEnable": true,
+               "DepthWriteMask": "D3D12_DEPTH_WRITE_MASK_ALL",
+               "DepthFunc": "D3D12_COMPARISON_FUNC_LESS",
+               "StencilEnable": false
+            }
+         }
+      }
+   ],
+   "dagCalculate": [
+      {
+         "name": "GeometryList0",
+         "function": "GeometryList",
+         "stackInput": [
+            "GeometryTriangle"
+         ]
+      },
+      {
+         "name": "Draw0",
+         "function": "Draw",
+         "orderedInput": [
+            "ShaderSimple",
+            "GeometryList0"
+         ]
+      },
+      {
+         "name": "DrawList0",
+         "function": "DrawList",
+         "stackInput": [
+            "Draw0"
+         ]
+      },
+      {
+         "name": "_Render",
+         "function": "RenderList",
+         "orderedInput": [
+            "_FrameCount",
+            "_CustomCommandList",
+            "_BackBuffer",
+            "DrawList0"
+         ]
+      }
+   ]
+}

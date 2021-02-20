@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{f7b020fc-6da1-4ec6-99ea-8e402fcb83aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{09a984ac-9dcc-40bf-aa94-263238b10e8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\DAG">
+      <UniqueIdentifier>{a099ba04-20fb-4c64-8b80-9cce4aafc6f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Shader">
+      <UniqueIdentifier>{9c426daa-6eb1-4f3a-8daf-d414457e23ef}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <MGCCompile Include="MicrosoftGame.Config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Application00.props" />
+    <None Include="Resources\DAG\RenderTargetDag.json">
+      <Filter>Resources\DAG</Filter>
+    </None>
+    <None Include="Resources\DAG\RenderTargetApplication.json">
+      <Filter>Resources\DAG</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PCH.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\PCH.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Resources\GraphicsLogo.png">
+      <Filter>Resources</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Resources\SmallLogo.png">
+      <Filter>Resources</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Resources\SplashScreen.png">
+      <Filter>Resources</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Resources\StoreLogo.png">
+      <Filter>Resources</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Resources\DAG\SimpleTriangleApplication.json">
+      <Filter>Resources\DAG</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Resources\DAG\SimpleTriangleDag.json">
+      <Filter>Resources\DAG</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Resources\DAG\DepthTriangleDag.json">
+      <Filter>Resources\DAG</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Resources\DAG\DepthTriangleApplication.json">
+      <Filter>Resources\DAG</Filter>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\Shader\SimpleTriangleVertex.hlsl">
+      <Filter>Resources\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\SimpleTrianglePixel.hlsl">
+      <Filter>Resources\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\DepthTriangleVertex.hlsl">
+      <Filter>Resources\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\DepthTrianglePixel.hlsl">
+      <Filter>Resources\Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

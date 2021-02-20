@@ -1,0 +1,335 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="CommonPCH.cpp" />
+    <ClCompile Include="DAG\DagNodeCalculate.cpp">
+      <Filter>DAG</Filter>
+    </ClCompile>
+    <ClCompile Include="DAG\DagNodeValue.cpp">
+      <Filter>DAG</Filter>
+    </ClCompile>
+    <ClCompile Include="DAG\DagValueVariant.cpp">
+      <Filter>DAG</Filter>
+    </ClCompile>
+    <ClCompile Include="DAG\DagCollection.cpp">
+      <Filter>DAG</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\WindowedHelper.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\iApplication.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DrawSystem.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DrawSystemResources.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\HeapWrapper.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\HeapWrapperItem.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\HeapWrapperPage.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\CustomCommandList.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\iResource.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\RenderTargetTexture.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\RenderTargetBackbuffer.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="DAG\iDagValue.cpp">
+      <Filter>DAG</Filter>
+    </ClCompile>
+    <ClCompile Include="DAG\iDagNode.cpp">
+      <Filter>DAG</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\iRenderTarget.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXTK12\GamePad.cpp">
+      <Filter>DirectXTK12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXTK12\GraphicsMemory.cpp">
+      <Filter>DirectXTK12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXTK12\Keyboard.cpp">
+      <Filter>DirectXTK12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXTK12\LinearAllocator.cpp">
+      <Filter>DirectXTK12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXTK12\Mouse.cpp">
+      <Filter>DirectXTK12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXTK12\DirectXHelpers.cpp">
+      <Filter>DirectXTK12</Filter>
+    </ClCompile>
+    <ClCompile Include="DAG\DagValue.cpp">
+      <Filter>DAG</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\ApplicationDagCollection.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\VectorInt2.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\FileCache.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\ApplicationDagCalculate.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Geometry.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="JSON\JSONEnum.cpp">
+      <Filter>JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="JSON\JSONDrawSystem.cpp">
+      <Filter>JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="JSON\JSONApplicationDagCollection.cpp">
+      <Filter>JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Utf8.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="JSON\JSONGeometry.cpp">
+      <Filter>JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="JSON\JSONInputElementDesc.cpp">
+      <Filter>JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="JSON\JSONShader.cpp">
+      <Filter>JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Shader.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ShaderBuffer.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ShaderResourceInfo.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ShaderTexture2D.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ShaderConstantBuffer.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ShaderConstantInfo.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ShaderPipelineStateData.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\VectorFloat4.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\RenderTargetFormatData.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\RenderTargetDepthData.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="JSON\JSONRenderTarget.cpp">
+      <Filter>JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="JSON\JSONVector.cpp">
+      <Filter>JSON</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CommonPCH.h" />
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="DAG\DagCollection.h">
+      <Filter>DAG</Filter>
+    </ClInclude>
+    <ClInclude Include="DAG\DagNodeCalculate.h">
+      <Filter>DAG</Filter>
+    </ClInclude>
+    <ClInclude Include="DAG\DagNodeValue.h">
+      <Filter>DAG</Filter>
+    </ClInclude>
+    <ClInclude Include="DAG\DagValueVariant.h">
+      <Filter>DAG</Filter>
+    </ClInclude>
+    <ClInclude Include="Macro.h" />
+    <ClInclude Include="Application\iApplication.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\WindowedHelper.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DrawSystem.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DrawSystemResources.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\HeapWrapper.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\HeapWrapperItem.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\HeapWrapperPage.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\CustomCommandList.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\iResource.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\RenderTargetBackbuffer.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\RenderTargetTexture.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="DAG\iDagNode.h">
+      <Filter>DAG</Filter>
+    </ClInclude>
+    <ClInclude Include="DAG\iDagValue.h">
+      <Filter>DAG</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\iRenderTarget.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="DirectXTK12\GamePad.h">
+      <Filter>DirectXTK12</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXTK12\GraphicsMemory.h">
+      <Filter>DirectXTK12</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXTK12\Keyboard.h">
+      <Filter>DirectXTK12</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXTK12\LinearAllocator.h">
+      <Filter>DirectXTK12</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXTK12\Mouse.h">
+      <Filter>DirectXTK12</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXTK12\DirectXHelpers.h">
+      <Filter>DirectXTK12</Filter>
+    </ClInclude>
+    <ClInclude Include="DAG\DagValue.h">
+      <Filter>DAG</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\ApplicationDagCollection.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\VectorInt2.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\FileCache.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\ReadData.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\ApplicationDagCalculate.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Geometry.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="JSON\JSONDrawSystem.h">
+      <Filter>JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="JSON\JSONEnum.h">
+      <Filter>JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="JSON\JSONApplicationDagCollection.h">
+      <Filter>JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Utf8.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="JSON\JSONGeometry.h">
+      <Filter>JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="JSON\JSONInputElementDesc.h">
+      <Filter>JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="JSON\JSONShader.h">
+      <Filter>JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Shader.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ShaderBuffer.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ShaderResourceInfo.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ShaderTexture2D.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ShaderConstantBuffer.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ShaderConstantInfo.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ShaderPipelineStateData.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\VectorFloat4.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\RenderTargetFormatData.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\RenderTargetDepthData.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="JSON\JSONRenderTarget.h">
+      <Filter>JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="JSON\JSONVector.h">
+      <Filter>JSON</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="DAG">
+      <UniqueIdentifier>{1eb3137d-9c66-4c07-899d-be72833c04dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{7e23ba24-18e0-4e7a-ae11-50e5441fe9ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{4d94336b-ac03-4426-adc6-cc44cd47729a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXTK12">
+      <UniqueIdentifier>{f031bbd0-ba51-4333-b480-2370b5663cc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{e9d6232b-ae2f-4179-b1f6-4f30fd7c3ae9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JSON">
+      <UniqueIdentifier>{9a7a4c80-ea62-4a0e-b3e1-cd8180a41777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{fc872a48-4526-481e-b8e5-59ffb1fed5d8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Common.props" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|Gaming.Desktop.x64">
+      <Configuration>Release</Configuration>
+      <Platform>Gaming.Desktop.x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Profile|Gaming.Desktop.x64">
+      <Configuration>Profile</Configuration>
+      <Platform>Gaming.Desktop.x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Gaming.Desktop.x64">
+      <Configuration>Debug</Configuration>
+      <Platform>Gaming.Desktop.x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Application\ApplicationDagCalculate.cpp" />
+    <ClCompile Include="Application\ApplicationDagCollection.cpp" />
+    <ClCompile Include="Application\FileCache.cpp" />
+    <ClCompile Include="Application\iApplication.cpp" />
+    <ClCompile Include="Application\WindowedHelper.cpp" />
+    <ClCompile Include="CommonPCH.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">CommonPCH.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">CommonPCH.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">CommonPCH.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="DAG\DagCollection.cpp" />
+    <ClCompile Include="DAG\DagNodeCalculate.cpp" />
+    <ClCompile Include="DAG\DagNodeValue.cpp" />
+    <ClCompile Include="DAG\DagValue.cpp" />
+    <ClCompile Include="DAG\DagValueVariant.cpp" />
+    <ClCompile Include="DAG\iDagNode.cpp" />
+    <ClCompile Include="DAG\iDagValue.cpp" />
+    <ClCompile Include="DirectXTK12\DirectXHelpers.cpp" />
+    <ClCompile Include="DirectXTK12\GamePad.cpp" />
+    <ClCompile Include="DirectXTK12\GraphicsMemory.cpp" />
+    <ClCompile Include="DirectXTK12\Keyboard.cpp" />
+    <ClCompile Include="DirectXTK12\LinearAllocator.cpp" />
+    <ClCompile Include="DirectXTK12\Mouse.cpp" />
+    <ClCompile Include="JSON\JSONApplicationDagCollection.cpp" />
+    <ClCompile Include="JSON\JSONDrawSystem.cpp" />
+    <ClCompile Include="JSON\JSONEnum.cpp" />
+    <ClCompile Include="JSON\JSONGeometry.cpp" />
+    <ClCompile Include="JSON\JSONInputElementDesc.cpp" />
+    <ClCompile Include="JSON\JSONRenderTarget.cpp" />
+    <ClCompile Include="JSON\JSONShader.cpp" />
+    <ClCompile Include="JSON\JSONVector.cpp" />
+    <ClCompile Include="Math\VectorFloat4.cpp" />
+    <ClCompile Include="Math\VectorInt2.cpp" />
+    <ClCompile Include="Render\RenderTargetDepthData.cpp" />
+    <ClCompile Include="Render\RenderTargetFormatData.cpp" />
+    <ClCompile Include="Render\ShaderConstantBuffer.cpp" />
+    <ClCompile Include="Render\CustomCommandList.cpp" />
+    <ClCompile Include="Render\DrawSystem.cpp" />
+    <ClCompile Include="Render\DrawSystemResources.cpp" />
+    <ClCompile Include="Render\Geometry.cpp" />
+    <ClCompile Include="Render\HeapWrapper.cpp" />
+    <ClCompile Include="Render\HeapWrapperItem.cpp" />
+    <ClCompile Include="Render\HeapWrapperPage.cpp" />
+    <ClCompile Include="Render\iRenderTarget.cpp" />
+    <ClCompile Include="Render\iResource.cpp" />
+    <ClCompile Include="Render\RenderTargetBackbuffer.cpp" />
+    <ClCompile Include="Render\RenderTargetTexture.cpp" />
+    <ClCompile Include="Render\Shader.cpp" />
+    <ClCompile Include="Render\ShaderBuffer.cpp" />
+    <ClCompile Include="Render\ShaderConstantInfo.cpp" />
+    <ClCompile Include="Render\ShaderPipelineStateData.cpp" />
+    <ClCompile Include="Render\ShaderResourceInfo.cpp" />
+    <ClCompile Include="Render\ShaderTexture2D.cpp" />
+    <ClCompile Include="Utils\Utf8.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application\ApplicationDagCalculate.h" />
+    <ClInclude Include="Application\ApplicationDagCollection.h" />
+    <ClInclude Include="Application\FileCache.h" />
+    <ClInclude Include="Application\iApplication.h" />
+    <ClInclude Include="Application\ReadData.h" />
+    <ClInclude Include="Application\WindowedHelper.h" />
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="CommonPCH.h" />
+    <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="DAG\DagCollection.h" />
+    <ClInclude Include="DAG\DagNodeCalculate.h" />
+    <ClInclude Include="DAG\DagNodeValue.h" />
+    <ClInclude Include="DAG\DagValue.h" />
+    <ClInclude Include="DAG\DagValueVariant.h" />
+    <ClInclude Include="DAG\iDagNode.h" />
+    <ClInclude Include="DAG\iDagValue.h" />
+    <ClInclude Include="DirectXTK12\DirectXHelpers.h" />
+    <ClInclude Include="DirectXTK12\GamePad.h" />
+    <ClInclude Include="DirectXTK12\GraphicsMemory.h" />
+    <ClInclude Include="DirectXTK12\Keyboard.h" />
+    <ClInclude Include="DirectXTK12\LinearAllocator.h" />
+    <ClInclude Include="DirectXTK12\Mouse.h" />
+    <ClInclude Include="JSON\JSONApplicationDagCollection.h" />
+    <ClInclude Include="JSON\JSONDrawSystem.h" />
+    <ClInclude Include="JSON\JSONEnum.h" />
+    <ClInclude Include="JSON\JSONGeometry.h" />
+    <ClInclude Include="JSON\JSONInputElementDesc.h" />
+    <ClInclude Include="JSON\JSONRenderTarget.h" />
+    <ClInclude Include="JSON\JSONShader.h" />
+    <ClInclude Include="JSON\JSONVector.h" />
+    <ClInclude Include="Macro.h" />
+    <ClInclude Include="Math\VectorFloat4.h" />
+    <ClInclude Include="Math\VectorInt2.h" />
+    <ClInclude Include="Render\RenderTargetDepthData.h" />
+    <ClInclude Include="Render\RenderTargetFormatData.h" />
+    <ClInclude Include="Render\ShaderConstantBuffer.h" />
+    <ClInclude Include="Render\CustomCommandList.h" />
+    <ClInclude Include="Render\DrawSystem.h" />
+    <ClInclude Include="Render\DrawSystemResources.h" />
+    <ClInclude Include="Render\Geometry.h" />
+    <ClInclude Include="Render\HeapWrapper.h" />
+    <ClInclude Include="Render\HeapWrapperItem.h" />
+    <ClInclude Include="Render\HeapWrapperPage.h" />
+    <ClInclude Include="Render\iRenderTarget.h" />
+    <ClInclude Include="Render\iResource.h" />
+    <ClInclude Include="Render\RenderTargetBackbuffer.h" />
+    <ClInclude Include="Render\RenderTargetTexture.h" />
+    <ClInclude Include="Render\Shader.h" />
+    <ClInclude Include="Render\ShaderBuffer.h" />
+    <ClInclude Include="Render\ShaderConstantInfo.h" />
+    <ClInclude Include="Render\ShaderPipelineStateData.h" />
+    <ClInclude Include="Render\ShaderResourceInfo.h" />
+    <ClInclude Include="Render\ShaderTexture2D.h" />
+    <ClInclude Include="Utils\Utf8.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Common.props" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <RootNamespace>Common</RootNamespace>
+    <ProjectGuid>{3488d950-af42-4b14-8414-3f9899b33d08}</ProjectGuid>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <Keyword>Win32Proj</Keyword>
+    <!-- - - - -->
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <TargetRuntime>Native</TargetRuntime>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Common.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Common.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Common.props" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">
+    <LibraryPath>$(Console_SdkLibPath);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(Console_SdkIncludeRoot);$(IncludePath)</IncludePath>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">
+    <LibraryPath>$(Console_SdkLibPath);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(Console_SdkIncludeRoot);$(IncludePath)</IncludePath>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">
+    <LibraryPath>$(Console_SdkLibPath);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(Console_SdkIncludeRoot);$(IncludePath)</IncludePath>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(Console_Libs);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>NDEBUG;__WRL_NO_DEFAULT_LIB__;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(Console_Libs);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>NDEBUG;__WRL_NO_DEFAULT_LIB__;_LIB;PROFILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(Console_Libs);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ClCompile>
+      <MinimalRebuild>false</MinimalRebuild>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;__WRL_NO_DEFAULT_LIB__;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

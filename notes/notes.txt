@@ -1,0 +1,32 @@
+dag render target or shader nodes
+   do we have them as calculate nodes, 
+   or get as many static values as possible as a value node, and use calculate node to hook up run time data
+
+dag node and json
+   make a struct to optionall reflect values (render target, shader)
+   what can be changed run time? render target width height could change, but not format
+
+
+bugs:
+   there is a crash on shutdown after "alt + return" fullscreen, d3dx12 resource leak
+
+
+design:
+   radius earth (max)6378km equator, 6357km poles
+      ?6,367.5?
+   human field of view 
+      horizontal 200 - 220 deg
+      vertical 130 - 135 deg
+      220 / 135 = 44/27
+      27/44 = 0.61363636363636363636363636363636
+      1920x1080, 1080/1920 = 0.5625
+      130/231 =: 0.5625
+      130/231 = ?0.56277056277056277056277056277056?
+   distance to horizon, 2m tall, 5km
+   8848m tall (everest) 370km
+   earth continetal plate 3km to 25km
+0.1m, earth radius 6367500m, 
+
+
+
+
