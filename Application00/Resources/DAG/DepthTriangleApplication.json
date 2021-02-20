@@ -1,7 +1,15 @@
 {
    "DrawSystem": {
-      "backBufferFormat": "DXGI_FORMAT_B8G8R8A8_UNORM",
-      "depthBufferFormat": "DXGI_FORMAT_D32_FLOAT"
+      "backBuffer": {
+         "format": "DXGI_FORMAT_B8G8R8A8_UNORM",
+         "clearOnSet": true,
+         "clearColor": [ 0.5, 0.5, 0.5, 1.0 ]
+      },
+      "backDepth": {
+         "clearDepthOnSet": true,
+         "clearDepth": 1.0,
+         "format": "DXGI_FORMAT_D32_FLOAT"
+      }
    },
    "DagFiles": [
       "Resources\\DAG\\DepthTriangleDag.json"

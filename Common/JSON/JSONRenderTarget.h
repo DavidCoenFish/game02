@@ -18,6 +18,7 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    RenderTargetDepthData, 
+   format,
    clearDepthOnSet,
    clearDepth,
    clearStencilOnSet,
