@@ -19,6 +19,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Application00.props" />
+    <None Include="Resources\Shader\BarrelDistortion.hlsli">
+      <Filter>Resources\Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">

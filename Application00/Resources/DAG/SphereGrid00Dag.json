@@ -43,6 +43,23 @@
                   "semantic": "TEXCOORD",
                   "format": "DXGI_FORMAT_R32G32_FLOAT"
                }
+            ],
+            "shaderConstantInfo":[
+               {
+                  "visiblity": "D3D12_SHADER_VISIBILITY_PIXEL",
+                  "dataFloat":[
+                     0.0, -5.0, 0.0, 0.0,
+                     0.0, 1.0, 0.0, 0.0,
+                     0.0, 0.0, 1.0, 0.0,
+                     231.111, 130.0, 0.0, 500000.0
+                     ]
+               },
+               {
+                  "visiblity": "D3D12_SHADER_VISIBILITY_PIXEL",
+                  "dataFloat": [
+                     0.0, 0.0, 0.0, 1.0
+                  ]
+               }
             ]
          }
       }

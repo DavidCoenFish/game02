@@ -17,8 +17,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
        nCmdShow,
        L"Application00Class", 
        L"Application00", 
-       800, 
-       600,
+       1440, 
+       810,
        false,
        [](HWND hwnd, const int width, const int height){ return std::make_unique< Application >(hwnd, width, height); }
       );

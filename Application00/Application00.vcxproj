@@ -234,6 +234,9 @@
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Shader\BarrelDistortion.hlsli">
+      <FileType>Document</FileType>
+    </None>
     <FxCompile Include="Resources\Shader\DepthTrianglePixel.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">Pixel</ShaderType>

@@ -21,7 +21,9 @@ Application::Application(HWND hwnd, const int width, const int height)
 {
    m_pFileCache = std::make_unique< FileCache >();
    //auto applicationJson = nlohmann::json::parse( FileCache::RawLoadFileString(L"Resources\\DAG\\SimpleTriangleApplication.json"));
-   auto applicationJson = nlohmann::json::parse( FileCache::RawLoadFileString(L"Resources\\DAG\\DepthTriangleApplication.json"));
+   //auto applicationJson = nlohmann::json::parse( FileCache::RawLoadFileString(L"Resources\\DAG\\DepthTriangleApplication.json"));
+   auto applicationJson = nlohmann::json::parse( FileCache::RawLoadFileString(L"Resources\\DAG\\SphereGrid00Application.json"));
+
    m_pDrawSystem = JSONDrawSystem::Factory(
       []()
       {

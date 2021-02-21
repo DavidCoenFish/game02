@@ -294,7 +294,7 @@ void from_json(const nlohmann::json& j, JSONShaderConstantInfo& p)
    if(j.contains("dataFloat"))
    { 
       std::vector<float> data;
-      j.at("data").get_to(data); 
+      j.at("dataFloat").get_to(data); 
       for (const float& item : data)
       {
          const uint8_t* const pTrace = (const uint8_t* const)&item;
