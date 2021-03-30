@@ -149,6 +149,9 @@
     <ClCompile Include="JSON\JSONVector.cpp">
       <Filter>JSON</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Log.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommonPCH.h" />
@@ -304,6 +307,9 @@
     </ClInclude>
     <ClInclude Include="JSON\JSONVector.h">
       <Filter>JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Log.h">
+      <Filter>Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

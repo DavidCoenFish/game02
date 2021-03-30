@@ -2,10 +2,13 @@
 
 #include "Common/Application/WindowedHelper.h"
 #include "Common/Application/iApplication.h"
+#include "Common/Application/log.h"
+#include "Common/Utils/Utf8.h"
+
 #define DSC_DXTK12 1
 #if defined(DSC_DXTK12)
-#include "Common/DirectXTK12/Keyboard.h"
-#include "Common/DirectXTK12/Mouse.h"
+   #include "Common/DirectXTK12/Keyboard.h"
+   #include "Common/DirectXTK12/Mouse.h"
 #endif //#if defined(DSC_DXTK12)
 
 static int s_windowDefaultWidth = 0;
@@ -166,19 +169,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 #endif //#if defined(DSC_DXTK12)
 
     case WM_SYSKEYDOWN:
-        //OutputDebugStringW(L"WM_SYSKEYDOWN\n");
+        //LOG_MESSAGE_DEBUG("WM_SYSKEYDOWN\n");
         if (wParam == VK_RETURN && (lParam & 0x60000000) == 0x20000000)
         {
-             OutputDebugStringW(L"WM_SYSKEYDOWN ALT+ENTER\n");
+             LOG_MESSAGE_DEBUG("WM_SYSKEYDOWN ALT+ENTER\n");
            // Implements the classic ALT+ENTER fullscreen toggle
             if (s_fullscreen)
             {
                 SetWindowLongPtr(hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
                 SetWindowLongPtr(hWnd, GWL_EXSTYLE, 0);
 
-                //OutputDebugStringW(L"fullscreen::ShowWindow\n");
+                //LOG_MESSAGE_DEBUG(L"fullscreen::ShowWindow\n");
                 ShowWindow(hWnd, SW_SHOWNORMAL);
-                OutputDebugStringW(L"fullscreen::SetWindowPos\n");
+                LOG_MESSAGE_DEBUG("fullscreen::SetWindowPos\n");
 
                 RECT rc = { 0, 0, static_cast<LONG>(s_windowDefaultWidth), static_cast<LONG>(s_windowDefaultHeight) };
                 AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
@@ -189,9 +192,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 SetWindowLongPtr(hWnd, GWL_STYLE, 0);
                 SetWindowLongPtr(hWnd, GWL_EXSTYLE, WS_EX_TOPMOST);
 
-                OutputDebugStringW(L"notfullscreen::SetWindowPos\n");
+                LOG_MESSAGE_DEBUG("notfullscreen::SetWindowPos\n");
                 SetWindowPos(hWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
-                OutputDebugStringW(L"notfullscreen::ShowWindow\n");
+                LOG_MESSAGE_DEBUG("notfullscreen::ShowWindow\n");
                 ShowWindow(hWnd, SW_SHOWMAXIMIZED);
             }
 
@@ -211,23 +214,47 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
+static void ConsumeCmdLine(std::vector< std::wstring >& cmdLineArray, LPWSTR lpCmdLine)
+{
+   LOG_MESSAGE_DEBUG("ConsumeCmdLine\n");
+
+   int nArgs = 0;
+   LPWSTR *szArglist = CommandLineToArgvW(lpCmdLine, &nArgs);
+   if( NULL == szArglist )
+   {
+      return;
+   }
+   for( int index=0; index<nArgs; index++)
+   {
+      cmdLineArray.push_back(std::wstring(szArglist[index]));
+      LOG_MESSAGE_DEBUG("  %s\n", Utf8::Utf16ToUtf8(szArglist[index]).c_str());
+   }
+   LocalFree(szArglist);
+}
+
 const int WindowedHelper(
    _In_ HINSTANCE hInstance, 
+   _In_ LPWSTR lpCmdLine,
    _In_ int nCmdShow,
    const std::wstring& className,
    const std::wstring& windowTitle,
    const int defaultWindowWidth,
    const int defaultWindowHeight,
    const bool bFullScreen,
-   const std::function< std::unique_ptr< iApplication >(HWND hwnd, const int width, const int height) >& applicationFactory
+   const std::function< std::unique_ptr< iApplication >(const std::vector< std::wstring >& cmdLineArray, HWND hwnd, const int width, const int height) >& applicationFactory
    )
 {
+   LOG_SCOPE_DEBUG("WindowedHelper");
+
     if (!DirectX::XMVerifyCPUSupport())
         return 1;
 
     s_fullscreen = bFullScreen;
     s_windowDefaultWidth = defaultWindowWidth;
     s_windowDefaultHeight = defaultWindowHeight;
+
+    std::vector< std::wstring > cmdLineArray;
+    ConsumeCmdLine(cmdLineArray, lpCmdLine);
 
     std::unique_ptr< iApplication > pApplication;
 
@@ -261,7 +288,8 @@ const int WindowedHelper(
 
         if (!hwnd)
         {
-            return 1;
+           LOG_MESSAGE_WARNING("creation of window failed");
+           return 1;
         }
         {
            const int localCmdShow = bFullScreen ? SW_SHOWMAXIMIZED : nCmdShow;
@@ -269,7 +297,7 @@ const int WindowedHelper(
         }
 
         GetClientRect(hwnd, &rc);
-        pApplication = applicationFactory ? applicationFactory(hwnd, rc.right - rc.left, rc.bottom - rc.top) : nullptr;
+        pApplication = applicationFactory ? applicationFactory(cmdLineArray, hwnd, rc.right - rc.left, rc.bottom - rc.top) : nullptr;
         SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pApplication.get()) );
     }
 

@@ -11,18 +11,24 @@
 #include "Common/Render/DrawSystem.h"
 #include "Common/Render/CustomCommandList.h"
 #include "Common/Render/ShaderPipelineStateData.h"
+#include "Common/Application/Log.h"
 #include "Common/Application/ApplicationDagCollection.h"
 #include "Common/Application/ApplicationDagCalculate.h"
 #include "Common/Application/FileCache.h"
 #include "SDK/json/json.hpp"
 
-Application::Application(HWND hwnd, const int width, const int height)
+#include <stdio.h>
+#include <iostream>
+
+Application::Application(const std::vector< std::wstring >& cmdLineArray, HWND hwnd, const int width, const int height)
    : m_bTicked(false)
 {
+   LOG_SCOPE_DEBUG("Application ctor");
    m_pFileCache = std::make_unique< FileCache >();
+   auto applicationJson = nlohmann::json::parse( 1 < cmdLineArray.size() ? FileCache::RawLoadFileString(cmdLineArray[1]) : "{}");
    //auto applicationJson = nlohmann::json::parse( FileCache::RawLoadFileString(L"Resources\\DAG\\SimpleTriangleApplication.json"));
    //auto applicationJson = nlohmann::json::parse( FileCache::RawLoadFileString(L"Resources\\DAG\\DepthTriangleApplication.json"));
-   auto applicationJson = nlohmann::json::parse( FileCache::RawLoadFileString(L"Resources\\DAG\\SphereGrid00Application.json"));
+   //auto applicationJson = nlohmann::json::parse( FileCache::RawLoadFileString(L"Resources\\DAG\\SphereGrid00Application.json"));
 
    m_pDrawSystem = JSONDrawSystem::Factory(
       []()
@@ -53,10 +59,26 @@ Application::Application(HWND hwnd, const int width, const int height)
    {
       m_pDrawSystem->WaitForGpu();
    }
+
+   //std::cout << L"std::cout:test0\n";
+   //std::cout << "std::cout:test1\n";
+   //std::cout.flush();
+   //sprintf(stdout, "hello world\n");
+   //std::basic_ofstream << L"std::basic_ofstream: Hello world" << std::endline;
+   //printf("0printf stdout hello\n");
+   //fprintf(stdout, "0fprintf stdout hello\n");
+
+   //if (TRUE == AttachConsole(ATTACH_PARENT_PROCESS))
+   //{
+   //   FILE* pFileOut = nullptr;
+   //   freopen_s(&pFileOut, "conout$","w",stdout);
+   //   printf("Debugging Window:\n");
+   //}
 }
 
 Application::~Application()
 {
+   LOG_SCOPE_DEBUG("Application dtor");
    m_pApplicationDagCollection.reset();
    m_pDrawSystem.reset();
    return;

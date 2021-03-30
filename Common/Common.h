@@ -37,6 +37,7 @@
 #include <codecvt>
 #include <cmath>
 #include <exception>
+#include <fstream>
 #include <functional>
 #include <locale>
 #include <map>
@@ -44,8 +45,6 @@
 #include <mutex>
 #include <stdexcept>
 #include <type_traits>
-
-
 
 #ifdef _DEBUG
 #include <dxgidebug.h>

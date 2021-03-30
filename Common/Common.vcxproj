@@ -19,6 +19,7 @@
     <ClCompile Include="Application\ApplicationDagCollection.cpp" />
     <ClCompile Include="Application\FileCache.cpp" />
     <ClCompile Include="Application\iApplication.cpp" />
+    <ClCompile Include="Application\Log.cpp" />
     <ClCompile Include="Application\WindowedHelper.cpp" />
     <ClCompile Include="CommonPCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">Create</PrecompiledHeader>
@@ -78,6 +79,7 @@
     <ClInclude Include="Application\ApplicationDagCollection.h" />
     <ClInclude Include="Application\FileCache.h" />
     <ClInclude Include="Application\iApplication.h" />
+    <ClInclude Include="Application\Log.h" />
     <ClInclude Include="Application\ReadData.h" />
     <ClInclude Include="Application\WindowedHelper.h" />
     <ClInclude Include="Common.h" />

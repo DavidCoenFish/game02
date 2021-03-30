@@ -2,6 +2,7 @@
 
 #include "Common/Render/Shader.h"
 
+#include "Common/Application/Log.h"
 #include "Common/Render/DrawSystem.h"
 #include "Common/Render/ShaderConstantBuffer.h"
 #include "Common/Render/ShaderConstantInfo.h"
@@ -59,8 +60,7 @@ static Microsoft::WRL::ComPtr<ID3D12RootSignature> MakeRootSignatureLocal(
    static int s_trace = 0;
    const std::wstring name = (std::wstring(L"RootSignature:") + std::to_wstring(s_trace++)).c_str();
    pRootSignature->SetName(name.c_str());
-   OutputDebugStringW(name.c_str());
-   OutputDebugStringW(L"\n");
+   LOG_MESSAGE_RENDER("%s\n",name.c_str());
 
    return pRootSignature;
 

@@ -11,7 +11,7 @@ class Geometry;
 class Application : public iApplication
 {
 public:
-   Application(HWND hwnd, const int width, const int height);
+   Application(const std::vector< std::wstring >& cmdLineArray, HWND hwnd, const int width, const int height);
    virtual ~Application();
 
 private:

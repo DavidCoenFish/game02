@@ -1,6 +1,7 @@
 #include "CommonPCH.h"
 
 #include "Common/Render/DrawSystemResources.h"
+#include "Common/Application/Log.h"
 #include "Common/Render/DrawSystem.h"
 #include "Common/Render/iResource.h"
 #include "Common/Render/CustomCommandList.h"
@@ -39,7 +40,7 @@ DrawSystemResources::DrawSystemResources(
         }
         else
         {
-            OutputDebugStringA("WARNING: Direct3D Debug Device is not available\n");
+            LOG_MESSAGE_WARNING("WARNING: Direct3D Debug Device is not available\n");
         }
 
         Microsoft::WRL::ComPtr<IDXGIInfoQueue> dxgiInfoQueue;
@@ -73,7 +74,7 @@ DrawSystemResources::DrawSystemResources(
         {
             flags &= ~DrawSystem::c_AllowTearing;
 #ifdef _DEBUG
-            OutputDebugStringA("WARNING: Variable refresh rate displays not supported");
+            LOG_MESSAGE_WARNING("WARNING: Variable refresh rate displays not supported");
 #endif
         }
     }
@@ -239,11 +240,7 @@ void DrawSystemResources::GetAdapter(IDXGIAdapter1** ppAdapter, D3D_FEATURE_LEVE
         // Check to see if the adapter supports Direct3D 12, but don't create the actual device yet.
         if (SUCCEEDED(D3D12CreateDevice(adapter.Get(), minFeatureLevel, _uuidof(ID3D12Device), nullptr)))
         {
-        #ifdef _DEBUG
-            wchar_t buff[256] = {};
-            swprintf_s(buff, L"Direct3D Adapter (%u): VID:%04X, PID:%04X - %ls\n", adapterIndex, desc.VendorId, desc.DeviceId, desc.Description);
-            OutputDebugStringW(buff);
-        #endif
+            LOG_MESSAGE_RENDER("Direct3D Adapter (%u): VID:%04X, PID:%04X - %ls\n", adapterIndex, desc.VendorId, desc.DeviceId, desc.Description);
             break;
         }
     }
@@ -257,7 +254,7 @@ void DrawSystemResources::GetAdapter(IDXGIAdapter1** ppAdapter, D3D_FEATURE_LEVE
             throw std::exception("WARP12 not available. Enable the 'Graphics Tools' optional feature");
         }
 
-        OutputDebugStringA("Direct3D Adapter - WARP12\n");
+        LOG_MESSAGE_RENDER("Direct3D Adapter - WARP12\n");
     }
 #endif
 
@@ -278,11 +275,7 @@ HRESULT DrawSystemResources::CreateWindowSizeDependentResources(
    const HWND hWnd
    )
 {
-   OutputDebugStringW(L"DrawSystemResources::CreateWindowSizeDependentResources\n");
-   OutputDebugStringW(std::to_wstring(backBufferWidth).c_str());
-   OutputDebugStringW(L"\n");
-   OutputDebugStringW(std::to_wstring(backBufferHeight).c_str());
-   OutputDebugStringW(L"\n");
+   LOG_MESSAGE_RENDER("DrawSystemResources::CreateWindowSizeDependentResources %d %d\n", backBufferWidth, backBufferHeight);
 
    WaitForGpu();
 
@@ -461,11 +454,7 @@ HRESULT DrawSystemResources::Present(const int flags)
     // If the device was reset we must completely reinitialize the renderer.
     if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
     {
-#ifdef _DEBUG
-        char buff[64] = {};
-        sprintf_s(buff, "Device Lost on Present: Reason code 0x%08X\n", (hr == DXGI_ERROR_DEVICE_REMOVED) ? m_d3dDevice->GetDeviceRemovedReason() : hr);
-        OutputDebugStringA(buff);
-#endif
+        LOG_MESSAGE_WARNING("Device Lost on Present: Reason code 0x%08X\n",(hr == DXGI_ERROR_DEVICE_REMOVED) ? m_d3dDevice->GetDeviceRemovedReason() : hr );
         //pParent->HandleDeviceLost();
         return hr;
     }

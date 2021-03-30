@@ -29,3 +29,11 @@ const std::wstring Utf8::Utf8ToUtf16( const std::string& in_utf8 )
    return std::wstring();
 #endif
 }
+
+
+const std::string Utf8::Utf16ToUtf8( const std::wstring& in_utf16 )
+{
+   std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>,wchar_t> convert; 
+   std::string dest = convert.to_bytes(in_utf16);   
+   return dest;
+}

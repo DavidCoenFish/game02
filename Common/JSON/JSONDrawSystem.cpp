@@ -46,6 +46,10 @@ std::unique_ptr<DrawSystem> JSONDrawSystem::Factory(
    {
       jsonParent.at("DrawSystem").get_to(data);
    }
+   if (DXGI_FORMAT_UNKNOWN == data.backBuffer.format)
+   {
+      return nullptr;
+   }
 
    return std::make_unique< DrawSystem >(
       callbackFatalExit,

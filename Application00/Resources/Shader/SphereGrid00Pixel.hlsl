@@ -64,8 +64,9 @@ Pixel main( Interpolants In )
    {
       discard;
    }
+   float3 hitNormal = ((m_cameraPosition + (worldRay * t)) - m_posRadius.xyz) / m_posRadius.w;
 
    Pixel Out;
-   Out.color = float4(t, 1.0, 1.0, 1.0);
+   Out.color = float4(hitNormal, 1.0);
    return Out;
 }
