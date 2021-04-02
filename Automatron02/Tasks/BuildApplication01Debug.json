@@ -1,0 +1,11 @@
+{
+   "Factory": "TaskFileDevenv",
+   "Skip": true,
+   "Priority": 0,
+   "Dependants": [],
+   "FilePath": "Game02Build\\Application00\\Gaming.Desktop.x64\\Debug\\output\\Application00.exe",
+   "Solution": "game02\\Game02.sln",
+   "Project": "Application00",
+   "Configuration": "Debug",
+   "Platform": "Gaming.Desktop.x64"
+}
