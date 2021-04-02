@@ -1,0 +1,11 @@
+{
+   "Factory": "TaskFileDevenv",
+   "Skip": false,
+   "Priority": 0,
+   "Dependants": [],
+   "FilePath": "UnitTestBuild\\UnitTest\\x64\\Debug\\output\\UnitTest.dll",
+   "Solution": "game02\\UnitTest.sln",
+   "Project": "UnitTest",
+   "Configuration": "Debug",
+   "Platform": "x64"
+}

@@ -35,19 +35,19 @@
          return true;
       }
 
-      private static bool Run(string[] args)
+      private static int Run(string[] args)
       {
          if (args.Length != 2)
          {
             System.Console.WriteLine(string.Format("Usage:{0}   Automatron02 \"root path\" \"abs path to task json\"", System.Environment.NewLine));
-            return false;
+            return -1;
          }
          var rootPath = args[0];
          var pathToJson = args[1];
          if (false == System.IO.Directory.Exists(pathToJson))
          {
             System.Console.Error.WriteLine(string.Format("Directory:{0} does not exists", pathToJson));
-            return false;
+            return -1;
          }
 
          //load the tasks
@@ -73,21 +73,18 @@
          {
             if (false == DealTask(task, taskMap))
             {
-               return false;
+               return -1;
             }
          }
-         return true;
+         return 0;
       }
 
+      //args = ["G:\dcoen", "G:\dcoen\game02\Automatron02\Tasks"]
       static int Main(string[] args)
       {
          System.Console.WriteLine("Automatron02 Start:" + System.DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"));
 
-         int result = 0;
-         if (false == Run(args))
-         {
-            result = -1;
-         }
+         int result = Run(args);
 
          System.Console.WriteLine("Automatron02 End:" + System.DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"));
          return result;

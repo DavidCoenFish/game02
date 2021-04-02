@@ -3,7 +3,7 @@
    class Task
    {
       private static bool _initialized = false;
-      private static System.Collections.Generic.Dictionary<string, System.Func<string,string,string,ITask>> _taskFactoryMap;
+      private static System.Collections.Generic.Dictionary<string, System.Func<string, string, string, ITask>> _taskFactoryMap;
       private static System.Collections.Generic.Dictionary<string, System.Func<string, string, string, ITask>> TaskFactoryMap
       {
          get
@@ -15,6 +15,7 @@
             _taskFactoryMap = new System.Collections.Generic.Dictionary<string, System.Func<string, string, string, ITask>> ();
             _taskFactoryMap.Add("TaskFileDevenv", TaskFileDevenv.Factory);
             _taskFactoryMap.Add("TaskRunExeAction", TaskRunExeAction.Factory);
+            _taskFactoryMap.Add("TaskRunTest", TaskRunTest.Factory);
             _initialized = true;
             return _taskFactoryMap;
          }

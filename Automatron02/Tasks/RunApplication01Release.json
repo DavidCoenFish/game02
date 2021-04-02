@@ -1,6 +1,6 @@
 {
    "Factory": "TaskRunExeAction",
-   "Skip": false,
+   "Skip": true,
    "Priority": 0,
    "Dependants": [ "BuildApplication01Release" ],
    "CommandLine": "Resources\\DAG\\SimpleTriangleApplication.json",

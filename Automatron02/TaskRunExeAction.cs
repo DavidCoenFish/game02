@@ -59,24 +59,27 @@ namespace Automatron02
       {
          var data = System.Text.Json.JsonSerializer.Deserialize<TaskRunExeActionPOCO>(jsonString);
          var actionList = new System.Collections.Generic.List< System.Action<System.Diagnostics.Process>>();
-         foreach (var item in data.Actions)
+         if (null != data.Actions)
          {
-            switch (item.Factory)
+            foreach (var item in data.Actions)
             {
-               default:
-                  break;
-               case "Wait":
-                  actionList.Add(ActionFactoryWait(item.IntParam0));
-                  break;
-               case "Close":
-                  actionList.Add(ActionFactoryPostMessage(WM_CLOSE, System.IntPtr.Zero, System.IntPtr.Zero));
-                  break;
-               case "SysKeyDown":
-                  actionList.Add(ActionFactoryPostMessage(WM_SYSKEYDOWN, new System.IntPtr(GetVkKey(item.StringParam0)), System.IntPtr.Zero));
-                  break;
-               case "SysKeyDownAlt":
-                  actionList.Add(ActionFactoryPostMessage(WM_SYSKEYDOWN, new System.IntPtr(GetVkKey(item.StringParam0)), new System.IntPtr(KEY_STATE_ALT_DOWN)));
-                  break;
+               switch (item.Factory)
+               {
+                  default:
+                     break;
+                  case "Wait":
+                     actionList.Add(ActionFactoryWait(item.IntParam0));
+                     break;
+                  case "Close":
+                     actionList.Add(ActionFactoryPostMessage(WM_CLOSE, System.IntPtr.Zero, System.IntPtr.Zero));
+                     break;
+                  case "SysKeyDown":
+                     actionList.Add(ActionFactoryPostMessage(WM_SYSKEYDOWN, new System.IntPtr(GetVkKey(item.StringParam0)), System.IntPtr.Zero));
+                     break;
+                  case "SysKeyDownAlt":
+                     actionList.Add(ActionFactoryPostMessage(WM_SYSKEYDOWN, new System.IntPtr(GetVkKey(item.StringParam0)), new System.IntPtr(KEY_STATE_ALT_DOWN)));
+                     break;
+               }
             }
          }
 
