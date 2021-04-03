@@ -11,12 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\UnitTest01.cpp" />
     <ClCompile Include="Source\UnitTestPCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Source\UnitTestUtilUtf8.cpp" />
+    <ClCompile Include="Source\CommonUtilUtf8.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\UnitTestPCH.h" />

@@ -1,34 +1,20 @@
 #include "CommonPCH.h"
 #include "Common/Application/WindowHelper.h"
+#include "Common/Util/Utf8.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 const int WindowHelper(
-   const std::string& applicationName
+   HINSTANCE hInstance,
+   const std::string& applicationName,
+   const bool bFullScreen,
+   const int defaultWidth,
+   const int defaultHeight,
+   const int nCmdShow
    )
 {
-   applicationName;
-   return 0;
-}
-
-#if 0
-    if (!DirectX::XMVerifyCPUSupport())
-        return 1;
-
-    // Initialize the GameRuntime
-    HRESULT hr = XGameRuntimeInitialize();
-    if (FAILED(hr))
-    {
-        if (hr == E_GAMERUNTIME_DLL_NOT_FOUND || hr == E_GAMERUNTIME_VERSION_MISMATCH)
-        {
-            (void)MessageBoxW(nullptr, L"Game Runtime is not installed on this system or needs updating.", g_szAppName, MB_ICONERROR | MB_OK);
-        }
-        return 1;
-
-    }
-
-    //g_game = std::make_unique<Game>();
-
+   const std::wstring className(Utf8::Utf8ToUtf16( applicationName + std::string("Class")));
+   const std::wstring name(Utf8::Utf8ToUtf16( applicationName ));
     // Register class and create window
     {
         // Register class
@@ -40,29 +26,42 @@ const int WindowHelper(
         wcex.hIcon = LoadIconW(hInstance, L"IDI_ICON");
         wcex.hCursor = LoadCursorW(nullptr, IDC_ARROW);
         wcex.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
-        wcex.lpszClassName = L"Application01WindowClass";
+        wcex.lpszClassName = className.c_str();
         wcex.hIconSm = LoadIconW(wcex.hInstance, L"IDI_ICON");
         if (!RegisterClassExW(&wcex))
             return 1;
 
         // Create window
-        int w = 0, h = 0;
-        //g_game->GetDefaultSize(w, h);
 
-        RECT rc = { 0, 0, static_cast<LONG>(w), static_cast<LONG>(h) };
+        RECT rc = { 0, 0, static_cast<LONG>(defaultWidth), static_cast<LONG>(defaultHeight) };
 
         AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-        HWND hwnd = CreateWindowExW(0, L"Application01WindowClass", g_szAppName, WS_OVERLAPPEDWINDOW,
+        HWND hwnd = 0;
+        if (true == bFullScreen)
+        {
+         hwnd = CreateWindowExW(WS_EX_TOPMOST, className.c_str(), name.c_str(), WS_POPUP,
             CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
             nullptr);
-        // TODO: Change to CreateWindowExW(WS_EX_TOPMOST, L"Application01WindowClass", g_szAppName, WS_POPUP,
-        // to default to fullscreen.
+        }
+        else
+        {
+         hwnd = CreateWindowExW(0, className.c_str(), name.c_str(), WS_OVERLAPPEDWINDOW,
+            CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
+            nullptr);
+        }
 
         if (!hwnd)
             return 1;
 
-        ShowWindow(hwnd, nCmdShow);
+        if (true == bFullScreen)
+        {
+           ShowWindow(hwnd, SW_SHOWMAXIMIZED);
+        }
+        else
+        {
+           ShowWindow(hwnd, nCmdShow);
+        }
         // TODO: Change nCmdShow to SW_SHOWMAXIMIZED to default to fullscreen.
 
         //SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(g_game.get()));
@@ -87,7 +86,7 @@ const int WindowHelper(
         }
     }
 
-    XGameRuntimeUninitialize();
+    //XGameRuntimeUninitialize();
 
     //g_game.reset();
 
@@ -259,4 +258,3 @@ void ExitGame() noexcept
 {
     PostQuitMessage(0);
 }
-#endif

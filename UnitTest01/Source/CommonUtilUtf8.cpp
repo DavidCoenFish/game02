@@ -2,13 +2,10 @@
 
 #include "Common/Util/Utf8.h"
 
-//using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-
 //Assert::IsNotNull( pResultType );
 //Assert::AreEqual(9, pResultType->Get<int>() );
 
-
-namespace UtilUtf8Unittest
+namespace CommonUtilUtf8
 {
    TEST_CLASS(Basic)
    {
@@ -27,8 +24,13 @@ namespace UtilUtf8Unittest
  
       TEST_METHOD(RoundTrip0)
       {
+         TestRoundTrip("");
          TestRoundTrip("abcd");
+         //https://www.fileformat.info/info/unicode/char/0e0d/index.htm
          TestRoundTrip("abcd\xE0\xB8\x8D");
+         //https://www.fileformat.info/info/unicode/char/25FF0/index.htm
+         TestRoundTrip("\xF0\xA5\xBF\xB0");
+         TestRoundTrip("_\xF0\xA5\xBF\xB0_");
       }
 
    };

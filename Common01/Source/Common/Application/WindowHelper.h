@@ -1,6 +1,11 @@
 #pragma once
 
 const int WindowHelper(
-   const std::string& applicationName
+   HINSTANCE hInstance,
+   const std::string& applicationName,
+   const bool bFullScreen,
+   const int defaultWidth,
+   const int defaultHeight,
+   const int nCmdShow
    );
 

@@ -9,10 +9,7 @@
     <ClCompile Include="Source\UnitTestPCH.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\UnitTest01.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\UnitTestUtilUtf8.cpp">
+    <ClCompile Include="Source\CommonUtilUtf8.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
