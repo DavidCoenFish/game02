@@ -3,8 +3,10 @@
    "Skip": true,
    "Priority": 0,
    "Dependants": [],
-   "FilePath": "Game02Build\\Application00\\Gaming.Desktop.x64\\Release\\output\\Application00.exe",
-   "Solution": "game02\\Game02.sln",
+   "DevEnv": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE\\devenv.com",
+   "Clean": false,
+   "FilePath": "..\\Game02Build\\Application00\\Gaming.Desktop.x64\\Release\\output\\Application00.exe",
+   "Solution": "Game02.sln",
    "Project": "Application00",
    "Configuration": "Release",
    "Platform": "Gaming.Desktop.x64"

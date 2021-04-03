@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>$(SolutionDir)..\Game02Build\Automatron02\Debug\bin\</OutputPath>
+    <BaseIntermediateOutputPath>$(SolutionDir)..\Game02Build\Automatron02\Debug\obj\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>$(SolutionDir)..\Game02Build\Automatron02\Release\bin\</OutputPath>
+    <BaseIntermediateOutputPath>$(SolutionDir)..\Game02Build\Automatron02\Release\obj\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
+  </PropertyGroup>
+
+</Project>

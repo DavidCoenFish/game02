@@ -2,7 +2,7 @@
   "profiles": {
     "Automatron02": {
       "commandName": "Project",
-      "commandLineArgs": "G:\\dcoen G:\\dcoen\\game02\\Automatron02\\Tasks"
+      "commandLineArgs": "G:\\dcoen\\game02 G:\\dcoen\\game02\\Automatron02\\Tasks \"test commit\""
     }
   }
 }

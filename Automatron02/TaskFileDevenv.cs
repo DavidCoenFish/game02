@@ -8,6 +8,8 @@ namespace Automatron02
          public int Priority { get; set; }
          public string[] Dependants { get; set; }
          public bool Skip { get; set; }
+         public bool Clean { get; set; }
+         public string DevEnv { get; set; }
          public string FilePath { get; set; }
          public string Solution { get; set; }
          public string Project { get; set; }
@@ -15,14 +17,17 @@ namespace Automatron02
          public string Platform { get; set; }
       }
 
-      public static TaskFileDevenv Factory(string name, string jsonString, string rootPath)
+      public static TaskFileDevenv Factory(string name, string jsonString, string[] args)
       {
+         var rootPath = args[0];
          var data = System.Text.Json.JsonSerializer.Deserialize<TaskFileDevenvPOCO>(jsonString);
          return new TaskFileDevenv(
             name,
             data.Priority,
             data.Dependants,
             data.Skip,
+            data.Clean,
+            data.DevEnv,
             System.IO.Path.Combine(rootPath, data.FilePath),
             System.IO.Path.Combine(rootPath, data.Solution),
             data.Project,
@@ -107,10 +112,10 @@ namespace Automatron02
          bool pass = true;
 
          var configuration = _configuration + @"|" + _platform;
-         if (pass)
+         if (pass && _clean)
          {
             pass = ProcessStart(
-               @"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\devenv.com",
+               _devEnv,
                @"""" + _solution + @""" /clean """ + configuration + @""""
                );
          }
@@ -118,7 +123,7 @@ namespace Automatron02
          if (pass)
          {
             pass = ProcessStart(
-               @"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\devenv.com",
+               _devEnv,
                @"""" + _solution + @""" /build """ + configuration + @"""  /project "+ _project
                );
          }
@@ -131,6 +136,8 @@ namespace Automatron02
          int priority,
          string[] dependants,
          bool skip,
+         bool clean,
+         string devEnv,
          string filePath,
          string solution,
          string project,
@@ -142,6 +149,8 @@ namespace Automatron02
          _name = name;
          _dependants = dependants;
          _skip = skip;
+         _clean = clean;
+         _devEnv = devEnv;
          _filePath = filePath;
          _solution = solution;
          _project = project;
@@ -149,6 +158,8 @@ namespace Automatron02
          _platform = platform;
       }
 
+      private bool _clean;
+      private string _devEnv;
       private string _solution;
       private string _project;
       private string _configuration;

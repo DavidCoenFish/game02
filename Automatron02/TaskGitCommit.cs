@@ -6,23 +6,29 @@ using System.Threading.Tasks;
 
 namespace Automatron02
 {
-   class TaskRunTest : ITask
+   class TaskGitCommit : ITask
    {
-      public class TaskRunTestPOCO
+      public class TaskGitCommitPOCO
       {
          public int Priority { get; set; }
          public string[] Dependants { get; set; }
          public bool Skip { get; set; }
+         public string Git { get; set; }
       }
 
       public static ITask Factory(string name, string jsonString, string[] args)
       {
-         var data = System.Text.Json.JsonSerializer.Deserialize<TaskRunTestPOCO>(jsonString);
-         return new TaskRunTest(
+         var rootPath = args[0];
+         var commitMessage = args[2];
+         var data = System.Text.Json.JsonSerializer.Deserialize<TaskGitCommitPOCO>(jsonString);
+         return new TaskGitCommit(
+            rootPath,
             name,
             data.Priority,
             data.Dependants,
-            data.Skip
+            data.Skip,
+            data.Git,
+            commitMessage
             );
       }
 
@@ -62,7 +68,7 @@ namespace Automatron02
          System.Console.Error.WriteLine(data.Data);
       }
 
-      private static bool ProcessStart(string exePath, string armuments)
+      private static bool ProcessStart(string workingDir, string exePath, string armuments)
       {
          System.Console.WriteLine(System.String.Format("ProcessStart: {0} {1}", exePath, armuments));
 
@@ -73,7 +79,7 @@ namespace Automatron02
          process.StartInfo.RedirectStandardOutput = true;
          process.StartInfo.RedirectStandardError = true;
          process.StartInfo.Arguments = armuments;
-         process.StartInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(exePath);
+         process.StartInfo.WorkingDirectory = workingDir;
          process.OutputDataReceived += OutputHandler;
          process.ErrorDataReceived += ErrorHandler;
 
@@ -93,43 +99,57 @@ namespace Automatron02
 
       public bool Run(System.Collections.Generic.List<ITask> taskDependants)
       {
-         //HasRun = true; ?
-         if ((1 != taskDependants.Count) || (taskDependants[0] is not ITaskFile))
-         {
-            System.Console.Error.WriteLine("Require a task file type dependency");
-            return false;
-         }
-         ITaskFile dependencyFile = taskDependants[0] as ITaskFile;
-         //dependencyFile.FilePath,
-         var cmdLine = String.Format(@"""{0}""", dependencyFile.FilePath);
-         //var cmdLine = dependencyFile.FilePath;
-
-         //"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\MSTest.exe" /testcontainer:G:\dcoen\UnitTestBuild\UnitTest\x64\Debug\output\UnitTest.dll
-         //"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe" G:\dcoen\UnitTestBuild\UnitTest\x64\Debug\output\UnitTest.dll
+         //git pull <REMOTE> <name-of-branch [master]>
+         //git pull origin master
+         //git remote -v
+         //git status
+         //git add .
+         //git commit -m "COMMENT TO DESCRIBE THE INTENTION OF THE COMMIT"
+         //git push <remote> <name-of-branch>
+         //git push origin master
 
          bool pass = true;
          if (pass)
          {
-            pass = ProcessStart(
-               @"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe",
-               cmdLine
-               );
+            pass = ProcessStart(_rootPath, _git, "pull");
+         }
+         if (pass)
+         {
+            pass = ProcessStart(_rootPath, _git, "add .");
+         }
+         if (pass)
+         {
+            pass = ProcessStart(_rootPath, _git, String.Format(@"commit -m ""{0}""", _commitMessage));
+         }
+         if (pass)
+         {
+            pass = ProcessStart(_rootPath, _git, "push");
          }
 
          return pass;
       }
 
-      public TaskRunTest(
+      public TaskGitCommit(
+         string rootPath,
          string name,
          int priority,
          string[] dependants,
-         bool skip
+         bool skip,
+         string git,
+         string commitMessage
          )
       {
+         _rootPath = rootPath;
          _priority = priority;
          _name = name;
          _dependants = dependants;
          _skip = skip;
+         _git = git;
+         _commitMessage = commitMessage;
       }
+
+      private string _rootPath;
+      private string _git;
+      private string _commitMessage;
    }
 }

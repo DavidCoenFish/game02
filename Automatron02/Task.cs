@@ -3,8 +3,8 @@
    class Task
    {
       private static bool _initialized = false;
-      private static System.Collections.Generic.Dictionary<string, System.Func<string, string, string, ITask>> _taskFactoryMap;
-      private static System.Collections.Generic.Dictionary<string, System.Func<string, string, string, ITask>> TaskFactoryMap
+      private static System.Collections.Generic.Dictionary<string, System.Func<string, string, string[], ITask>> _taskFactoryMap;
+      private static System.Collections.Generic.Dictionary<string, System.Func<string, string, string[], ITask>> TaskFactoryMap
       {
          get
          {
@@ -12,10 +12,11 @@
             {
                return _taskFactoryMap;
             }
-            _taskFactoryMap = new System.Collections.Generic.Dictionary<string, System.Func<string, string, string, ITask>> ();
+            _taskFactoryMap = new System.Collections.Generic.Dictionary<string, System.Func<string, string, string[], ITask>> ();
             _taskFactoryMap.Add("TaskFileDevenv", TaskFileDevenv.Factory);
             _taskFactoryMap.Add("TaskRunExeAction", TaskRunExeAction.Factory);
             _taskFactoryMap.Add("TaskRunTest", TaskRunTest.Factory);
+            _taskFactoryMap.Add("TaskGitCommit", TaskGitCommit.Factory);
             _initialized = true;
             return _taskFactoryMap;
          }
@@ -26,7 +27,7 @@
          public string Factory { get; set; }
       }
 
-      public static ITask DealFile(string fileName, string rootPath)
+      public static ITask DealFile(string fileName, string[] args)
       {
          ITask result = null;
 
@@ -37,7 +38,7 @@
          if (TaskFactoryMap.ContainsKey(data.Factory))
          {
             var function = TaskFactoryMap[data.Factory];
-            result = function(name, jsonString, rootPath);
+            result = function(name, jsonString, args);
          }
          else
          {

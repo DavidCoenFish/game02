@@ -37,12 +37,12 @@
 
       private static int Run(string[] args)
       {
-         if (args.Length != 2)
+         if (args.Length < 2)
          {
-            System.Console.WriteLine(string.Format("Usage:{0}   Automatron02 \"root path\" \"abs path to task json\"", System.Environment.NewLine));
+            System.Console.WriteLine(string.Format("Usage:{0}   Automatron02 \"root path\" \"abs path to task json\"  [\"commit message\"]", System.Environment.NewLine));
             return -1;
          }
-         var rootPath = args[0];
+         //var rootPath = args[0];
          var pathToJson = args[1];
          if (false == System.IO.Directory.Exists(pathToJson))
          {
@@ -57,7 +57,7 @@
          foreach (string fileName in fileEntries)
          {
             //System.Console.WriteLine(fileName);
-            var task = Task.DealFile(fileName, rootPath);
+            var task = Task.DealFile(fileName, args);
             if (null != task)
             {
                taskList.Add(task);
@@ -79,7 +79,7 @@
          return 0;
       }
 
-      //args = ["G:\dcoen", "G:\dcoen\game02\Automatron02\Tasks"]
+      //args = ["G:\dcoen\game02", "G:\dcoen\game02\Automatron02\Tasks", "test commit"]
       static int Main(string[] args)
       {
          System.Console.WriteLine("Automatron02 Start:" + System.DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"));

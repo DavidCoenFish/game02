@@ -55,7 +55,7 @@ namespace Automatron02
       }
 
 
-      public static ITask Factory(string name, string jsonString, string rootPath)
+      public static ITask Factory(string name, string jsonString, string[] args)
       {
          var data = System.Text.Json.JsonSerializer.Deserialize<TaskRunExeActionPOCO>(jsonString);
          var actionList = new System.Collections.Generic.List< System.Action<System.Diagnostics.Process>>();
