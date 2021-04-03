@@ -18,14 +18,20 @@
     <None Include="Common01.props" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Application\WindowHelper.cpp" />
-    <ClCompile Include="Source\CommonPCH.cpp" />
+    <ClCompile Include="Source\CommonPCH.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Application\WindowHelper.cpp" />
+    <ClCompile Include="Source\Common\Util\Utf8.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Application\d3dx12.h" />
-    <ClInclude Include="Source\Application\WindowHelper.h" />
     <ClInclude Include="Source\Common.h" />
     <ClInclude Include="Source\CommonPCH.h" />
+    <ClInclude Include="Source\Common\Application\d3dx12.h" />
+    <ClInclude Include="Source\Common\Application\WindowHelper.h" />
+    <ClInclude Include="Source\Common\Util\Utf8.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <RootNamespace>Common01</RootNamespace>

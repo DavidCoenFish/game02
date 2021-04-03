@@ -183,6 +183,11 @@
   <ItemGroup>
     <None Include="Application01.props" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common01\Common01.vcxproj">
+      <Project>{3de01963-e730-4a3f-9d8a-76dc5a1f1683}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

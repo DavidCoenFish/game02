@@ -14,16 +14,20 @@
     <ClCompile Include="Source\UnitTest01.cpp" />
     <ClCompile Include="Source\UnitTestPCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UnitTestPCH.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UnitTestPCH.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Source\UnitTestUtilUtf8.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\UnitTestPCH.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UnitTest01.props" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common01\Common01.vcxproj">
+      <Project>{3de01963-e730-4a3f-9d8a-76dc5a1f1683}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

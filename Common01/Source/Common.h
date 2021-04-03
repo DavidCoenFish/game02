@@ -38,8 +38,6 @@
 #include <DirectXMath.h>
 #include <DirectXColors.h>
 
-#include "Application/d3dx12.h"
-
 #include <algorithm>
 #include <cstdint>
 #include <exception>

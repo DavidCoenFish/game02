@@ -3,7 +3,7 @@
 // Header for standard system include files.
 //
 #include "Common.h"
-#include <XGameRuntime.h>
+//#include <XGameRuntime.h>
 
 /*
 #pragma once

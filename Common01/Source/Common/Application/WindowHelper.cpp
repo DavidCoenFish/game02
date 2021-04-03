@@ -1,27 +1,19 @@
-//
-// Main.cpp
-//
-
-#include "ApplicationPCH.h"
+#include "CommonPCH.h"
 #include "Common/Application/WindowHelper.h"
-
-
-LPCWSTR g_szAppName = L"Application01";
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-// Entry point
-int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
+const int WindowHelper(
+   const std::string& applicationName
+   )
 {
-    UNREFERENCED_PARAMETER(hInstance);
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
-    UNREFERENCED_PARAMETER(nCmdShow);
+   applicationName;
+   return 0;
+}
 
+#if 0
     if (!DirectX::XMVerifyCPUSupport())
-    {
-        return -1;
-    }
+        return 1;
 
     // Initialize the GameRuntime
     HRESULT hr = XGameRuntimeInitialize();
@@ -29,18 +21,77 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     {
         if (hr == E_GAMERUNTIME_DLL_NOT_FOUND || hr == E_GAMERUNTIME_VERSION_MISMATCH)
         {
-            (void)MessageBoxW(nullptr, L"Game Runtime is not installed on this system or needs updating.", L"Main", MB_ICONERROR | MB_OK);
+            (void)MessageBoxW(nullptr, L"Game Runtime is not installed on this system or needs updating.", g_szAppName, MB_ICONERROR | MB_OK);
         }
-        return -1;
+        return 1;
+
     }
 
-    const int result = WindowHelper(
-      "Application01"
-      );
+    //g_game = std::make_unique<Game>();
+
+    // Register class and create window
+    {
+        // Register class
+        WNDCLASSEXW wcex = {};
+        wcex.cbSize = sizeof(WNDCLASSEXW);
+        wcex.style = CS_HREDRAW | CS_VREDRAW;
+        wcex.lpfnWndProc = WndProc;
+        wcex.hInstance = hInstance;
+        wcex.hIcon = LoadIconW(hInstance, L"IDI_ICON");
+        wcex.hCursor = LoadCursorW(nullptr, IDC_ARROW);
+        wcex.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
+        wcex.lpszClassName = L"Application01WindowClass";
+        wcex.hIconSm = LoadIconW(wcex.hInstance, L"IDI_ICON");
+        if (!RegisterClassExW(&wcex))
+            return 1;
+
+        // Create window
+        int w = 0, h = 0;
+        //g_game->GetDefaultSize(w, h);
+
+        RECT rc = { 0, 0, static_cast<LONG>(w), static_cast<LONG>(h) };
+
+        AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+
+        HWND hwnd = CreateWindowExW(0, L"Application01WindowClass", g_szAppName, WS_OVERLAPPEDWINDOW,
+            CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
+            nullptr);
+        // TODO: Change to CreateWindowExW(WS_EX_TOPMOST, L"Application01WindowClass", g_szAppName, WS_POPUP,
+        // to default to fullscreen.
+
+        if (!hwnd)
+            return 1;
+
+        ShowWindow(hwnd, nCmdShow);
+        // TODO: Change nCmdShow to SW_SHOWMAXIMIZED to default to fullscreen.
+
+        //SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(g_game.get()));
+
+        GetClientRect(hwnd, &rc);
+
+        //g_game->Initialize(hwnd, rc.right - rc.left, rc.bottom - rc.top);
+    }
+
+    // Main message loop
+    MSG msg = {};
+    while (WM_QUIT != msg.message)
+    {
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        else
+        {
+            //g_game->Tick();
+        }
+    }
 
     XGameRuntimeUninitialize();
 
-    return result;
+    //g_game.reset();
+
+    return static_cast<int>(msg.wParam);
 }
 
 // Windows procedure
@@ -208,3 +259,4 @@ void ExitGame() noexcept
 {
     PostQuitMessage(0);
 }
+#endif

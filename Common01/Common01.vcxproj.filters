@@ -4,7 +4,13 @@
     <Filter Include="Source">
       <UniqueIdentifier>{b384da31-24cf-4cc8-b78c-e70607b34bec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Application">
+    <Filter Include="Source\Common">
+      <UniqueIdentifier>{68582a0b-3a86-4b27-83af-1b9cd6eaabde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common\Util">
+      <UniqueIdentifier>{2769eefc-0acd-4ab3-ac13-a9d61ebd851a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common\Application">
       <UniqueIdentifier>{41bf7e93-1aa9-4ba3-a024-657592fd1e19}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -12,25 +18,31 @@
     <None Include="Common01.props" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Application\WindowHelper.cpp">
-      <Filter>Source\Application</Filter>
-    </ClCompile>
     <ClCompile Include="Source\CommonPCH.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Common\Application\WindowHelper.cpp">
+      <Filter>Source\Common\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Util\Utf8.cpp">
+      <Filter>Source\Common\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Application\WindowHelper.h">
-      <Filter>Source\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application\d3dx12.h">
-      <Filter>Source\Application</Filter>
-    </ClInclude>
     <ClInclude Include="Source\CommonPCH.h">
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common.h">
       <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Application\WindowHelper.h">
+      <Filter>Source\Common\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Application\d3dx12.h">
+      <Filter>Source\Common\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Util\Utf8.h">
+      <Filter>Source\Common\Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
