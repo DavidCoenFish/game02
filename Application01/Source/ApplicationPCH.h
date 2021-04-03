@@ -3,6 +3,9 @@
 // Header for standard system include files.
 //
 
+#include <Common.h>
+#include <XGameRuntime.h>
+/*
 #pragma once
 
 #include <winsdkver.h>
@@ -86,3 +89,4 @@ namespace DX
         }
     }
 }
+*/

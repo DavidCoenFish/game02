@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <DscBuildDir>$(SolutionDir)..\$(SolutionName)Build\$(ProjectName)\$(Platform)\$(Configuration)\</DscBuildDir>
-    <DscIncludeDir>$(SolutionDir);$(projectDir)Source\</DscIncludeDir>
+    <DscIncludeDir>$(projectDir)Source\;$(SolutionDir)Common01\Source\</DscIncludeDir>
   </PropertyGroup>
   <PropertyGroup>
     <OutDir>$(DscBuildDir)output\</OutDir>
@@ -16,7 +16,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>ApplicationPCH.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(DscIncludeDir);$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <FxCompile>

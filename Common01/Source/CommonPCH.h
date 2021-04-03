@@ -2,7 +2,9 @@
 // pch.h
 // Header for standard system include files.
 //
-#include <Common01/CommonPch.h>
+#include "Common.h"
+#include <XGameRuntime.h>
+
 /*
 #pragma once
 

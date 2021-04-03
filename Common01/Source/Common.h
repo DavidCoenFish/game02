@@ -3,8 +3,6 @@
 // Header for standard system include files.
 //
 
-#include <Common01/CommonPch.h>
-/*
 #pragma once
 
 #include <winsdkver.h>
@@ -40,7 +38,7 @@
 #include <DirectXMath.h>
 #include <DirectXColors.h>
 
-#include "d3dx12.h"
+#include "Application/d3dx12.h"
 
 #include <algorithm>
 #include <cstdint>
@@ -57,8 +55,6 @@
 // To use graphics and CPU markup events with the latest version of PIX, change this to include <pix3.h>
 // then add the NuGet package WinPixEventRuntime to the project.
 #include <pix.h>
-
-#include <XGameRuntime.h>
 
 namespace DX
 {
@@ -88,4 +84,3 @@ namespace DX
         }
     }
 }
-*/
