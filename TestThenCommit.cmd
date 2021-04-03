@@ -12,8 +12,8 @@ IF defined MISSING_AUTOMATRON (
    call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\devenv.com" "%~dp0Automatron.sln" /build "Release|Any CPU" /project Automatron02
    )
 
-echo "%~dp0..\Game02Build\Automatron02\Release\bin\net5.0\Automatron02.exe" %~dp0.. %~dp0Automatron02\Tasks
-call "%~dp0..\Game02Build\Automatron02\Release\bin\net5.0\Automatron02.exe" %~dp0.. %~dp0Automatron02\Tasks
+echo "%~dp0..\Game02Build\Automatron02\Release\bin\net5.0\Automatron02.exe" %~dp0 %~dp0Automatron02\Tasks "%~1"
+call "%~dp0..\Game02Build\Automatron02\Release\bin\net5.0\Automatron02.exe" %~dp0 %~dp0Automatron02\Tasks "%~1"
 if %errorlevel% NEQ 0 (
    echo Automatron02.exe exited with %errorlevel%
    exit /b %errorlevel%

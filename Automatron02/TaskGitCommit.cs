@@ -19,7 +19,16 @@ namespace Automatron02
       public static ITask Factory(string name, string jsonString, string[] args)
       {
          var rootPath = args[0];
-         var commitMessage = args[2];
+         var commitMessage = "";
+         if (2 < args.Length)
+         {
+            commitMessage = args[2];
+         }
+         if (commitMessage == "")
+         {
+            commitMessage = String.Format(@"Automatron auto generated commit message {0}", System.DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"));
+         }
+
          var data = System.Text.Json.JsonSerializer.Deserialize<TaskGitCommitPOCO>(jsonString);
          return new TaskGitCommit(
             rootPath,
@@ -70,7 +79,7 @@ namespace Automatron02
 
       private static bool ProcessStart(string workingDir, string exePath, string armuments)
       {
-         System.Console.WriteLine(System.String.Format("ProcessStart: {0} {1}", exePath, armuments));
+         System.Console.WriteLine(System.String.Format("ProcessStart: {0} {1} {2}", workingDir, exePath, armuments));
 
          var process = new System.Diagnostics.Process();
          process.StartInfo = new System.Diagnostics.ProcessStartInfo(exePath);
