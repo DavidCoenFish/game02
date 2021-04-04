@@ -23,14 +23,24 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Common\Application\CommandLine.cpp" />
     <ClCompile Include="Source\Common\Application\WindowHelper.cpp" />
+    <ClCompile Include="Source\Common\Log\Log.cpp" />
+    <ClCompile Include="Source\Common\Log\LogConsumerConsole.cpp" />
+    <ClCompile Include="Source\Common\Log\LogConsumerWriteToFile.cpp" />
+    <ClCompile Include="Source\Common\Log\LogScope.cpp" />
     <ClCompile Include="Source\Common\Util\Utf8.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Common.h" />
     <ClInclude Include="Source\CommonPCH.h" />
+    <ClInclude Include="Source\Common\Application\CommandLine.h" />
     <ClInclude Include="Source\Common\Application\d3dx12.h" />
     <ClInclude Include="Source\Common\Application\WindowHelper.h" />
+    <ClInclude Include="Source\Common\Log\Log.h" />
+    <ClInclude Include="Source\Common\Log\LogConsumerConsole.h" />
+    <ClInclude Include="Source\Common\Log\LogConsumerWriteToFile.h" />
+    <ClInclude Include="Source\Common\Log\LogScope.h" />
     <ClInclude Include="Source\Common\Util\Utf8.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -2,8 +2,8 @@
 
 #include "Common/Util/Utf8.h"
 
-//Assert::IsNotNull( pResultType );
-//Assert::AreEqual(9, pResultType->Get<int>() );
+//Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsNotNull( pResultType );
+//Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(9, pResultType->Get<int>() );
 
 namespace CommonUtilUtf8
 {

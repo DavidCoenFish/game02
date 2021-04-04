@@ -41,8 +41,13 @@
 #include <algorithm>
 #include <cstdint>
 #include <exception>
+#include <fstream>
+#include <functional>
+#include <map>
 #include <memory>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 #ifdef _DEBUG
 #include <dxgidebug.h>

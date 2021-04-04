@@ -7,6 +7,12 @@
     <Filter Include="Source">
       <UniqueIdentifier>{0413a7eb-f8ac-4ba0-b421-44a1c5255dfa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Task">
+      <UniqueIdentifier>{59217c21-31d8-4082-af79-37f03dd0cce1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Task\Empty">
+      <UniqueIdentifier>{4a289a82-6ba3-4423-b4f2-ef8b779450d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ApplicationPCH.h">
@@ -34,5 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Application01.props" />
+    <None Include="Task\Empty\Application.json">
+      <Filter>Task\Empty</Filter>
+    </None>
   </ItemGroup>
 </Project>

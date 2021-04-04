@@ -13,6 +13,9 @@
     <Filter Include="Source\Common\Application">
       <UniqueIdentifier>{41bf7e93-1aa9-4ba3-a024-657592fd1e19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Common\Log">
+      <UniqueIdentifier>{f176c3df-4a3b-4189-a4d8-2bcc21f831df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Common01.props" />
@@ -26,6 +29,21 @@
     </ClCompile>
     <ClCompile Include="Source\Common\Util\Utf8.cpp">
       <Filter>Source\Common\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Application\CommandLine.cpp">
+      <Filter>Source\Common\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Log\LogConsumerConsole.cpp">
+      <Filter>Source\Common\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Log\LogConsumerWriteToFile.cpp">
+      <Filter>Source\Common\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Log\LogScope.cpp">
+      <Filter>Source\Common\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Log\Log.cpp">
+      <Filter>Source\Common\Log</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -43,6 +61,21 @@
     </ClInclude>
     <ClInclude Include="Source\Common\Util\Utf8.h">
       <Filter>Source\Common\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Application\CommandLine.h">
+      <Filter>Source\Common\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Log\LogConsumerConsole.h">
+      <Filter>Source\Common\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Log\LogConsumerWriteToFile.h">
+      <Filter>Source\Common\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Log\LogScope.h">
+      <Filter>Source\Common\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Log\Log.h">
+      <Filter>Source\Common\Log</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -12,6 +12,9 @@
     <ClCompile Include="Source\CommonUtilUtf8.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\CommonApplicationCommandLine.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\UnitTestPCH.h">

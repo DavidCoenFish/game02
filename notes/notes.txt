@@ -10,6 +10,8 @@ dag node and json
 bugs:
    there is a crash on shutdown after "alt + return" fullscreen, d3dx12 resource leak
 
+//unix time of head commit
+git log -1 --pretty=format:%cd HEAD
 
 design:
    radius earth (max)6378km equator, 6357km poles
