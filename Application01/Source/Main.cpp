@@ -5,26 +5,12 @@
 #include "ApplicationPCH.h"
 #include "Common/Application/WindowHelper.h"
 #include "Common/Application/CommandLine.h"
-#include "Common/Util/Utf8.h"
+#include "Common/FileSystem/FileSystem.h"
+#include "Common/FileSystem/ReadOverlayDir.h"
 #include "Common/Log/Log.h"
 #include "Common/Log/LogConsumerConsole.h"
+#include "Common/Util/Utf8.h"
 #include "json/json.hpp"
-
-//#define MAX_PATH_LENGTH MAX_PATH 
-#define MAX_PATH_LENGTH 1024 
-static const std::filesystem::path GetModuleFilePath(HINSTANCE hInstance)
-{
-   wchar_t data[MAX_PATH_LENGTH];
-   const auto length = GetModuleFileNameW(hInstance, &data[0], MAX_PATH_LENGTH);
-   if (length == MAX_PATH_LENGTH)
-   {
-      return std::string();
-   }
-   std::string exePath = Utf8::Utf16ToUtf8(data);
-   std::filesystem::path path(exePath);
-   path.remove_filename();
-   return path;
-}
 
 static const int RunTask(HINSTANCE hInstance, int nCmdShow)
 {
@@ -40,7 +26,10 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
        return -1;
     }
 
-    const auto basePath = GetModuleFilePath(hInstance);
+    const auto basePath = FileSystem::GetModualDir(hInstance);
+    FileSystem fileSystem;
+    fileSystem.AddReadOverlay( std::make_shared< ReadOverlayDir >( 0, basePath ) );
+
     if (2 <= pCommandLine->GetParamCount())
     {
        std::filesystem::path filePath = basePath / "Task" / pCommandLine->GetParam(1);

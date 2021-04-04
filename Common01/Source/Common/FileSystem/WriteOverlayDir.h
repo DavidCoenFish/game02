@@ -4,15 +4,14 @@
 class WriteOverlayDir : public IWriteOverlay
 {
 public:
-   static const std::filesystem::path GetTempPath();
 
    WriteOverlayDir(const int mask, const std::filesystem::path& basePath);
    ~WriteOverlayDir();
 
 private:
-   virtual const int GetMask() const override;
-   virtual void SaveFileData(const std::filesystem::path& path, const std::vector<uint8_t>& data) override;
-   virtual void SaveFileString(const std::filesystem::path& path, const std::string& data) override;
+   virtual const int GetMask() const override { return m_mask; }
+   //return true if save worked
+   virtual const bool SaveFileData(const std::filesystem::path& path, const std::vector<uint8_t>& data) override;
 
 private:
    int m_mask;
