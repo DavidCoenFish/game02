@@ -25,6 +25,12 @@
     </ClCompile>
     <ClCompile Include="Source\Common\Application\CommandLine.cpp" />
     <ClCompile Include="Source\Common\Application\WindowHelper.cpp" />
+    <ClCompile Include="Source\Common\FileSystem\FileSystem.cpp" />
+    <ClCompile Include="Source\Common\FileSystem\IWriteOverlay.cpp" />
+    <ClCompile Include="Source\Common\FileSystem\ReadOverlayDir.cpp" />
+    <ClCompile Include="Source\Common\FileSystem\IReadOverlay.cpp" />
+    <ClCompile Include="Source\Common\FileSystem\WriteOverlayDir.cpp" />
+    <ClCompile Include="Source\Common\Log\ILogConsumer.cpp" />
     <ClCompile Include="Source\Common\Log\Log.cpp" />
     <ClCompile Include="Source\Common\Log\LogConsumerConsole.cpp" />
     <ClCompile Include="Source\Common\Log\LogConsumerWriteToFile.cpp" />
@@ -37,6 +43,12 @@
     <ClInclude Include="Source\Common\Application\CommandLine.h" />
     <ClInclude Include="Source\Common\Application\d3dx12.h" />
     <ClInclude Include="Source\Common\Application\WindowHelper.h" />
+    <ClInclude Include="Source\Common\FileSystem\FileSystem.h" />
+    <ClInclude Include="Source\Common\FileSystem\IWriteOverlay.h" />
+    <ClInclude Include="Source\Common\FileSystem\ReadOverlayDir.h" />
+    <ClInclude Include="Source\Common\FileSystem\IReadOverlay.h" />
+    <ClInclude Include="Source\Common\FileSystem\WriteOverlayDir.h" />
+    <ClInclude Include="Source\Common\Log\ILogConsumer.h" />
     <ClInclude Include="Source\Common\Log\Log.h" />
     <ClInclude Include="Source\Common\Log\LogConsumerConsole.h" />
     <ClInclude Include="Source\Common\Log\LogConsumerWriteToFile.h" />

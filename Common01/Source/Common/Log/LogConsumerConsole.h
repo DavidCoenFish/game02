@@ -1,6 +1,7 @@
 #pragma once
+#include "Common/Log/ILogConsumer.h"
 
-class LogConsumerConsole
+class LogConsumerConsole : public ILogConsumer
 {
 public:
    LogConsumerConsole();

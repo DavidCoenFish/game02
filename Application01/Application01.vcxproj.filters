@@ -34,14 +34,20 @@
     <CopyFileToFolders Include="Resources\StoreLogo.png">
       <Filter>Resources</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="Resources\GraphicsLogo.png" />
-    <CopyFileToFolders Include="Resources\SmallLogo.png" />
-    <CopyFileToFolders Include="Resources\SplashScreen.png" />
+    <CopyFileToFolders Include="Task\Empty\Application.json">
+      <Filter>Task\Empty</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Resources\GraphicsLogo.png">
+      <Filter>Resources</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Resources\SmallLogo.png">
+      <Filter>Resources</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Resources\SplashScreen.png">
+      <Filter>Resources</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <None Include="Application01.props" />
-    <None Include="Task\Empty\Application.json">
-      <Filter>Task\Empty</Filter>
-    </None>
   </ItemGroup>
 </Project>

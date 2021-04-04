@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <DscBuildDir>$(SolutionDir)..\$(SolutionName)Build\$(ProjectName)\$(Platform)\$(Configuration)\</DscBuildDir>
-    <DscIncludeDir>$(projectDir)Source\;$(SolutionDir)Common01\Source\</DscIncludeDir>
+    <DscIncludeDir>$(SolutionDir)Common01\Source\;$(SolutionDir)SDK\;$(projectDir)Source\</DscIncludeDir>
   </PropertyGroup>
   <PropertyGroup>
     <OutDir>$(DscBuildDir)output\</OutDir>
@@ -18,10 +18,15 @@
     <ClCompile>
       <PrecompiledHeaderFile>ApplicationPCH.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(DscIncludeDir);$(IncludePath)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <FxCompile>
       <ObjectFileOutput>$(OutDir)Resources\Shader\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
+    <CopyFileToFolders />
+    <CopyFileToFolders>
+      <DestinationFolders>$(OutDirFullPath)%(RelativeDir)</DestinationFolders>
+    </CopyFileToFolders>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="DscBuildDir">

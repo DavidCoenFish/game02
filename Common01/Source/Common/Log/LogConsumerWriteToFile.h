@@ -1,6 +1,7 @@
 #pragma once
+#include "Common/Log/ILogConsumer.h"
 
-class LogConsumerWriteToFile
+class LogConsumerWriteToFile: public ILogConsumer
 {
 public:
    LogConsumerWriteToFile(const std::string& logFilePath = GetDefaultPath());

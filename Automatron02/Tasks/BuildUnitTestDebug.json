@@ -1,13 +1,13 @@
 {
    "Factory": "TaskFileDevenv",
-   "Skip": true,
+   "Skip": false,
    "Priority": 0,
    "Dependants": [],
    "DevEnv": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE\\devenv.com",
    "Clean": false,
-   "FilePath": "..\\Game02Build\\UnitTest\\x64\\Debug\\output\\UnitTest.dll",
-   "Solution": "UnitTest.sln",
-   "Project": "UnitTest",
+   "FilePath": "..\\SolutionBuild\\UnitTest01\\x64\\Debug\\output\\UnitTest.dll",
+   "Solution": "Solution.sln",
+   "Project": "UnitTest01",
    "Configuration": "Debug",
-   "Platform": "x64"
+   "Platform": "Gaming.Desktop.x64"
 }

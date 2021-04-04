@@ -16,6 +16,9 @@
     <Filter Include="Source\Common\Log">
       <UniqueIdentifier>{f176c3df-4a3b-4189-a4d8-2bcc21f831df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Common\FileSystem">
+      <UniqueIdentifier>{7e3ea876-3e4e-4697-9b54-9ce69694fcc7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Common01.props" />
@@ -44,6 +47,24 @@
     </ClCompile>
     <ClCompile Include="Source\Common\Log\Log.cpp">
       <Filter>Source\Common\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Log\ILogConsumer.cpp">
+      <Filter>Source\Common\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\ReadOverlayDir.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\IReadOverlay.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\FileSystem.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\IWriteOverlay.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\WriteOverlayDir.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +97,24 @@
     </ClInclude>
     <ClInclude Include="Source\Common\Log\Log.h">
       <Filter>Source\Common\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Log\ILogConsumer.h">
+      <Filter>Source\Common\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\FileSystem.h">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\ReadOverlayDir.h">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\IReadOverlay.h">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\IWriteOverlay.h">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\WriteOverlayDir.h">
+      <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
