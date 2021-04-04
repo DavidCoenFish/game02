@@ -25,14 +25,16 @@
             }
             var dependancy = taskMap[dependancyName];
             dependencyTask.Add(dependancy);
-            DealTask(dependancy, taskMap);
+            if (false == DealTask(dependancy, taskMap))
+            {
+               return false;
+            }
          }
 
          System.Console.WriteLine(string.Format("Run task:{0}", task.Name));
-         task.Run(dependencyTask);
-
+         var result = task.Run(dependencyTask);
          task.HasRun = true;
-         return true;
+         return result;
       }
 
       private static int Run(string[] args)

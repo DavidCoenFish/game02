@@ -5,7 +5,7 @@
    "Dependants": [],
    "DevEnv": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE\\devenv.com",
    "Clean": false,
-   "FilePath": "..\\SolutionBuild\\UnitTest01\\x64\\Debug\\output\\UnitTest.dll",
+   "FilePath": "..\\SolutionBuild\\UnitTest01\\x64\\Debug\\output\\UnitTest01.dll",
    "Solution": "Solution.sln",
    "Project": "UnitTest01",
    "Configuration": "Debug",

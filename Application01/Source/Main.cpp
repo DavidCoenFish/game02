@@ -45,17 +45,17 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
     {
        std::filesystem::path filePath = basePath / "Task" / pCommandLine->GetParam(1);
 
-      auto applicationJson = nlohmann::json::parse( 2 < cmdLineArray.size() ? FileCache::RawLoadFileString(cmdLineArray[1]) : "{}");
+      //auto applicationJson = nlohmann::json::parse( 2 < cmdLineArray.size() ? FileCache::RawLoadFileString(cmdLineArray[1]) : "{}");
     }
 
-    //const int result = WindowHelper(
-    //  hInstance,
-    //  "Application01",
-    //   false,
-    //   800,
-    //   600,
-    //   nCmdShow
-    //  );
+    const int result = WindowHelper(
+      hInstance,
+      "Application01",
+       false,
+       800,
+       600,
+       nCmdShow
+      );
 
     return result;
 }
