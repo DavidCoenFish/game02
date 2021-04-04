@@ -4,7 +4,6 @@
 class WriteOverlayDir : public IWriteOverlay
 {
 public:
-
    WriteOverlayDir(const int mask, const std::filesystem::path& basePath);
    ~WriteOverlayDir();
 

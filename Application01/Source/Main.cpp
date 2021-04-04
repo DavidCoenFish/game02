@@ -7,10 +7,41 @@
 #include "Common/Application/CommandLine.h"
 #include "Common/FileSystem/FileSystem.h"
 #include "Common/FileSystem/ReadOverlayDir.h"
+#include "Common/FileSystem/WriteOverlayDir.h"
 #include "Common/Log/Log.h"
 #include "Common/Log/LogConsumerConsole.h"
 #include "Common/Util/Utf8.h"
 #include "json/json.hpp"
+
+struct JSONWindow
+{
+   std::string Name;
+   bool FullScreen;
+   int Width;
+   int Height;
+   std::string Factory;
+};
+
+   NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+      JSONWindow,
+      Name,
+      FullScreen,
+      Width,
+      Height,
+      Factory
+      );
+
+struct JSONApplication
+{
+   std::vector< JSONWindow > Windows;
+   std::vector< std::string > Logs;
+};
+
+   NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+      JSONApplication, 
+      Windows,
+      Logs
+      );
 
 static const int RunTask(HINSTANCE hInstance, int nCmdShow)
 {
@@ -27,24 +58,33 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
     }
 
     const auto basePath = FileSystem::GetModualDir(hInstance);
-    FileSystem fileSystem;
-    fileSystem.AddReadOverlay( std::make_shared< ReadOverlayDir >( 0, basePath ) );
+
+    FileSystem::AddReadOverlay( std::make_shared< ReadOverlayDir >( 0, basePath ) );
+    FileSystem::AddReadOverlay( std::make_shared< ReadOverlayDir >( 1, FileSystem::GetTempDir() ) );
+    FileSystem::AddWriteOverlay( std::make_shared< WriteOverlayDir >( 1, FileSystem::GetTempDir() ) );
+
+    int result = 0;
 
     if (2 <= pCommandLine->GetParamCount())
     {
-       std::filesystem::path filePath = basePath / "Task" / pCommandLine->GetParam(1);
+       std::filesystem::path path = std::filesystem::path("Task") / pCommandLine->GetParam(1) / "Application.json";
+       auto pFile = FileSystem::GetFileString(path);
+       auto json = nlohmann::json::parse( pFile ? *pFile : "{}");
+       JSONApplication applicationData;
+       json.get_to(applicationData);
 
-      //auto applicationJson = nlohmann::json::parse( 2 < cmdLineArray.size() ? FileCache::RawLoadFileString(cmdLineArray[1]) : "{}");
+       for(const auto& item : applicationData.Windows)
+       {
+          result = WindowHelper(
+             hInstance,
+             item.Name,
+             item.FullScreen,
+             item.Width,
+             item.Height,
+             nCmdShow
+             );
+       }
     }
-
-    const int result = WindowHelper(
-      hInstance,
-      "Application01",
-       false,
-       800,
-       600,
-       nCmdShow
-      );
 
     return result;
 }

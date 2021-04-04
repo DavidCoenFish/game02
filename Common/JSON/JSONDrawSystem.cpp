@@ -23,15 +23,17 @@ struct JSONDrawSystemData
    D3D_FEATURE_LEVEL d3dMinFeatureLevel;
    RenderTargetFormatData backBuffer;
    RenderTargetDepthData backDepth;
+   
+  NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+    JSONDrawSystemData, 
+    backBufferCount,
+    flags,
+    d3dMinFeatureLevel,
+    backBuffer,
+    backDepth
+    );
+
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-   JSONDrawSystemData, 
-   backBufferCount,
-   flags,
-   d3dMinFeatureLevel,
-   backBuffer,
-   backDepth
-   );
 
 std::unique_ptr<DrawSystem> JSONDrawSystem::Factory(
    const std::function< void(void) >& callbackFatalExit,

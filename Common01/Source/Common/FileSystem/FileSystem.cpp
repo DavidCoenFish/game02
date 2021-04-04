@@ -5,6 +5,23 @@
 #include "Common/FileSystem/IWriteOverlay.h"
 #include "Common/Util/Utf8.h"
 
+static std::vector< std::shared_ptr< IReadOverlay > >& GetArrayOverlayRead()
+{
+   static std::vector< std::shared_ptr< IReadOverlay > > sArrayOverlayRead;
+   std::sort(sArrayOverlayRead.begin(), sArrayOverlayRead.end(), [](const std::shared_ptr< IReadOverlay >& lhs, const std::shared_ptr< IReadOverlay >& rhs)
+      {
+         return (rhs->GetPriority() < lhs->GetPriority());
+      }
+   );
+   return sArrayOverlayRead;
+}
+
+static std::vector< std::shared_ptr< IWriteOverlay > >& GetArrayOverlayWrite()
+{
+   static std::vector< std::shared_ptr< IWriteOverlay > > sArrayOverlayWrite;
+   return sArrayOverlayWrite;
+}
+
 static const std::string DataToString(const std::vector<uint8_t>& data)
 {
 #if 0
@@ -41,50 +58,48 @@ const std::filesystem::path FileSystem::GetModualDir(HINSTANCE hInstance)
    return path;
 }
 
-const std::filesystem::path FileSystem::GetTempPath()
+const std::filesystem::path FileSystem::GetTempDir()
 {
    return std::filesystem::temp_directory_path();
 }
 
-FileSystem::FileSystem()
-   : m_bArrayOverlayReadOrderDirty(false)
-{
-   //nop
-}
-
-FileSystem::~FileSystem()
-{
-   //nop
-}
-
 void FileSystem::AddReadOverlay( const std::shared_ptr< IReadOverlay >& pOverlay )
 {
-   m_arrayOverlayRead.push_back(pOverlay);
-   m_bArrayOverlayReadOrderDirty = true;
+   GetArrayOverlayRead().push_back(pOverlay);
 }
 
 void FileSystem::RemoveReadOverlay( const std::shared_ptr< IReadOverlay >& pOverlay )
 {
-   auto result = std::remove(m_arrayOverlayRead.begin(), m_arrayOverlayRead.end(), pOverlay);
+   auto& arrayOverlayRead = GetArrayOverlayRead();
+   auto result = std::remove(arrayOverlayRead.begin(), arrayOverlayRead.end(), pOverlay);
    result;
+}
+void FileSystem::CleadReadOverlay()
+{
+   GetArrayOverlayRead().clear();
 }
 
 void FileSystem::AddWriteOverlay( const std::shared_ptr< IWriteOverlay >& pOverlay )
 {
-   m_arrayOverlayWrite.push_back(pOverlay);
+   GetArrayOverlayWrite().push_back(pOverlay);
 }
 
 void FileSystem::RemoveWriteOverlay( const std::shared_ptr< IWriteOverlay >& pOverlay )
 {
-   auto result = std::remove(m_arrayOverlayWrite.begin(), m_arrayOverlayWrite.end(), pOverlay);
+   auto& arrayOverlayWrite = GetArrayOverlayWrite();
+   auto result = std::remove(arrayOverlayWrite.begin(), arrayOverlayWrite.end(), pOverlay);
    result;
+}
+void FileSystem::CleadWriteOverlay()
+{
+   GetArrayOverlayWrite().clear();
 }
 
 std::shared_ptr< std::vector<uint8_t> > FileSystem::GetFileData(const std::filesystem::path& path, const bool bCacheFile)
 {
    bCacheFile;
-   SortReadOverlayArray();
-   for( const auto& item : m_arrayOverlayRead)
+   auto& arrayOverlayRead = GetArrayOverlayRead();
+   for( const auto& item : arrayOverlayRead)
    {
       auto pResult = item->GetFileData(path);
       if (nullptr != pResult)
@@ -109,7 +124,8 @@ std::shared_ptr< std::string > FileSystem::GetFileString(const std::filesystem::
 const int FileSystem::SaveFileData(const int filter, const std::filesystem::path& path, const std::vector<uint8_t>& data)
 {
    int result = 0;
-   for( const auto& item : m_arrayOverlayWrite)
+   auto& arrayOverlayWrite = GetArrayOverlayWrite();
+   for( const auto& item : arrayOverlayWrite)
    {
       if (0 == (filter & item->GetMask()))
       {
@@ -128,19 +144,4 @@ const int FileSystem::SaveFileString(const int filter, const std::filesystem::pa
    const auto arrayData = StringToData(data);
    const int result = SaveFileData(filter, path, arrayData);
    return result;
-}
-
-void FileSystem::SortReadOverlayArray()
-{
-   if (false == m_bArrayOverlayReadOrderDirty)
-   {
-      return;
-   }
-   m_bArrayOverlayReadOrderDirty = true;
-   std::sort(m_arrayOverlayRead.begin(), m_arrayOverlayRead.end(), [](const std::shared_ptr< IReadOverlay >& lhs, const std::shared_ptr< IReadOverlay >& rhs)
-      {
-         return (lhs->GetPriority() < rhs->GetPriority());
-      }
-   );
-   return;
 }

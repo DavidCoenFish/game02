@@ -13,23 +13,22 @@ have not committed to implementing a file cache, main consumer is shaders?
    as well as a file data cache, what about what files exists
 either we implement async, or we need to be thread safe (risk of removing overlay during read?)
 */
-class FileSystem
+namespace FileSystem
 {
-public:
-   static const std::filesystem::path GetModualDir(HINSTANCE hInstance);
-   static const std::filesystem::path GetTempPath();
+   const std::filesystem::path GetModualDir(HINSTANCE hInstance);
+   const std::filesystem::path GetTempDir();
 
-   FileSystem();
-   ~FileSystem();
    //read is done by priority, file of a higher priority will be read
    void AddReadOverlay( const std::shared_ptr< IReadOverlay >& pOverlay );
    void RemoveReadOverlay( const std::shared_ptr< IReadOverlay >& pOverlay );
+   void CleadReadOverlay();
    // or need to add/ remove overlay on change of priority
    //void OnOverlayChangePrioiry( const std::shared_ptr< IReadOverlay >& pOverlay );
 
    //write is done by filter
    void AddWriteOverlay( const std::shared_ptr< IWriteOverlay >& pOverlay );
    void RemoveWriteOverlay( const std::shared_ptr< IWriteOverlay >& pOverlay );
+   void CleadWriteOverlay();
 
    //const bool GetFileExist(const std::filesystem::path& path) const;
    std::shared_ptr< std::vector<uint8_t> > GetFileData(const std::filesystem::path& path, const bool bCacheFile = false);
@@ -46,21 +45,6 @@ public:
    //void ClearFileCacheFile(const IReadOverlay& readOverlay);
    //void ClearFileCache();
 
-private:
-   void SortReadOverlayArray();
-
-private:
-   //struct FileCacheValue
-   //{
-   //   std::shared_ptr< std::vector<uint8_t> > m_data;
-   //   //we can not just save the prioirty, as a overlay's priority could change
-   //   //std::weak_ptr< IReadOverlay > m_pOverlay;
-   //   void* m_pOverlay; //want to id, but not to use... 
-   //};
-
-   std::vector< std::shared_ptr< IReadOverlay > > m_arrayOverlayRead;
-   bool m_bArrayOverlayReadOrderDirty;
-   std::vector< std::shared_ptr< IWriteOverlay > > m_arrayOverlayWrite;
    //std::map< std::filesystem::path, FileCacheValue> m_fileCache;
 
 };
