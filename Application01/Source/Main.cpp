@@ -5,6 +5,8 @@
 #include "ApplicationPCH.h"
 #include "Common/Application/WindowHelper.h"
 #include "Common/Application/CommandLine.h"
+#include "Common/Application/IApplication.h"
+#include "Common/Application/TaskHolder.h"
 #include "Common/FileSystem/FileSystem.h"
 #include "Common/FileSystem/ReadOverlayDir.h"
 #include "Common/FileSystem/WriteOverlayDir.h"
@@ -50,7 +52,6 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
     arrayLogs.push_back(std::make_shared<LogConsumerConsole>());
 #endif
 
-    LogConsumerConsole logConsumerConsole;
     auto pCommandLine = CommandLine::Factory(Utf8::Utf16ToUtf8(GetCommandLineW()));
     if (nullptr == pCommandLine)
     {
@@ -73,9 +74,15 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
        JSONApplication applicationData;
        json.get_to(applicationData);
 
+       //std::vector<HWND> windows;
+       auto pTaskHolder = std::make_shared<TaskHolder>();
        for(const auto& item : applicationData.Windows)
        {
           result = WindowHelper(
+             pTaskHolder,
+             [](HWND hwnd, const std::shared_ptr<TaskHolder>& pTaskHolderLocal){
+               return new IApplication(hwnd, pTaskHolderLocal);
+             },
              hInstance,
              item.Name,
              item.FullScreen,
@@ -83,6 +90,19 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
              item.Height,
              nCmdShow
              );
+       }
+
+       MSG msg = {};
+       while (true == pTaskHolder->HasHwnd())
+       {
+          //while (WM_QUIT != msg.message)
+          //{
+              if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+              {
+                  TranslateMessage(&msg);
+                  DispatchMessage(&msg);
+              }
+          //}
        }
     }
 

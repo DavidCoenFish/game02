@@ -71,8 +71,7 @@ void FileSystem::AddReadOverlay( const std::shared_ptr< IReadOverlay >& pOverlay
 void FileSystem::RemoveReadOverlay( const std::shared_ptr< IReadOverlay >& pOverlay )
 {
    auto& arrayOverlayRead = GetArrayOverlayRead();
-   auto result = std::remove(arrayOverlayRead.begin(), arrayOverlayRead.end(), pOverlay);
-   result;
+   arrayOverlayRead.erase(std::remove(arrayOverlayRead.begin(), arrayOverlayRead.end(), pOverlay), arrayOverlayRead.end());
 }
 void FileSystem::CleadReadOverlay()
 {
@@ -87,8 +86,7 @@ void FileSystem::AddWriteOverlay( const std::shared_ptr< IWriteOverlay >& pOverl
 void FileSystem::RemoveWriteOverlay( const std::shared_ptr< IWriteOverlay >& pOverlay )
 {
    auto& arrayOverlayWrite = GetArrayOverlayWrite();
-   auto result = std::remove(arrayOverlayWrite.begin(), arrayOverlayWrite.end(), pOverlay);
-   result;
+   arrayOverlayWrite.erase(std::remove(arrayOverlayWrite.begin(), arrayOverlayWrite.end(), pOverlay), arrayOverlayWrite.end());
 }
 void FileSystem::CleadWriteOverlay()
 {

@@ -1,10 +1,30 @@
 #include "CommonPCH.h"
 #include "Common/Application/WindowHelper.h"
+#include "Common/Application/TaskHolder.h"
+#include "Common/Application/IApplication.h"
 #include "Common/Util/Utf8.h"
+#include "Common/Log/Log.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
+struct CreateData
+{
+   CreateData(
+      const std::shared_ptr<TaskHolder>& pTaskHolder,
+      const std::function< IApplication*(HWND, const std::shared_ptr<TaskHolder>&) >& pApplicationFactory
+      )
+      : m_pTaskHolder(pTaskHolder)
+      , m_pApplicationFactory(pApplicationFactory)
+   {
+      //nop
+   }
+   std::shared_ptr<TaskHolder> m_pTaskHolder;
+   std::function< IApplication*(HWND, const std::shared_ptr<TaskHolder>&) > m_pApplicationFactory;
+};
+
 const int WindowHelper(
+   const std::shared_ptr<TaskHolder>& pTaskHolder,
+   const std::function< IApplication*(HWND, const std::shared_ptr<TaskHolder>&) >& pApplicationFactory,
    HINSTANCE hInstance,
    const std::string& applicationName,
    const bool bFullScreen,
@@ -13,6 +33,11 @@ const int WindowHelper(
    const int nCmdShow
    )
 {
+   {
+      auto pApplication = pApplicationFactory(0, pTaskHolder);
+      delete pApplication;
+   }
+
    const std::wstring className(Utf8::Utf8ToUtf16( applicationName + std::string("Class")));
    const std::wstring name(Utf8::Utf8ToUtf16( applicationName ));
     // Register class and create window
@@ -38,21 +63,26 @@ const int WindowHelper(
         AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
         HWND hwnd = 0;
+        CreateData createData(pTaskHolder, pApplicationFactory);
         if (true == bFullScreen)
         {
-         hwnd = CreateWindowExW(WS_EX_TOPMOST, className.c_str(), name.c_str(), WS_POPUP,
-            CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
-            nullptr);
+            hwnd = CreateWindowExW(WS_EX_TOPMOST, className.c_str(), name.c_str(), WS_POPUP,
+               CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
+               &createData);
         }
         else
         {
-         hwnd = CreateWindowExW(0, className.c_str(), name.c_str(), WS_OVERLAPPEDWINDOW,
-            CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
-            nullptr);
+            hwnd = CreateWindowExW(0, className.c_str(), name.c_str(), WS_OVERLAPPEDWINDOW,
+               CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
+               &createData);
         }
 
         if (!hwnd)
+        {
             return 1;
+        }
+
+        //pTaskHolder->AddHwnd(hwnd);
 
         if (true == bFullScreen)
         {
@@ -66,31 +96,31 @@ const int WindowHelper(
 
         //SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(g_game.get()));
 
-        GetClientRect(hwnd, &rc);
+        //GetClientRect(hwnd, &rc);
 
         //g_game->Initialize(hwnd, rc.right - rc.left, rc.bottom - rc.top);
     }
 
     // Main message loop
-    MSG msg = {};
-    while (WM_QUIT != msg.message)
-    {
-        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-        else
-        {
-            //g_game->Tick();
-        }
-    }
+    //MSG msg = {};
+    //while (WM_QUIT != msg.message)
+    //{
+    //    if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+    //    {
+    //        TranslateMessage(&msg);
+    //        DispatchMessage(&msg);
+    //    }
+    //    else
+    //    {
+    //        //g_game->Tick();
+    //    }
+    //}
 
     //XGameRuntimeUninitialize();
 
     //g_game.reset();
 
-    return static_cast<int>(msg.wParam);
+    return 0; //static_cast<int>(msg.wParam);
 }
 
 // Windows procedure
@@ -102,10 +132,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static bool s_fullscreen = false;
     // TODO: Set s_fullscreen to true if defaulting to fullscreen.
 
-    //auto game = reinterpret_cast<Game*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+    auto pApplication = reinterpret_cast<IApplication*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 
     switch (message)
     {
+    case WM_CREATE:
+       {
+         auto pData = (LPCREATESTRUCTA)(lParam);
+         CreateData* pCreateData = pData ? (CreateData*)(pData->lpCreateParams) : nullptr;
+         if (pCreateData)
+         {
+            auto pApplicationNew = pCreateData->m_pApplicationFactory(
+               hWnd,
+               pCreateData->m_pTaskHolder
+               );
+            SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)pApplicationNew);
+         }
+       }
+       break;
     case WM_PAINT:
         //if (s_in_sizemove && game)
         //{
@@ -209,7 +253,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
 
     case WM_DESTROY:
-        PostQuitMessage(0);
+       {
+         if (pApplication)
+         {
+            delete pApplication;
+            pApplication = nullptr;
+         }
+         SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG)0);
+         PostQuitMessage(0);
+       }
         break;
 
     case WM_SYSKEYDOWN:
@@ -251,10 +303,4 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
 
     return DefWindowProc(hWnd, message, wParam, lParam);
-}
-
-// Exit helper
-void ExitGame() noexcept
-{
-    PostQuitMessage(0);
 }

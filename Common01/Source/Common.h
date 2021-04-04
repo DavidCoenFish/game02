@@ -46,6 +46,7 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <stdexcept>
 #include <string>
 #include <vector>
