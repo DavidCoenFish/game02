@@ -1,10 +1,18 @@
 {
    "Factory": "TaskRunExeAction",
-   "Skip": true,
+   "Skip": false,
    "Priority": 0,
    "Dependants": [ "BuildApplication01Release" ],
-   "CommandLine": "Resources\\DAG\\SimpleTriangleApplication.json",
+   "CommandLine": "Empty",
    "Actions": [
+      {
+         "Factory": "Wait",
+         "IntParam0": 1000
+      },
+      {
+         "Factory": "SysKeyDownAlt",
+         "StringParam0": "VK_RETURN"
+      },
       {
          "Factory": "Wait",
          "IntParam0": 1000
