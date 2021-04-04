@@ -13,7 +13,7 @@ const std::wstring Utf8::Utf8ToUtf16( const std::string& in_utf8 )
    if (num_chars)
    {
       wstrTo.resize(num_chars);
-      if (MultiByteToWideChar(CP_UTF8, 0, in_utf8.c_str(), (int)in_utf8.length(), &wstrTo[0], (int)num_chars))
+      if (MultiByteToWideChar(CP_UTF8, 0, in_utf8.c_str(), (int)in_utf8.length(), wstrTo.data(), (int)num_chars))
       {
          return wstrTo;
       }
@@ -29,6 +29,6 @@ const std::string Utf8::Utf16ToUtf8( const std::wstring& in_utf16 )
    }
    const int sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, in_utf16.c_str(), (int)in_utf16.size(), NULL, 0, NULL, NULL);
    std::string result( sizeNeeded, 0 );
-   WideCharToMultiByte(CP_UTF8, 0, in_utf16.c_str(), (int)in_utf16.size(), &result[0], sizeNeeded, NULL, NULL);
+   WideCharToMultiByte(CP_UTF8, 0, in_utf16.c_str(), (int)in_utf16.size(), result.data(), sizeNeeded, NULL, NULL);
    return result;
 }

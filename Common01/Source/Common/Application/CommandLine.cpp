@@ -1,8 +1,10 @@
 #include "CommonPCH.h"
 #include "Common/Application/CommandLine.h"
+#include "Common/Log/Log.h"
 
 std::shared_ptr< CommandLine > CommandLine::Factory( const std::string& commandLine )
 {
+   LOG_MESSAGE("CommandLine:");
    std::vector< std::shared_ptr< IToken > > tokenArray;
    {
       Tokeniser tokeniser(tokenArray);
@@ -203,14 +205,17 @@ void CommandLine::Tokeniser::Flush()
       int number = 0;
       if (true == m_value.empty())
       {
+         LOG_MESSAGE(" %s", m_token.c_str());
          m_tokenArray.push_back(std::make_shared< TokenFlag >( m_token ));
       }
       else if (true == IsNumber(m_value, number))
       {
+         LOG_MESSAGE(" %s=%d", m_token.c_str(), number);
          m_tokenArray.push_back(std::make_shared< TokenValueInt >( m_token, number ));
       }
       else
       {
+         LOG_MESSAGE(" %s=%s", m_token.c_str(), m_value.c_str());
          m_tokenArray.push_back(std::make_shared< TokenValueString >( m_token, m_value ));
       }
    }

@@ -4,7 +4,10 @@
 
 #include "ApplicationPCH.h"
 #include "Common/Application/WindowHelper.h"
-
+#include "Common/Application/CommandLine.h"
+#include "Common/Util/Utf8.h"
+#include "Common/Log/Log.h"
+#include "Common/Log/LogConsumerConsole.h"
 
 LPCWSTR g_szAppName = L"Application01";
 
@@ -31,11 +34,13 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
         }
         return -1;
     }
+    LogConsumerConsole logConsumerConsole;
+    auto pCommandLine = CommandLine::Factory(Utf8::Utf16ToUtf8(GetCommandLineW()));
 
     const int result = WindowHelper(
       hInstance,
       "Application01",
-       true,
+       false,
        800,
        600,
        nCmdShow

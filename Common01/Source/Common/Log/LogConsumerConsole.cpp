@@ -2,6 +2,7 @@
 
 #include "Common/Log/LogConsumerConsole.h"
 #include "Common/Log/Log.h"
+#include "Common/Util/Utf8.h"
 
 LogConsumerConsole::LogConsumerConsole()
 {
@@ -24,9 +25,9 @@ LogConsumerConsole::~LogConsumerConsole()
    Log::RemoveLogConsumer(m_logConsumer);
 }
 
-void LogConsumerConsole::Consumer(const int topic, const std::string& message )
+void LogConsumerConsole::Consumer(const int topic, const std::string& messageTest )
 {
-   std::string output = std::to_string(topic) + ":" + message;
-   OutputDebugStringA(output.c_str());
-   printf(output.c_str());
+   std::string text = std::to_string(topic) + std::string(":") + messageTest + "\n";
+   OutputDebugStringW(Utf8::Utf8ToUtf16(text).c_str());
+   printf(text.c_str());
 }
