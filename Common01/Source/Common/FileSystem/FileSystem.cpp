@@ -119,7 +119,7 @@ std::shared_ptr< std::string > FileSystem::GetFileString(const std::filesystem::
    return nullptr;
 }
 
-const int FileSystem::SaveFileData(const int filter, const std::filesystem::path& path, const std::vector<uint8_t>& data)
+const int FileSystem::SaveFileData(const int filter, const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend)
 {
    int result = 0;
    auto& arrayOverlayWrite = GetArrayOverlayWrite();
@@ -129,7 +129,7 @@ const int FileSystem::SaveFileData(const int filter, const std::filesystem::path
       {
          continue;
       }
-      if (true == item->SaveFileData(path, data))
+      if (true == item->SaveFileData(path, data, bAppend))
       {
          result |= item->GetMask();
       }
@@ -137,9 +137,27 @@ const int FileSystem::SaveFileData(const int filter, const std::filesystem::path
    return result;
 }
 
-const int FileSystem::SaveFileString(const int filter, const std::filesystem::path& path, const std::string& data)
+const int FileSystem::SaveFileString(const int filter, const std::filesystem::path& path, const std::string& data, const bool bAppend)
 {
    const auto arrayData = StringToData(data);
-   const int result = SaveFileData(filter, path, arrayData);
+   const int result = SaveFileData(filter, path, arrayData, bAppend);
+   return result;
+}
+
+const int FileSystem::DeleteSaveFile(const int filter, const std::filesystem::path& path)
+{
+   int result = 0;
+   auto& arrayOverlayWrite = GetArrayOverlayWrite();
+   for( const auto& item : arrayOverlayWrite)
+   {
+      if (0 == (filter & item->GetMask()))
+      {
+         continue;
+      }
+      if (true == item->DeleteSaveFile(path))
+      {
+         result |= item->GetMask();
+      }
+   }
    return result;
 }

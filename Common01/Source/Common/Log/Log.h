@@ -4,6 +4,12 @@
    #define DSC_LOG
 #endif
 
+/*
+keep on seeing a chicken and egg for who gets started first between file system and log
+some logs may want to write to file using file system
+some logs may want to flush on every write
+*/
+
 enum class LogTopic
 {
    None = 0,

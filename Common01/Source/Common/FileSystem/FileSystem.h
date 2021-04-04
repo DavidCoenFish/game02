@@ -4,14 +4,19 @@ class IReadOverlay;
 class IWriteOverlay;
 
 /*
+there is a tendency to want access to the file system at various times during the lifetime of an application
+   and rather than singelton or scoped object, moving towards a set of namespace functions with consumers that can be added and removed when appropriate
+
 want to allow a zip file to be a read overlay, as well as dlc or mods possibly saved to locations on disk
 want to allow multiple destination on save (cloud, temp file system)
+either we implement async, or we need to be thread safe 
+   risk of removing overlay during read?
+   risk of having the same file handle open accross multiple threads, (OS may fail to open file in this case) 
 have not committed to implementing a file cache, main consumer is shaders?
    on change of read overlay array, let them each in turn check the contents of the file cache incase they want to invalidate files?
    what if an overlay changes priority at runtime, invalidate cache of overlay?
    what if read and write work on same file, invalidate file cache for file on write?
    as well as a file data cache, what about what files exists
-either we implement async, or we need to be thread safe (risk of removing overlay during read?)
 */
 namespace FileSystem
 {
@@ -37,9 +42,11 @@ namespace FileSystem
    //std::shared_ptr< AsyncJob< std::shared_ptr< std::vector<uint8_t> > > > GetFileDataAsync(const std::filesystem::path& path, const bool bCacheFile = false);
 
    //write overlays, cloud? temp dir? local dir? is a 32 bit mask sufficient for all the write overlays
-   const int SaveFileData(const int filter, const std::filesystem::path& path, const std::vector<uint8_t>& data);
-   const int SaveFileString(const int filter, const std::filesystem::path& path, const std::string& data);
+   const int SaveFileData(const int filter, const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend = false);
+   const int SaveFileString(const int filter, const std::filesystem::path& path, const std::string& data, const bool bAppend = false);
+   const int DeleteSaveFile(const int filter, const std::filesystem::path& path);
    //std::shared_ptr< AsyncJob< int > > > SaveFileDataAsync(const int filter, const std::filesystem::path& path, const std::vector<uint8_t>& data);
+
 
    //void ClearFileCacheFile(const std::filesystem::path& path);
    //void ClearFileCacheFile(const IReadOverlay& readOverlay);

@@ -24,26 +24,38 @@ struct JSONWindow
    std::string Factory;
 };
 
-   NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-      JSONWindow,
-      Name,
-      FullScreen,
-      Width,
-      Height,
-      Factory
-      );
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+   JSONWindow,
+   Name,
+   FullScreen,
+   Width,
+   Height,
+   Factory
+   );
 
 struct JSONApplication
 {
    std::vector< JSONWindow > Windows;
    std::vector< std::string > Logs;
+   //std::vector< JSONLog > Logs;
+   //std::vector< JSONOverlayRead > OverlayRead; // beter to be under application or data control?
+   //std::vector< JSONOverlayWrite > OverlayWrite; // beter to be under application or data control?
 };
 
-   NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-      JSONApplication, 
-      Windows,
-      Logs
-      );
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+   JSONApplication, 
+   Windows,
+   Logs
+   );
+
+static const std::function< IApplication*(HWND, const std::shared_ptr<TaskHolder>&) > GetFactory(const std::string& factoryKey)
+{
+   return [](HWND hwnd, const std::shared_ptr<TaskHolder>& pTaskHolderLocal)
+   {
+      return new IApplication(hwnd, pTaskHolderLocal);
+   };
+}
+
 
 static const int RunTask(HINSTANCE hInstance, int nCmdShow)
 {
@@ -80,9 +92,7 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
        {
           result = WindowHelper(
              pTaskHolder,
-             [](HWND hwnd, const std::shared_ptr<TaskHolder>& pTaskHolderLocal){
-               return new IApplication(hwnd, pTaskHolderLocal);
-             },
+             GetFactory(item.Factory),
              hInstance,
              item.Name,
              item.FullScreen,

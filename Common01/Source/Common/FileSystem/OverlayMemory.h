@@ -17,8 +17,9 @@ private:
    virtual std::shared_ptr< std::vector<uint8_t> > GetFileData(const std::filesystem::path& path) override;
 
    virtual const int GetMask() const override { return m_mask; }
-   //return true if save worked
-   virtual const bool SaveFileData(const std::filesystem::path& path, const std::vector<uint8_t>& data) override;
+   virtual const bool SaveFileData(const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend) override;
+   //return true if delete worked
+   virtual const bool DeleteSaveFile(const std::filesystem::path& path) override;
 
 private:
    int m_priority;
