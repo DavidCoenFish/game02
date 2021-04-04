@@ -1,6 +1,6 @@
 {
    "Factory": "TaskRunTest",
-   "Skip": true,
+   "Skip": false,
    "Priority": 0,
    "Dependants": [ "BuildUnitTestDebug" ]
 }
