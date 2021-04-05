@@ -35,6 +35,9 @@ public:
       );
    void UpdateBackBufferIndex();
 
+   const int GetWidth() const { return m_width; }
+   const int GetHeight() const { return m_height; }
+
 private:
    CD3DX12_CPU_DESCRIPTOR_HANDLE GetRenderTargetView() const;
    CD3DX12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView() const;
@@ -42,6 +45,8 @@ private:
 private:
    static const size_t MAX_BACK_BUFFER_COUNT = 3;
 
+   int m_width;
+   int m_height;
    bool m_bAllowTearing;
    unsigned int m_backBufferCount;
    unsigned int m_backBufferIndex;

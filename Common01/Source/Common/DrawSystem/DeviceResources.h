@@ -24,6 +24,8 @@ public:
    ~DeviceResources();
    void WaitForGpu() noexcept;
 
+   void OnResize(const HWND hWnd);
+
    void Prepare();
    void Clear();
    const bool Present();

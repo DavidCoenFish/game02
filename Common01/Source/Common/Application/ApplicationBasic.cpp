@@ -26,3 +26,13 @@ void ApplicationBasic::Update()
    }
 }
 
+void ApplicationBasic::OnWindowSizeChanged(const int width, const int height)
+{
+   BaseType::OnWindowSizeChanged(width, height);
+   if (m_pDrawSystem)
+   {
+      m_pDrawSystem->OnResize();
+   }
+
+   return;
+}

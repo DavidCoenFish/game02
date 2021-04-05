@@ -30,6 +30,8 @@ ScreenSizeResources::ScreenSizeResources(
    )
    : m_backBufferCount(backBufferCount)
    , m_backBufferIndex(0)
+   , m_width(width)
+   , m_height(height)
    , m_bAllowTearing(bAllowTearing)
    , m_rtvDescriptorSize(0)
    , m_screenViewport{}

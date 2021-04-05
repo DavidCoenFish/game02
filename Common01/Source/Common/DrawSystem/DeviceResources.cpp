@@ -185,6 +185,11 @@ void DeviceResources::WaitForGpu() noexcept
    return;
 }
 
+void DeviceResources::OnResize(const HWND hWnd)
+{
+   CreateWindowSizeDependentResources(hWnd);
+}
+
 void DeviceResources::GetAdapter(IDXGIAdapter1** ppAdapter, const D3D_FEATURE_LEVEL d3dFeatureLevel)
 {
    *ppAdapter = nullptr;
@@ -241,6 +246,19 @@ void DeviceResources::CreateWindowSizeDependentResources(
    const HWND hWnd
    )
 {
+   RECT rc;
+   GetClientRect(hWnd, &rc);
+   const int width = rc.right - rc.left;
+   const int height = rc.bottom - rc.top;
+
+   //if we don't need to resize, then don't
+   if ((nullptr != m_pScreenSizeResources) &&
+      (width == m_pScreenSizeResources->GetWidth()) &&
+      (height == m_pScreenSizeResources->GetHeight()))
+   {
+      return;
+   }
+
    WaitForGpu();
 
    UINT64 fenceValue = 0;
@@ -251,10 +269,6 @@ void DeviceResources::CreateWindowSizeDependentResources(
    m_pScreenSizeResources.reset();
 
    const unsigned int swapFlag = (m_options & c_AllowTearing) ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u;
-   RECT rc;
-   GetClientRect(hWnd, &rc);
-   const int width = rc.right - rc.left;
-   const int height = rc.bottom - rc.top;
    m_pScreenSizeResources = std::make_unique<ScreenSizeResources>(
       m_pDevice,
       m_pDXGIFactory,

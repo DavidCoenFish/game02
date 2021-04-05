@@ -71,6 +71,10 @@ void DrawSystem::WaitForGpu() noexcept
 
 void DrawSystem::OnResize()
 {
+   if (m_pDeviceResources)
+   {
+      m_pDeviceResources->OnResize(m_hWnd);
+   }
 }
 
 void DrawSystem::CreateDeviceResources()
