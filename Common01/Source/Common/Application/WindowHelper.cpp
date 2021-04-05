@@ -1,30 +1,41 @@
 #include "CommonPCH.h"
 #include "Common/Application/WindowHelper.h"
-#include "Common/Application/TaskHolder.h"
+#include "Common/Application/ApplicationHolder.h"
 #include "Common/Application/IApplication.h"
 #include "Common/Util/Utf8.h"
 #include "Common/Log/Log.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-struct CreateData
-{
-   CreateData(
-      const std::shared_ptr<TaskHolder>& pTaskHolder,
-      const std::function< IApplication*(HWND, const std::shared_ptr<TaskHolder>&) >& pApplicationFactory
-      )
-      : m_pTaskHolder(pTaskHolder)
-      , m_pApplicationFactory(pApplicationFactory)
-   {
-      //nop
-   }
-   std::shared_ptr<TaskHolder> m_pTaskHolder;
-   std::function< IApplication*(HWND, const std::shared_ptr<TaskHolder>&) > m_pApplicationFactory;
-};
+typedef std::function< IApplication*(const HWND hWnd)> TCreateFunction;
+
+//struct CreateData
+//{
+   //CreateData(
+   //   const std::shared_ptr<ApplicationHolder>& pTaskHolder,
+   //   const std::function< IApplication*(const IApplicationParam&) >& pApplicationFactory,
+   //   const bool bFullscreen,
+   //   const int width,
+   //   const int height
+   //   )
+   //   : m_pTaskHolder(pTaskHolder)
+   //   , m_pApplicationFactory(pApplicationFactory)
+   //   , m_bFullscreen(bFullscreen)
+   //   , m_width(width)
+   //   , m_height(height)
+   //{
+   //   //nop
+   //}
+   //std::shared_ptr<ApplicationHolder> m_pTaskHolder;
+   //std::function< IApplication*(const IApplicationParam&) > m_pApplicationFactory;
+   //bool m_bFullscreen;
+   //int m_width;
+   //int m_height;
+//};
 
 const int WindowHelper(
-   const std::shared_ptr<TaskHolder>& pTaskHolder,
-   const std::function< IApplication*(HWND, const std::shared_ptr<TaskHolder>&) >& pApplicationFactory,
+   const std::shared_ptr<ApplicationHolder>& pApplicationHolder,
+   const std::function< IApplication*(const IApplicationParam&) >& pApplicationFactory,
    HINSTANCE hInstance,
    const std::string& applicationName,
    const bool bFullScreen,
@@ -33,182 +44,135 @@ const int WindowHelper(
    const int nCmdShow
    )
 {
-   {
-      auto pApplication = pApplicationFactory(0, pTaskHolder);
-      delete pApplication;
-   }
-
    const std::wstring className(Utf8::Utf8ToUtf16( applicationName + std::string("Class")));
    const std::wstring name(Utf8::Utf8ToUtf16( applicationName ));
-    // Register class and create window
-    {
-        // Register class
-        WNDCLASSEXW wcex = {};
-        wcex.cbSize = sizeof(WNDCLASSEXW);
-        wcex.style = CS_HREDRAW | CS_VREDRAW;
-        wcex.lpfnWndProc = WndProc;
-        wcex.hInstance = hInstance;
-        wcex.hIcon = LoadIconW(hInstance, L"IDI_ICON");
-        wcex.hCursor = LoadCursorW(nullptr, IDC_ARROW);
-        wcex.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
-        wcex.lpszClassName = className.c_str();
-        wcex.hIconSm = LoadIconW(wcex.hInstance, L"IDI_ICON");
-        if (!RegisterClassExW(&wcex))
-            return 1;
 
-        // Create window
+   // Register class
+   {
+      WNDCLASSEXW wcex = {};
+      wcex.cbSize = sizeof(WNDCLASSEXW);
+      wcex.style = CS_HREDRAW | CS_VREDRAW;
+      wcex.lpfnWndProc = WndProc;
+      wcex.hInstance = hInstance;
+      wcex.hIcon = LoadIconW(hInstance, L"IDI_ICON");
+      wcex.hCursor = LoadCursorW(nullptr, IDC_ARROW);
+      wcex.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
+      wcex.lpszClassName = className.c_str();
+      wcex.hIconSm = LoadIconW(wcex.hInstance, L"IDI_ICON");
+      if (!RegisterClassExW(&wcex))
+      {
+         return -1;
+      }
+   }
 
-        RECT rc = { 0, 0, static_cast<LONG>(defaultWidth), static_cast<LONG>(defaultHeight) };
+   // Create window
+   {
+      RECT rc = { 0, 0, static_cast<LONG>(defaultWidth), static_cast<LONG>(defaultHeight) };
 
-        AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+      HWND hwnd = 0;
+      TCreateFunction createFunction = [=](const HWND hWndParam)
+      {
+         return pApplicationFactory(IApplicationParam(
+            hWndParam,
+            pApplicationHolder,
+            bFullScreen,
+            defaultWidth,
+            defaultHeight
+            ));
+      };
+      DWORD dwStyle = bFullScreen ? WS_POPUP : WS_OVERLAPPEDWINDOW;
+      AdjustWindowRect(&rc, dwStyle, FALSE);
+      hwnd = CreateWindowExW(WS_EX_TOPMOST, className.c_str(), name.c_str(), dwStyle,
+         CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, 
+         nullptr, hInstance, &createFunction);
 
-        HWND hwnd = 0;
-        CreateData createData(pTaskHolder, pApplicationFactory);
-        if (true == bFullScreen)
-        {
-            hwnd = CreateWindowExW(WS_EX_TOPMOST, className.c_str(), name.c_str(), WS_POPUP,
-               CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
-               &createData);
-        }
-        else
-        {
-            hwnd = CreateWindowExW(0, className.c_str(), name.c_str(), WS_OVERLAPPEDWINDOW,
-               CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
-               &createData);
-        }
+      if (!hwnd)
+      {
+         return -1;
+      }
 
-        if (!hwnd)
-        {
-            return 1;
-        }
+      ShowWindow(hwnd, bFullScreen ? SW_SHOWMAXIMIZED : nCmdShow);
+   }
 
-        //pTaskHolder->AddHwnd(hwnd);
-
-        if (true == bFullScreen)
-        {
-           ShowWindow(hwnd, SW_SHOWMAXIMIZED);
-        }
-        else
-        {
-           ShowWindow(hwnd, nCmdShow);
-        }
-        // TODO: Change nCmdShow to SW_SHOWMAXIMIZED to default to fullscreen.
-
-        //SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(g_game.get()));
-
-        //GetClientRect(hwnd, &rc);
-
-        //g_game->Initialize(hwnd, rc.right - rc.left, rc.bottom - rc.top);
-    }
-
-    // Main message loop
-    //MSG msg = {};
-    //while (WM_QUIT != msg.message)
-    //{
-    //    if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-    //    {
-    //        TranslateMessage(&msg);
-    //        DispatchMessage(&msg);
-    //    }
-    //    else
-    //    {
-    //        //g_game->Tick();
-    //    }
-    //}
-
-    //XGameRuntimeUninitialize();
-
-    //g_game.reset();
-
-    return 0; //static_cast<int>(msg.wParam);
+   return 0;
 }
 
 // Windows procedure
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    static bool s_in_sizemove = false;
-    static bool s_in_suspend = false;
-    static bool s_minimized = false;
-    static bool s_fullscreen = false;
-    // TODO: Set s_fullscreen to true if defaulting to fullscreen.
+   auto pApplication = reinterpret_cast<IApplication*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+   LOG_MESSAGE_DEBUG("WndProc message:%d wParam:%p lParam:%p pApplication:%p", message, wParam, lParam);
 
-    auto pApplication = reinterpret_cast<IApplication*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-
-    switch (message)
-    {
-    case WM_CREATE:
-       {
+   switch (message)
+   {
+   case WM_CREATE:
+      {
          auto pData = (LPCREATESTRUCTA)(lParam);
-         CreateData* pCreateData = pData ? (CreateData*)(pData->lpCreateParams) : nullptr;
-         if (pCreateData)
+         TCreateFunction* pCreateFunction = pData ? (TCreateFunction*)(pData->lpCreateParams) : nullptr;
+         if (pCreateFunction)
          {
-            auto pApplicationNew = pCreateData->m_pApplicationFactory(
-               hWnd,
-               pCreateData->m_pTaskHolder
-               );
+            auto pApplicationNew = (*pCreateFunction)(hWnd);
             SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)pApplicationNew);
          }
-       }
-       break;
-    case WM_PAINT:
-        //if (s_in_sizemove && game)
-        //{
-        //    //game->Tick();
-        //}
-        //else
-        {
-            PAINTSTRUCT ps;
-            (void)BeginPaint(hWnd, &ps);
-            EndPaint(hWnd, &ps);
-        }
-        break;
+      }
+      break;
+   case WM_PAINT:
+      if ((nullptr != pApplication) && (true == pApplication->GetInSizemove()))
+      {
+         pApplication->Update();
+      }
+      else
+      {
+         PAINTSTRUCT ps;
+         (void)BeginPaint(hWnd, &ps);
+         EndPaint(hWnd, &ps);
+      }
+      break;
 
-    case WM_MOVE:
-        //if (game)
-        //{
-        //    game->OnWindowMoved();
-        //}
-        break;
+   case WM_MOVE:
+      if (nullptr != pApplication)
+      {
+         pApplication->OnWindowMoved();
+      }
+      break;
 
-    case WM_SIZE:
-        if (wParam == SIZE_MINIMIZED)
-        {
-            if (!s_minimized)
+   case WM_SIZE:
+      if(nullptr != pApplication)
+      {
+         if (wParam == SIZE_MINIMIZED)
+         {
+            if (false == pApplication->GetMinimized())
             {
-                s_minimized = true;
-                //if (!s_in_suspend && game)
-                //    game->OnSuspending();
-                s_in_suspend = true;
+               pApplication->SetMinimized(true);
+               pApplication->OnSuspending();
             }
-        }
-        else if (s_minimized)
-        {
-            s_minimized = false;
-            //if (s_in_suspend && game)
-            //    game->OnResuming();
-            s_in_suspend = false;
-        }
-        //else if (!s_in_sizemove && game)
-        //{
-        //    game->OnWindowSizeChanged(LOWORD(lParam), HIWORD(lParam));
-        //}
-        break;
-
-    case WM_ENTERSIZEMOVE:
-        s_in_sizemove = true;
-        break;
-
+         }
+         else if (true == pApplication->GetMinimized())
+         {
+            pApplication->SetMinimized(false);
+            pApplication->OnResuming();
+         }
+         else if (false == pApplication->GetInSizemove())
+         {
+            pApplication->OnWindowSizeChanged(LOWORD(lParam), HIWORD(lParam));
+         }
+      }
+      break;
+   case WM_ENTERSIZEMOVE:
+      if(nullptr != pApplication)
+      {
+         pApplication->SetInSizemove(true);
+      }
+      break;
     case WM_EXITSIZEMOVE:
-        s_in_sizemove = false;
-        //if (game)
-        //{
-        //    RECT rc;
-        //    GetClientRect(hWnd, &rc);
-        //
-        //    game->OnWindowSizeChanged(rc.right - rc.left, rc.bottom - rc.top);
-        //}
-        break;
-
+      if(nullptr != pApplication)
+      {
+         pApplication->SetInSizemove(false);
+         RECT rc;
+         GetClientRect(hWnd, &rc);
+         pApplication->OnWindowSizeChanged(rc.right - rc.left, rc.bottom - rc.top);
+      }
+      break;
     case WM_GETMINMAXINFO:
         if (lParam)
         {
@@ -219,41 +183,41 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
 
     case WM_ACTIVATEAPP:
-        //if (game)
-        //{
-        //    if (wParam)
-        //    {
-        //        game->OnActivated();
-        //    }
-        //    else
-        //    {
-        //        game->OnDeactivated();
-        //    }
-        //}
-        break;
-
-    case WM_POWERBROADCAST:
-        switch (wParam)
-        {
-        case PBT_APMQUERYSUSPEND:
-            //if (!s_in_suspend && game)
-            //    game->OnSuspending();
-            s_in_suspend = true;
-            return TRUE;
-
-        case PBT_APMRESUMESUSPEND:
-            if (!s_minimized)
-            {
-                //if (s_in_suspend && game)
-                //    game->OnResuming();
-                s_in_suspend = false;
-            }
-            return TRUE;
-        }
-        break;
-
-    case WM_DESTROY:
+       if (nullptr != pApplication)
        {
+          if (wParam)
+          {
+             pApplication->OnActivated();
+          }
+          else
+          {
+             pApplication->OnDeactivated();
+          }
+       }
+       break;
+
+   case WM_POWERBROADCAST:
+      switch (wParam)
+      {
+      default:
+         break;
+      case PBT_APMQUERYSUSPEND:
+         if (nullptr != pApplication)
+         {
+            pApplication->OnSuspending();
+         }
+         return TRUE;
+      case PBT_APMRESUMESUSPEND:
+         if ((nullptr != pApplication) && (false == pApplication->GetMinimized()))
+         {
+            pApplication->OnResuming();
+         }
+         return TRUE;
+      }
+      break;
+
+   case WM_DESTROY:
+      {
          if (pApplication)
          {
             delete pApplication;
@@ -261,40 +225,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
          }
          SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG)0);
          PostQuitMessage(0);
-       }
-        break;
+      }
+      break;
 
     case WM_SYSKEYDOWN:
-        if (wParam == VK_RETURN && (lParam & 0x60000000) == 0x20000000)
-        {
-            // Implements the classic ALT+ENTER fullscreen toggle
-            if (s_fullscreen)
-            {
-                SetWindowLongPtr(hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
-                SetWindowLongPtr(hWnd, GWL_EXSTYLE, 0);
+      if ((wParam == VK_RETURN && (lParam & 0x60000000) == 0x20000000) && (nullptr != pApplication))
+      {
+         // Implements the classic ALT+ENTER fullscreen toggle
+         if (pApplication->GetFullScreen())
+         {
+            pApplication->SetFullScreen(false);
+            SetWindowLongPtr(hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
+            SetWindowLongPtr(hWnd, GWL_EXSTYLE, 0);
 
-                int width = 800;
-                int height = 600;
-                //if (game)
-                //    game->GetDefaultSize(width, height);
+            const int width = pApplication ? pApplication->GetDefaultWidth() : 800;
+            const int height = pApplication ? pApplication->GetDefaultHeight() : 600;
 
-                ShowWindow(hWnd, SW_SHOWNORMAL);
+            ShowWindow(hWnd, SW_SHOWNORMAL);
+            SetWindowPos(hWnd, HWND_TOP, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
+         }
+         else
+         {
+            pApplication->SetFullScreen(true);
+            SetWindowLongPtr(hWnd, GWL_STYLE, 0);
+            SetWindowLongPtr(hWnd, GWL_EXSTYLE, WS_EX_TOPMOST);
 
-                SetWindowPos(hWnd, HWND_TOP, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
-            }
-            else
-            {
-                SetWindowLongPtr(hWnd, GWL_STYLE, 0);
-                SetWindowLongPtr(hWnd, GWL_EXSTYLE, WS_EX_TOPMOST);
-
-                SetWindowPos(hWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
-
-                ShowWindow(hWnd, SW_SHOWMAXIMIZED);
-            }
-
-            s_fullscreen = !s_fullscreen;
-        }
-        break;
+            SetWindowPos(hWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+            ShowWindow(hWnd, SW_SHOWMAXIMIZED);
+         }
+      }
+      break;
 
     case WM_MENUCHAR:
         // A menu is active and the user presses a key that does not correspond

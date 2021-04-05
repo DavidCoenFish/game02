@@ -2,7 +2,7 @@
    "Windows": [
       {
          "Name": "Empty",
-         "FullScreen": false,
+         "FullScreen": true,
          "Width": 800,
          "Height": 600,
          "Factory": "Default"

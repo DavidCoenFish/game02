@@ -69,10 +69,13 @@
     <ClCompile Include="Source\Common\FileSystem\OverlayMemory.cpp">
       <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\Application\TaskHolder.cpp">
+    <ClCompile Include="Source\Common\Application\ApplicationHolder.cpp">
       <Filter>Source\Common\Application</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\Application\IApplication.cpp">
+      <Filter>Source\Common\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Application\ApplicationBasic.cpp">
       <Filter>Source\Common\Application</Filter>
     </ClCompile>
   </ItemGroup>
@@ -128,10 +131,13 @@
     <ClInclude Include="Source\Common\FileSystem\OverlayMemory.h">
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\Application\TaskHolder.h">
+    <ClInclude Include="Source\Common\Application\ApplicationHolder.h">
       <Filter>Source\Common\Application</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Application\IApplication.h">
+      <Filter>Source\Common\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Application\ApplicationBasic.h">
       <Filter>Source\Common\Application</Filter>
     </ClInclude>
   </ItemGroup>

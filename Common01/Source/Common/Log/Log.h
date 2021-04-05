@@ -7,7 +7,10 @@
 /*
 keep on seeing a chicken and egg for who gets started first between file system and log
 some logs may want to write to file using file system
-some logs may want to flush on every write
+some logs may want to flush on every write and not have any external dependencies
+some logs may only want to write at application end of life?
+some logs may want to append a log file
+some logs may only want to save out file for messages of certain topic
 */
 
 enum class LogTopic

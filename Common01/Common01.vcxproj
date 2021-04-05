@@ -23,9 +23,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Common\Application\ApplicationBasic.cpp" />
     <ClCompile Include="Source\Common\Application\CommandLine.cpp" />
     <ClCompile Include="Source\Common\Application\IApplication.cpp" />
-    <ClCompile Include="Source\Common\Application\TaskHolder.cpp" />
+    <ClCompile Include="Source\Common\Application\ApplicationHolder.cpp" />
     <ClCompile Include="Source\Common\Application\WindowHelper.cpp" />
     <ClCompile Include="Source\Common\FileSystem\FileSystem.cpp" />
     <ClCompile Include="Source\Common\FileSystem\IWriteOverlay.cpp" />
@@ -43,10 +44,11 @@
   <ItemGroup>
     <ClInclude Include="Source\Common.h" />
     <ClInclude Include="Source\CommonPCH.h" />
+    <ClInclude Include="Source\Common\Application\ApplicationBasic.h" />
     <ClInclude Include="Source\Common\Application\CommandLine.h" />
     <ClInclude Include="Source\Common\Application\d3dx12.h" />
     <ClInclude Include="Source\Common\Application\IApplication.h" />
-    <ClInclude Include="Source\Common\Application\TaskHolder.h" />
+    <ClInclude Include="Source\Common\Application\ApplicationHolder.h" />
     <ClInclude Include="Source\Common\Application\WindowHelper.h" />
     <ClInclude Include="Source\Common\FileSystem\FileSystem.h" />
     <ClInclude Include="Source\Common\FileSystem\IWriteOverlay.h" />

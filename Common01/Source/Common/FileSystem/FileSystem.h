@@ -5,7 +5,8 @@ class IWriteOverlay;
 
 /*
 there is a tendency to want access to the file system at various times during the lifetime of an application
-   and rather than singelton or scoped object, moving towards a set of namespace functions with consumers that can be added and removed when appropriate
+   and rather than singelton or scoped object needing to be created ever earlier and earlier as other dependencies move, 
+   moving towards a set of namespace functions with consumers that can be added and removed when appropriate
 
 want to allow a zip file to be a read overlay, as well as dlc or mods possibly saved to locations on disk
 want to allow multiple destination on save (cloud, temp file system)
@@ -23,7 +24,7 @@ namespace FileSystem
    const std::filesystem::path GetModualDir(HINSTANCE hInstance);
    const std::filesystem::path GetTempDir();
 
-   //read is done by priority, file of a higher priority will be read
+   //read is done by priority, file of a highest priority for path will be read
    void AddReadOverlay( const std::shared_ptr< IReadOverlay >& pOverlay );
    void RemoveReadOverlay( const std::shared_ptr< IReadOverlay >& pOverlay );
    void CleadReadOverlay();
@@ -41,17 +42,21 @@ namespace FileSystem
    // or does something else handle the async and we need to be thread safe....
    //std::shared_ptr< AsyncJob< std::shared_ptr< std::vector<uint8_t> > > > GetFileDataAsync(const std::filesystem::path& path, const bool bCacheFile = false);
 
+   //class FoundReadFile{ GetPath(); GetFileString(); GetFileData(); }
+   //void GatherReadFiles(std::vector< std::shared_ptr< FoundReadFile >>& foundFiles, const std::filesystem::path& path);
+
    //write overlays, cloud? temp dir? local dir? is a 32 bit mask sufficient for all the write overlays
    const int SaveFileData(const int filter, const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend = false);
    const int SaveFileString(const int filter, const std::filesystem::path& path, const std::string& data, const bool bAppend = false);
    const int DeleteSaveFile(const int filter, const std::filesystem::path& path);
    //std::shared_ptr< AsyncJob< int > > > SaveFileDataAsync(const int filter, const std::filesystem::path& path, const std::vector<uint8_t>& data);
 
+   //void GatherWriteFiles(std::vector< std::shared_ptr< std::filesystem::path >>& foundFiles, const std::filesystem::path& path);
 
    //void ClearFileCacheFile(const std::filesystem::path& path);
    //void ClearFileCacheFile(const IReadOverlay& readOverlay);
    //void ClearFileCache();
 
-   //std::map< std::filesystem::path, FileCacheValue> m_fileCache;
+   //std::map< std::filesystem::path, std::shared_ptr< FileCacheValue > > m_fileCache;
 
 };
