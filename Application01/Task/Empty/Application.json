@@ -2,13 +2,12 @@
    "Windows": [
       {
          "Name": "Empty",
-         "FullScreen": true,
+         "FullScreen": false,
          "Width": 800,
          "Height": 600,
-         "Factory": "Default"
+         "Factory": "ApplicationBasic"
       }
    ],
    "Logs":[
-      "Console"
       ]
 }

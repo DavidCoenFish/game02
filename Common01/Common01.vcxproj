@@ -28,6 +28,9 @@
     <ClCompile Include="Source\Common\Application\IApplication.cpp" />
     <ClCompile Include="Source\Common\Application\ApplicationHolder.cpp" />
     <ClCompile Include="Source\Common\Application\WindowHelper.cpp" />
+    <ClCompile Include="Source\Common\DrawSystem\DeviceResources.cpp" />
+    <ClCompile Include="Source\Common\DrawSystem\DrawSystem.cpp" />
+    <ClCompile Include="Source\Common\DrawSystem\DrawSystemFrame.cpp" />
     <ClCompile Include="Source\Common\FileSystem\FileSystem.cpp" />
     <ClCompile Include="Source\Common\FileSystem\IWriteOverlay.cpp" />
     <ClCompile Include="Source\Common\FileSystem\OverlayMemory.cpp" />
@@ -46,10 +49,13 @@
     <ClInclude Include="Source\CommonPCH.h" />
     <ClInclude Include="Source\Common\Application\ApplicationBasic.h" />
     <ClInclude Include="Source\Common\Application\CommandLine.h" />
-    <ClInclude Include="Source\Common\Application\d3dx12.h" />
     <ClInclude Include="Source\Common\Application\IApplication.h" />
     <ClInclude Include="Source\Common\Application\ApplicationHolder.h" />
     <ClInclude Include="Source\Common\Application\WindowHelper.h" />
+    <ClInclude Include="Source\Common\DrawSystem\d3dx12.h" />
+    <ClInclude Include="Source\Common\DrawSystem\DeviceResources.h" />
+    <ClInclude Include="Source\Common\DrawSystem\DrawSystem.h" />
+    <ClInclude Include="Source\Common\DrawSystem\DrawSystemFrame.h" />
     <ClInclude Include="Source\Common\FileSystem\FileSystem.h" />
     <ClInclude Include="Source\Common\FileSystem\IWriteOverlay.h" />
     <ClInclude Include="Source\Common\FileSystem\OverlayMemory.h" />

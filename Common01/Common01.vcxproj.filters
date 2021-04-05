@@ -19,6 +19,9 @@
     <Filter Include="Source\Common\FileSystem">
       <UniqueIdentifier>{7e3ea876-3e4e-4697-9b54-9ce69694fcc7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Common\DrawSystem">
+      <UniqueIdentifier>{8126853a-72e9-4888-8fc4-365a515b2c24}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Common01.props" />
@@ -78,6 +81,15 @@
     <ClCompile Include="Source\Common\Application\ApplicationBasic.cpp">
       <Filter>Source\Common\Application</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Common\DrawSystem\DrawSystem.cpp">
+      <Filter>Source\Common\DrawSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DrawSystem\DeviceResources.cpp">
+      <Filter>Source\Common\DrawSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DrawSystem\DrawSystemFrame.cpp">
+      <Filter>Source\Common\DrawSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CommonPCH.h">
@@ -87,9 +99,6 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Application\WindowHelper.h">
-      <Filter>Source\Common\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Application\d3dx12.h">
       <Filter>Source\Common\Application</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Util\Utf8.h">
@@ -139,6 +148,18 @@
     </ClInclude>
     <ClInclude Include="Source\Common\Application\ApplicationBasic.h">
       <Filter>Source\Common\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DrawSystem\DrawSystem.h">
+      <Filter>Source\Common\DrawSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DrawSystem\DeviceResources.h">
+      <Filter>Source\Common\DrawSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DrawSystem\d3dx12.h">
+      <Filter>Source\Common\DrawSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DrawSystem\DrawSystemFrame.h">
+      <Filter>Source\Common\DrawSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
