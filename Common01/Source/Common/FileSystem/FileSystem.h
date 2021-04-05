@@ -18,6 +18,7 @@ have not committed to implementing a file cache, main consumer is shaders?
    what if an overlay changes priority at runtime, invalidate cache of overlay?
    what if read and write work on same file, invalidate file cache for file on write?
    as well as a file data cache, what about what files exists
+   (note, the operating system also keeps recently accessed files in memory....)
 */
 namespace FileSystem
 {

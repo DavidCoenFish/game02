@@ -7,6 +7,8 @@
 //   EnableHDR = 0x2
 //};
 
+class ScreenSizeResources;
+
 class DeviceResources
 {
 public:
@@ -15,18 +17,37 @@ public:
 
    DeviceResources(
       const HWND hWnd,
+      const unsigned int backBufferCount,
       const D3D_FEATURE_LEVEL d3dFeatureLevel,
       const unsigned int options
       );
    ~DeviceResources();
+   void WaitForGpu() noexcept;
+
+   void Prepare();
+   void Clear();
+   const bool Present();
 
 private:
    void GetAdapter(IDXGIAdapter1** ppAdapter, const D3D_FEATURE_LEVEL d3dFeatureLevel);
-   void UpdateColorSpace();
+   void CreateWindowSizeDependentResources(
+      const HWND hWnd
+      );
+   void MoveToNextFrame();
+   //void UpdateColorSpace();
 
 private:
+   unsigned int m_backBufferCount;
+
    unsigned int m_options;
    Microsoft::WRL::ComPtr<IDXGIFactory6> m_pDXGIFactory;
-   Microsoft::WRL::ComPtr<ID3D12Device> m_pD3D12Device;
+   DWORD m_dxgiFactoryFlags;
+   Microsoft::WRL::ComPtr<ID3D12Device> m_pDevice;
+   Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_pCommandQueue;
+
+   Microsoft::WRL::ComPtr<ID3D12Fence> m_pFence;
+   Microsoft::WRL::Wrappers::Event m_fenceEvent;
+
+   std::unique_ptr< ScreenSizeResources > m_pScreenSizeResources;
 
 };

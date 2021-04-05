@@ -31,6 +31,7 @@
     <ClCompile Include="Source\Common\DrawSystem\DeviceResources.cpp" />
     <ClCompile Include="Source\Common\DrawSystem\DrawSystem.cpp" />
     <ClCompile Include="Source\Common\DrawSystem\DrawSystemFrame.cpp" />
+    <ClCompile Include="Source\Common\DrawSystem\ScreenSizeResources.cpp" />
     <ClCompile Include="Source\Common\FileSystem\FileSystem.cpp" />
     <ClCompile Include="Source\Common\FileSystem\IWriteOverlay.cpp" />
     <ClCompile Include="Source\Common\FileSystem\OverlayMemory.cpp" />
@@ -56,6 +57,7 @@
     <ClInclude Include="Source\Common\DrawSystem\DeviceResources.h" />
     <ClInclude Include="Source\Common\DrawSystem\DrawSystem.h" />
     <ClInclude Include="Source\Common\DrawSystem\DrawSystemFrame.h" />
+    <ClInclude Include="Source\Common\DrawSystem\ScreenSizeResources.h" />
     <ClInclude Include="Source\Common\FileSystem\FileSystem.h" />
     <ClInclude Include="Source\Common\FileSystem\IWriteOverlay.h" />
     <ClInclude Include="Source\Common\FileSystem\OverlayMemory.h" />

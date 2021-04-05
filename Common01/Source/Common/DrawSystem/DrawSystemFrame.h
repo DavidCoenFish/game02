@@ -1,7 +1,14 @@
 #pragma once
 
+class DrawSystem;
+
 class DrawSystemFrame
 {
 public:
-   DrawSystemFrame();
+   DrawSystemFrame(DrawSystem& drawSystem);
+   ~DrawSystemFrame();
+
+private:
+   DrawSystem& m_drawSystem;
+
 };

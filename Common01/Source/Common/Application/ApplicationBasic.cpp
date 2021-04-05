@@ -2,6 +2,7 @@
 #include "Common/Application/ApplicationBasic.h"
 #include "Common/Log/Log.h"
 #include "Common/DrawSystem/DrawSystem.h"
+#include "Common/DrawSystem/DrawSystemFrame.h"
 
 ApplicationBasic::ApplicationBasic(const IApplicationParam& applicationParam)
    : IApplication(applicationParam)
@@ -14,3 +15,14 @@ ApplicationBasic::~ApplicationBasic()
 {
    LOG_MESSAGE("ApplicationBasic dtor %p", this);
 }
+
+void ApplicationBasic::Update()
+{
+   BaseType::Update();
+   if (m_pDrawSystem)
+   {
+      auto pTemp = m_pDrawSystem->CreateNewFrame();
+      pTemp;
+   }
+}
+

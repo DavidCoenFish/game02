@@ -1,19 +1,23 @@
 #include "CommonPCH.h"
 
 #include "Common/DrawSystem/DeviceResources.h"
+#include "Common/DrawSystem/ScreenSizeResources.h"
 #include "Common/DrawSystem/d3dx12.h"
 #include "Common/Log/Log.h"
 #include "Common/Util/Utf8.h"
 
 DeviceResources::DeviceResources(
    const HWND hWnd,
+   const unsigned int backBufferCount,
    const D3D_FEATURE_LEVEL d3dFeatureLevel,
    const unsigned int options
    )
    : m_options(options)
+   , m_backBufferCount(backBufferCount)
+   , m_dxgiFactoryFlags(0)
 {
    hWnd;
-   DWORD dxgiFactoryFlags = 0;
+
 #if defined(_DEBUG)
    // Enable the debug layer (requires the Graphics Tools "optional feature").
    //
@@ -32,7 +36,7 @@ DeviceResources::DeviceResources(
       Microsoft::WRL::ComPtr<IDXGIInfoQueue> dxgiInfoQueue;
       if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(dxgiInfoQueue.GetAddressOf()))))
       {
-         dxgiFactoryFlags = DXGI_CREATE_FACTORY_DEBUG;
+         m_dxgiFactoryFlags = DXGI_CREATE_FACTORY_DEBUG;
 
          dxgiInfoQueue->SetBreakOnSeverity(DXGI_DEBUG_ALL, DXGI_INFO_QUEUE_MESSAGE_SEVERITY_ERROR, true);
          dxgiInfoQueue->SetBreakOnSeverity(DXGI_DEBUG_ALL, DXGI_INFO_QUEUE_MESSAGE_SEVERITY_CORRUPTION, true);
@@ -49,7 +53,7 @@ DeviceResources::DeviceResources(
    }
 #endif
 
-   DX::ThrowIfFailed(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(m_pDXGIFactory.ReleaseAndGetAddressOf())));
+   DX::ThrowIfFailed(CreateDXGIFactory2(m_dxgiFactoryFlags, IID_PPV_ARGS(m_pDXGIFactory.ReleaseAndGetAddressOf())));
 
    // Determines whether tearing support is available for fullscreen borderless windows.
    if (m_options & c_AllowTearing)
@@ -71,16 +75,16 @@ DeviceResources::DeviceResources(
    HRESULT hr = D3D12CreateDevice(
       adapter.Get(),
       d3dFeatureLevel,
-      IID_PPV_ARGS(m_pD3D12Device.ReleaseAndGetAddressOf())
+      IID_PPV_ARGS(m_pDevice.ReleaseAndGetAddressOf())
       );
    DX::ThrowIfFailed(hr);
 
-   m_pD3D12Device->SetName(L"DeviceResources");
+   m_pDevice->SetName(L"DeviceResources");
 
 #ifndef NDEBUG
    // Configure debug device (if active).
    Microsoft::WRL::ComPtr<ID3D12InfoQueue> d3dInfoQueue;
-   if (SUCCEEDED(m_pD3D12Device.As(&d3dInfoQueue)))
+   if (SUCCEEDED(m_pDevice.As(&d3dInfoQueue)))
    {
 #ifdef _DEBUG
       d3dInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
@@ -98,12 +102,87 @@ DeviceResources::DeviceResources(
       d3dInfoQueue->AddStorageFilterEntries(&filter);
    }
 #endif
+
+   // Create the command queue.
+   D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+   queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+   queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+
+   DX::ThrowIfFailed(m_pDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(m_pCommandQueue.ReleaseAndGetAddressOf())));
+
+   m_pCommandQueue->SetName(L"DeviceResources");
+
+   CreateWindowSizeDependentResources(hWnd);
+
+   if (nullptr != m_pScreenSizeResources)
+   {
+      // Create a fence for tracking GPU execution progress.
+      const auto fenceValue = m_pScreenSizeResources->GetFenceValue();
+      DX::ThrowIfFailed(m_pDevice->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(m_pFence.ReleaseAndGetAddressOf())));
+      m_pScreenSizeResources->SetFenceValue(fenceValue + 1);
+      m_pFence->SetName(L"Fence");
+   }
+
+   m_fenceEvent.Attach(CreateEventEx(nullptr, nullptr, 0, EVENT_MODIFY_STATE | SYNCHRONIZE));
+   if (!m_fenceEvent.IsValid())
+   {
+      throw std::exception("CreateEvent");
+   }
 }
 
 DeviceResources::~DeviceResources()
 {
-   m_pD3D12Device.Reset();
+   WaitForGpu();
+
+   for (UINT n = 0; n < m_backBufferCount; n++)
+   {
+      //m_commandAllocators[n].Reset();
+      //m_renderTargets[n].Reset();
+   }
+
+   //m_depthStencil.Reset();
+   m_pCommandQueue.Reset();
+   //m_commandList.Reset();
+   m_pFence.Reset();
+   //m_rtvDescriptorHeap.Reset();
+   //m_dsvDescriptorHeap.Reset();
+
+   m_pScreenSizeResources.reset();
+     //m_swapChain.Reset();
+
+   m_pDevice.Reset();
    m_pDXGIFactory.Reset();
+
+#ifdef _DEBUG
+    {
+        Microsoft::WRL::ComPtr<IDXGIDebug1> dxgiDebug;
+        if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgiDebug))))
+        {
+            dxgiDebug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_FLAGS(DXGI_DEBUG_RLO_SUMMARY | DXGI_DEBUG_RLO_IGNORE_INTERNAL));
+        }
+    }
+#endif
+}
+
+void DeviceResources::WaitForGpu() noexcept
+{
+   if (m_pCommandQueue && m_pFence && m_fenceEvent.IsValid() && m_pScreenSizeResources)
+   {
+      // Schedule a Signal command in the GPU queue.
+      UINT64 fenceValue = m_pScreenSizeResources->GetFenceValue();
+      if (SUCCEEDED(m_pCommandQueue->Signal(m_pFence.Get(), fenceValue)))
+      {
+         // Wait until the Signal has been processed.
+         if (SUCCEEDED(m_pFence->SetEventOnCompletion(fenceValue, m_fenceEvent.Get())))
+         {
+            WaitForSingleObjectEx(m_fenceEvent.Get(), INFINITE, FALSE);
+
+            // Increment the fence value for the current frame.
+            m_pScreenSizeResources->SetFenceValue(fenceValue + 1);
+         }
+      }
+   }
+   return;
 }
 
 void DeviceResources::GetAdapter(IDXGIAdapter1** ppAdapter, const D3D_FEATURE_LEVEL d3dFeatureLevel)
@@ -156,5 +235,103 @@ void DeviceResources::GetAdapter(IDXGIAdapter1** ppAdapter, const D3D_FEATURE_LE
    }
 
    *ppAdapter = adapter.Detach();
+}
+
+void DeviceResources::CreateWindowSizeDependentResources(
+   const HWND hWnd
+   )
+{
+   WaitForGpu();
+
+   UINT64 fenceValue = 0;
+   if (nullptr != m_pScreenSizeResources)
+   {
+      fenceValue = m_pScreenSizeResources->GetFenceValue();
+   }
+   m_pScreenSizeResources.reset();
+
+   const unsigned int swapFlag = (m_options & c_AllowTearing) ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u;
+   RECT rc;
+   GetClientRect(hWnd, &rc);
+   const int width = rc.right - rc.left;
+   const int height = rc.bottom - rc.top;
+   m_pScreenSizeResources = std::make_unique<ScreenSizeResources>(
+      m_pDevice,
+      m_pDXGIFactory,
+      m_pCommandQueue,
+      hWnd,
+      fenceValue,
+      m_backBufferCount,
+      width,
+      height,
+      swapFlag
+      );
+}
+
+void DeviceResources::MoveToNextFrame()
+{
+   // Schedule a Signal command in the queue.
+   const UINT64 currentFenceValue = m_pScreenSizeResources->GetFenceValue();
+   DX::ThrowIfFailed(m_pCommandQueue->Signal(m_pFence.Get(), currentFenceValue));
+
+   m_pScreenSizeResources->UpdateBackBufferIndex();
+   const UINT64 nextBackBufferFenceValue = m_pScreenSizeResources->GetFenceValue();
+   // If the next frame is not ready to be rendered yet, wait until it is ready.
+   if (m_pFence->GetCompletedValue() < nextBackBufferFenceValue)
+   {
+      DX::ThrowIfFailed(m_pFence->SetEventOnCompletion(nextBackBufferFenceValue, m_fenceEvent.Get()));
+      WaitForSingleObjectEx(m_fenceEvent.Get(), INFINITE, FALSE);
+   }
+
+   // Set the fence value for the next frame.
+   m_pScreenSizeResources->SetFenceValue(currentFenceValue + 1);
+}
+
+void DeviceResources::Prepare()
+{
+   if (nullptr == m_pScreenSizeResources)
+   {
+      return;
+   }
+   m_pScreenSizeResources->Prepare();
+}
+
+void DeviceResources::Clear()
+{
+   if (nullptr == m_pScreenSizeResources)
+   {
+      return;
+   }
+   m_pScreenSizeResources->Clear();
+}
+
+const bool DeviceResources::Present()
+{
+   if (nullptr == m_pScreenSizeResources)
+   {
+      return false;
+   }
+   HRESULT hr = SEVERITY_SUCCESS;
+   if (false == m_pScreenSizeResources->Present(hr, m_pCommandQueue))
+   {
+#ifdef _DEBUG
+        char buff[64] = {};
+        sprintf_s(buff, "Device Lost on Present: Reason code 0x%08X\n",
+            static_cast<unsigned int>((hr == DXGI_ERROR_DEVICE_REMOVED) ? m_pDevice->GetDeviceRemovedReason() : hr));
+        OutputDebugStringA(buff);
+#endif
+
+        return false;
+   }
+
+   MoveToNextFrame();
+
+   if (!m_pDXGIFactory->IsCurrent())
+   {
+      // Output information is cached on the DXGI Factory. If it is stale we need to create a new factory.
+      DX::ThrowIfFailed(CreateDXGIFactory2(m_dxgiFactoryFlags, IID_PPV_ARGS(m_pDXGIFactory.ReleaseAndGetAddressOf())));
+   }
+
+   return true;
 }
 

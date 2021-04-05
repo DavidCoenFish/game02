@@ -90,6 +90,9 @@
     <ClCompile Include="Source\Common\DrawSystem\DrawSystemFrame.cpp">
       <Filter>Source\Common\DrawSystem</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Common\DrawSystem\ScreenSizeResources.cpp">
+      <Filter>Source\Common\DrawSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CommonPCH.h">
@@ -159,6 +162,9 @@
       <Filter>Source\Common\DrawSystem</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\DrawSystem\DrawSystemFrame.h">
+      <Filter>Source\Common\DrawSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DrawSystem\ScreenSizeResources.h">
       <Filter>Source\Common\DrawSystem</Filter>
     </ClInclude>
   </ItemGroup>
