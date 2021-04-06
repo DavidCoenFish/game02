@@ -82,7 +82,7 @@ const int WindowHelper(
       };
       DWORD dwStyle = bFullScreen ? WS_POPUP : WS_OVERLAPPEDWINDOW;
       AdjustWindowRect(&rc, dwStyle, FALSE);
-      hwnd = CreateWindowExW(WS_EX_TOPMOST, className.c_str(), name.c_str(), dwStyle,
+      hwnd = CreateWindowExW(bFullScreen ? WS_EX_TOPMOST : 0, className.c_str(), name.c_str(), dwStyle,
          CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, 
          nullptr, hInstance, &createFunction);
 
