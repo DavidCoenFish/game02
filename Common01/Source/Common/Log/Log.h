@@ -39,14 +39,15 @@ enum class LogTopic
    #define LOG_MESSAGE_RENDER(format, ...) (void)0
 #endif
 
+class ILogConsumer;
 namespace Log
 {
    void AddMessage(const int topic, const char* const pFormat, ... );
 
    void AddLogConsumer(
-      const std::shared_ptr< std::function< void(const int, const std::string&) > >& pLogConsumer
+      ILogConsumer& logConsumer
       );
    void RemoveLogConsumer(
-      const std::shared_ptr< std::function< void(const int, const std::string&) > >& pLogConsumer
+      ILogConsumer& logConsumer
       );
 };

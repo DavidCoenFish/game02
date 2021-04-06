@@ -1,39 +1,35 @@
 #include "UnitTestPCH.h"
 
 #include "Common/Log/Log.h"
+#include "Common/Log/ILogConsumer.h"
 
 //Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsNotNull( pResultType );
 //Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(9, pResultType->Get<int>() );
 
 namespace CommonLog
 {
-   class LogConsumerTest
+   class LogConsumerTest : public ILogConsumer
    {
    public:
       LogConsumerTest()
       {
-         m_logConsumer = std::make_shared< std::function< void(const int, const std::string&) > >([=](const int topic, const std::string& message)
-         {
-            this->Consumer(topic, message);
-         });
-         Log::AddLogConsumer(m_logConsumer);
+         Log::AddLogConsumer(*this);
       }
       ~LogConsumerTest()
       {
-         Log::RemoveLogConsumer(m_logConsumer);
+         Log::RemoveLogConsumer(*this);
       }
       const std::string& GetData()
       {
          return m_data;
       }
    private:
-      void Consumer(const int topic, const std::string& message )
+      virtual void AddMessage(const int topic, const std::string& message ) override
       {
          std::string text = std::to_string(topic) + std::string(":") + message + "\n";
          m_data += text;
       }
    private:
-      std::shared_ptr< std::function< void(const int, const std::string&) > > m_logConsumer;
       std::string m_data;
    };
 

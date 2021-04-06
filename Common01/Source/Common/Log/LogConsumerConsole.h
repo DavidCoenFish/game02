@@ -7,7 +7,6 @@ public:
    LogConsumerConsole();
    ~LogConsumerConsole();
 private:
-   void Consumer(const int, const std::string& message );
-private:
-   std::shared_ptr< std::function< void(const int, const std::string&) > > m_logConsumer;
+   virtual void AddMessage(const int topic, const std::string& message ) override;
+
 };

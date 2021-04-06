@@ -6,16 +6,12 @@
 LogConsumerWriteToFile::LogConsumerWriteToFile(const std::string& logFilePath)
 {
    m_file.open(logFilePath.c_str(), std::ofstream::out);
-   m_logConsumer = std::make_shared< std::function< void(const int, const std::string&) > >([=](const int topic, const std::string& message)
-   {
-      this->Consumer(topic, message);
-   });
-   Log::AddLogConsumer(m_logConsumer);
+   Log::AddLogConsumer(*this);
 }
 
 LogConsumerWriteToFile::~LogConsumerWriteToFile()
 {
-   Log::RemoveLogConsumer(m_logConsumer);
+   Log::RemoveLogConsumer(*this);
    if (true == m_file.is_open())
    {
       m_file.flush();
@@ -28,7 +24,7 @@ const std::string LogConsumerWriteToFile::GetDefaultPath()
    return "g:\\log.txt";
 }
 
-void LogConsumerWriteToFile::Consumer(const int topic, const std::string& message )
+void LogConsumerWriteToFile::AddMessage(const int topic, const std::string& message )
 {
    if (true == m_file.is_open())
    {

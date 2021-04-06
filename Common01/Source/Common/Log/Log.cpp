@@ -1,20 +1,21 @@
 #include "CommonPCH.h"
 
 #include "Common/Log/Log.h"
+#include "Common/Log/ILogConsumer.h"
 
 //this doesn't gain much in this case, is a patteren to lazy init static vectors
-static std::vector< std::shared_ptr< std::function< void(const int, const std::string&) > > >& GetFunctorArray()
+static std::vector< ILogConsumer* >& GetFunctorArray()
 {
-   static std::vector< std::shared_ptr< std::function< void(const int, const std::string&) > > > s_functorArray;
+   static std::vector< ILogConsumer* > s_functorArray;
    return s_functorArray;
 }
 
 static void AddMessageInternal(const int topic, const std::string& message)
 {
    const auto& functorArray = GetFunctorArray();
-   for (const auto& iter : functorArray)
+   for (auto pIter : functorArray)
    {
-      (*iter)(topic, message);
+      pIter->AddMessage(topic, message);
    }
    return;
 }
@@ -44,19 +45,18 @@ void Log::AddMessage(const int topic, const char* const format, ... )
 }
 
 void Log::AddLogConsumer(
-   const std::shared_ptr< std::function< void(const int, const std::string&) > >& pLogConsumer
+   ILogConsumer& logConsumer
    )
 {
    auto& functorArray = GetFunctorArray();
-   functorArray.push_back(pLogConsumer);
+   functorArray.push_back(&logConsumer);
 }
 
 void Log::RemoveLogConsumer(
-   const std::shared_ptr< std::function< void(const int, const std::string&) > >& pLogConsumer
+   ILogConsumer& logConsumer
    )
 {
    auto& functorArray = GetFunctorArray();
-   auto iter = std::remove(functorArray.begin(), functorArray.end(), pLogConsumer);
-   iter;
+   functorArray.erase(std::remove(functorArray.begin(), functorArray.end(), &logConsumer), functorArray.end());
 }
 

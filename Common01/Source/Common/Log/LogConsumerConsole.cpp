@@ -6,11 +6,7 @@
 
 LogConsumerConsole::LogConsumerConsole()
 {
-   m_logConsumer = std::make_shared< std::function< void(const int, const std::string&) > >([=](const int topic, const std::string& message)
-   {
-      this->Consumer(topic, message);
-   });
-   Log::AddLogConsumer(m_logConsumer);
+   Log::AddLogConsumer(*this);
 
    if (TRUE == AttachConsole(ATTACH_PARENT_PROCESS))
    {
@@ -22,12 +18,12 @@ LogConsumerConsole::LogConsumerConsole()
 
 LogConsumerConsole::~LogConsumerConsole()
 {
-   Log::RemoveLogConsumer(m_logConsumer);
+   Log::RemoveLogConsumer(*this);
 }
 
-void LogConsumerConsole::Consumer(const int topic, const std::string& messageTest )
+void LogConsumerConsole::AddMessage(const int topic, const std::string& message )
 {
-   std::string text = std::to_string(topic) + std::string(":") + messageTest + "\n";
+   std::string text = std::to_string(topic) + std::string(":") + message + "\n";
    OutputDebugStringW(Utf8::Utf8ToUtf16(text).c_str());
    printf(text.c_str());
 }

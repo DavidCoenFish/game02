@@ -8,8 +8,7 @@ public:
    ~LogConsumerWriteToFile();
 private:
    static const std::string GetDefaultPath();
-   void Consumer(const int, const std::string& message );
+   virtual void AddMessage(const int topic, const std::string& message ) override;
 private:
-   std::shared_ptr< std::function< void(const int, const std::string&) > > m_logConsumer;
    std::ofstream m_file;
 };
