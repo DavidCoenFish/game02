@@ -6,12 +6,10 @@
 LogConsumerWriteToFile::LogConsumerWriteToFile(const std::string& logFilePath)
 {
    m_file.open(logFilePath.c_str(), std::ofstream::out);
-   Log::AddLogConsumer(*this);
 }
 
 LogConsumerWriteToFile::~LogConsumerWriteToFile()
 {
-   Log::RemoveLogConsumer(*this);
    if (true == m_file.is_open())
    {
       m_file.flush();

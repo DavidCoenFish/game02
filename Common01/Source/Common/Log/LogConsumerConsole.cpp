@@ -6,8 +6,6 @@
 
 LogConsumerConsole::LogConsumerConsole()
 {
-   Log::AddLogConsumer(*this);
-
    if (TRUE == AttachConsole(ATTACH_PARENT_PROCESS))
    {
       FILE* pFileOut = nullptr;
@@ -18,7 +16,7 @@ LogConsumerConsole::LogConsumerConsole()
 
 LogConsumerConsole::~LogConsumerConsole()
 {
-   Log::RemoveLogConsumer(*this);
+   //nop
 }
 
 void LogConsumerConsole::AddMessage(const int topic, const std::string& message )

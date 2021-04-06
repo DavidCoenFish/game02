@@ -11,14 +11,6 @@ namespace CommonLog
    class LogConsumerTest : public ILogConsumer
    {
    public:
-      LogConsumerTest()
-      {
-         Log::AddLogConsumer(*this);
-      }
-      ~LogConsumerTest()
-      {
-         Log::RemoveLogConsumer(*this);
-      }
       const std::string& GetData()
       {
          return m_data;
