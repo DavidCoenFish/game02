@@ -289,6 +289,11 @@ Shader::Shader(
    return;
 }
 
+Shader::~Shader()
+{
+   //nop
+}
+
 void Shader::SetDebugName( const std::string& name )
 {
    m_debugName = name;

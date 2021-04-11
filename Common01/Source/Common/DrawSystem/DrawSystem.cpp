@@ -21,12 +21,23 @@ DrawSystem::DrawSystem(
    , m_d3dFeatureLevel(d3dFeatureLevel)
    , m_options(options)
 {
+   m_pHeapWrapperCbvSrvUav = std::make_shared< HeapWrapper >( this, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, backBufferCount, true );
+   m_pHeapWrapperSampler = std::make_shared< HeapWrapper >( this, D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER );
+   m_pHeapWrapperRenderTargetView = std::make_shared< HeapWrapper >( this, D3D12_DESCRIPTOR_HEAP_TYPE_RTV );
+   m_pHeapWrapperDepthStencilView = std::make_shared< HeapWrapper >( this, D3D12_DESCRIPTOR_HEAP_TYPE_DSV );
+
    CreateDeviceResources();
 }
 
 DrawSystem::~DrawSystem()
 {
    WaitForGpu();
+   for (auto pIter : m_listResource)
+   {
+      pIter->OnDeviceLost();
+   }
+   m_listResource.clear();
+   m_pDeviceResources.reset();
 }
 
 DirectX::GraphicsResource DrawSystem::AllocateConstant(const std::size_t size, void* const pConstants)
@@ -223,6 +234,12 @@ void DrawSystem::AddResource(IResource* const pResource)
 
 void DrawSystem::RemoveResource(IResource* const pResource)
 {
+   //if RemoveResource is called by the dtor, then not a good idea to call a virutal func on the pResource?
+   //if (pResource)
+   //{
+   //   pResource->OnDeviceLost();
+   //}
+
    m_listResource.remove( pResource );
 }
 

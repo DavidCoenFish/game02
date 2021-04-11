@@ -87,6 +87,14 @@ ApplicationTestTriangle::ApplicationTestTriangle(const IApplicationParam& applic
 
 ApplicationTestTriangle::~ApplicationTestTriangle()
 {
+   if (m_pDrawSystem)
+   {
+      m_pDrawSystem->WaitForGpu();
+   }
+   m_pShader.reset();
+   m_pGeometry.reset();
+   m_pDrawSystem.reset();
+
    LOG_MESSAGE("ApplicationTestTriangle dtor %p", this);
 }
 

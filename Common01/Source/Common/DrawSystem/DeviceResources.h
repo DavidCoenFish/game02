@@ -45,6 +45,7 @@ public:
    ID3D12GraphicsCommandList* GetCustomCommandList();
    void CustomCommandListFinish(ID3D12GraphicsCommandList* pCommandList);
 
+   void ApplicationShuttingDown();
 private:
    void GetAdapter(IDXGIAdapter1** ppAdapter, const D3D_FEATURE_LEVEL d3dFeatureLevel);
    void CreateWindowSizeDependentResources(
