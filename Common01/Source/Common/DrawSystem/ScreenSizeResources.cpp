@@ -49,7 +49,7 @@ ScreenSizeResources::ScreenSizeResources(
 
    DX::ThrowIfFailed(pDevice->CreateDescriptorHeap(&rtvDescriptorHeapDesc, IID_PPV_ARGS(m_rtvDescriptorHeap.ReleaseAndGetAddressOf())));
 
-   m_rtvDescriptorHeap->SetName(L"DeviceResources");
+   m_rtvDescriptorHeap->SetName(L"rtvDescriptorHeap");
 
    m_rtvDescriptorSize = pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
@@ -61,7 +61,7 @@ ScreenSizeResources::ScreenSizeResources(
 
       DX::ThrowIfFailed(pDevice->CreateDescriptorHeap(&dsvDescriptorHeapDesc, IID_PPV_ARGS(m_dsvDescriptorHeap.ReleaseAndGetAddressOf())));
 
-      m_dsvDescriptorHeap->SetName(L"DeviceResources");
+      m_dsvDescriptorHeap->SetName(L"dsvDescriptorHeap");
    }
 
    // Create a command allocator for each back buffer that will be rendered to.
@@ -77,8 +77,13 @@ ScreenSizeResources::ScreenSizeResources(
    // Create a command list for recording graphics commands.
    DX::ThrowIfFailed(pDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_pCommandAllocators[0].Get(), nullptr, IID_PPV_ARGS(m_pCommandList.ReleaseAndGetAddressOf())));
    DX::ThrowIfFailed(m_pCommandList->Close());
-
-   m_pCommandList->SetName(L"DeviceResources");
+   {
+      static int count = -1;
+      count += 1;
+      wchar_t name[25] = {};
+      swprintf_s(name, L"CommandList:%d", count);
+      m_pCommandList->SetName(name);
+   }
 
    const UINT backBufferWidth = std::max<UINT>(width, 1u);
    const UINT backBufferHeight = std::max<UINT>(height, 1u);
@@ -183,6 +188,20 @@ ScreenSizeResources::ScreenSizeResources(
       pDevice->CreateDepthStencilView(m_pDepthStencil.Get(), &dsvDesc, m_dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
    }
 
+   {
+      // Create a fence for tracking GPU execution progress.
+      const auto fenceValue = GetFenceValue();
+      DX::ThrowIfFailed(pDevice->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(m_pFence.ReleaseAndGetAddressOf())));
+      SetFenceValue(fenceValue + 1);
+      m_pFence->SetName(L"Fence");
+   }
+
+   m_fenceEvent.Attach(CreateEventEx(nullptr, nullptr, 0, EVENT_MODIFY_STATE | SYNCHRONIZE));
+   if (!m_fenceEvent.IsValid())
+   {
+      throw std::exception("CreateEvent");
+   }
+
    // Set the 3D rendering viewport and scissor rectangle to target the entire window.
    m_screenViewport.TopLeftX = m_screenViewport.TopLeftY = 0.f;
    m_screenViewport.Width = static_cast<float>(backBufferWidth);
@@ -210,12 +229,16 @@ void ScreenSizeResources::SetFenceValue(const UINT64 value)
    return;
 }
 
-void ScreenSizeResources::Prepare(D3D12_RESOURCE_STATES beforeState,
-            D3D12_RESOURCE_STATES afterState)
+void ScreenSizeResources::Prepare(
+   ID3D12GraphicsCommandList*& pCommandList,
+   D3D12_RESOURCE_STATES beforeState,
+   D3D12_RESOURCE_STATES afterState
+   )
 {
     // Reset command list and allocator.
     DX::ThrowIfFailed(m_pCommandAllocators[m_backBufferIndex]->Reset());
     DX::ThrowIfFailed(m_pCommandList->Reset(m_pCommandAllocators[m_backBufferIndex].Get(), nullptr));
+    pCommandList = m_pCommandList.Get();
 
     if (beforeState != afterState)
     {
@@ -224,6 +247,8 @@ void ScreenSizeResources::Prepare(D3D12_RESOURCE_STATES beforeState,
             beforeState, afterState);
         m_pCommandList->ResourceBarrier(1, &barrier);
     }
+
+    return;
 }
 
 void ScreenSizeResources::Clear()
@@ -243,6 +268,27 @@ void ScreenSizeResources::Clear()
    m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
 
    //PIXEndEvent(commandList);
+}
+
+void ScreenSizeResources::WaitForGpu(const Microsoft::WRL::ComPtr<ID3D12CommandQueue>& pCommandQueue) noexcept
+{
+   if (pCommandQueue && m_pFence && m_fenceEvent.IsValid())
+   {
+      // Schedule a Signal command in the GPU queue.
+      UINT64 fenceValue = GetFenceValue();
+      if (SUCCEEDED(pCommandQueue->Signal(m_pFence.Get(), fenceValue)))
+      {
+         // Wait until the Signal has been processed.
+         if (SUCCEEDED(m_pFence->SetEventOnCompletion(fenceValue, m_fenceEvent.Get())))
+         {
+            WaitForSingleObjectEx(m_fenceEvent.Get(), INFINITE, FALSE);
+
+            // Increment the fence value for the current frame.
+            SetFenceValue(fenceValue + 1);
+         }
+      }
+   }
+   return;
 }
 
 CD3DX12_CPU_DESCRIPTOR_HANDLE ScreenSizeResources::GetRenderTargetView() const
@@ -304,4 +350,23 @@ void ScreenSizeResources::UpdateBackBufferIndex()
 {
    // Update the back buffer index.
    m_backBufferIndex = m_pSwapChain->GetCurrentBackBufferIndex();
+}
+
+void ScreenSizeResources::MoveToNextFrame(const Microsoft::WRL::ComPtr<ID3D12CommandQueue>& pCommandQueue)
+{
+   // Schedule a Signal command in the queue.
+   const UINT64 currentFenceValue = GetFenceValue();
+   DX::ThrowIfFailed(pCommandQueue->Signal(m_pFence.Get(), currentFenceValue));
+
+   UpdateBackBufferIndex();
+   const UINT64 nextBackBufferFenceValue = GetFenceValue();
+   // If the next frame is not ready to be rendered yet, wait until it is ready.
+   if (m_pFence->GetCompletedValue() < nextBackBufferFenceValue)
+   {
+      DX::ThrowIfFailed(m_pFence->SetEventOnCompletion(nextBackBufferFenceValue, m_fenceEvent.Get()));
+      WaitForSingleObjectEx(m_fenceEvent.Get(), INFINITE, FALSE);
+   }
+
+   // Set the fence value for the next frame.
+   SetFenceValue(currentFenceValue + 1);
 }

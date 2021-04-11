@@ -39,6 +39,7 @@
 #include <DirectXColors.h>
 
 #include <algorithm>
+#include <array>
 #include <cstdint>
 #include <exception>
 #include <filesystem>

@@ -1,0 +1,13 @@
+{
+   "Windows": [
+      {
+         "Name": "TestTriangle",
+         "FullScreen": false,
+         "Width": 800,
+         "Height": 600,
+         "Factory": "ApplicationTestTriangle"
+      }
+   ],
+   "Logs":[
+      ]
+}

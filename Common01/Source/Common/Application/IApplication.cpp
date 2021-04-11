@@ -8,13 +8,15 @@ IApplicationParam::IApplicationParam(
    const std::shared_ptr<ApplicationHolder>& pApplicationHolder, 
    const bool bFullScreen,
    const int width,
-   const int height
+   const int height,
+   const std::shared_ptr< CommandLine >& pCommandLine
    )
    : m_hWnd(hWnd)
    , m_pApplicationHolder(pApplicationHolder)
    , m_bFullScreen(bFullScreen)
    , m_width(width)
    , m_height(height)
+   , m_pCommandLine(pCommandLine)
 {
    //nop
 }

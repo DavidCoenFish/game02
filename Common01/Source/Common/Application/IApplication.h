@@ -1,6 +1,7 @@
 #pragma once
 
 class ApplicationHolder;
+class CommandLine;
 
 class IApplicationParam
 {
@@ -10,13 +11,15 @@ public:
       const std::shared_ptr<ApplicationHolder>& pApplicationHolder, 
       const bool bFullScreen,
       const int width,
-      const int height
+      const int height,
+      const std::shared_ptr< CommandLine >& pCommandLine
    );
    const HWND m_hWnd; 
    const std::shared_ptr<ApplicationHolder> m_pApplicationHolder;
    const bool  m_bFullScreen;
    const int  m_width;
    const int  m_height;
+   const std::shared_ptr< CommandLine >m_pCommandLine;
 };
 
 class IApplication

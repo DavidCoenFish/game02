@@ -1,7 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">
-    <CommandLineArgs>Empty</CommandLineArgs>
+    <CommandLineArgs>TestTriangle</CommandLineArgs>
     <DebuggerFlavor>GamingDesktopDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>
+    </LocalDebuggerCommandArguments>
+    <RemoteDebuggerCommandArguments>
+    </RemoteDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

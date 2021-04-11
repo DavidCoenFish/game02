@@ -3,6 +3,12 @@
 #include "Common/DrawSystem/DrawSystem.h"
 #include "Common/DrawSystem/DeviceResources.h"
 #include "Common/DrawSystem/DrawSystemFrame.h"
+#include "Common/DrawSystem/CustomCommandList.h"
+#include "Common/DrawSystem/HeapWrapper/HeapWrapper.h"
+#include "Common/DrawSystem/HeapWrapper/HeapWrapperItem.h"
+#include "Common/DrawSystem/Shader/Shader.h"
+#include "Common/DrawSystem/Geometry/GeometryGeneric.h"
+#include "Common/DirectXTK12/GraphicsMemory.h"
 
 DrawSystem::DrawSystem(
    const HWND hWnd,
@@ -23,20 +29,117 @@ DrawSystem::~DrawSystem()
    WaitForGpu();
 }
 
+DirectX::GraphicsResource DrawSystem::AllocateConstant(const std::size_t size, void* const pConstants)
+{
+   return AllocateUpload(size, pConstants, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
+}
+
+DirectX::GraphicsResource DrawSystem::AllocateUpload(
+   const std::size_t size, 
+   void* const pDataOrNullptr, 
+   size_t alignment
+   )
+{
+   if (m_pDeviceResources)
+   {
+      return m_pDeviceResources->AllocateUpload(size, pDataOrNullptr, alignment);
+   }
+   return DirectX::GraphicsResource();
+}
+
+std::shared_ptr< Shader > DrawSystem::MakeShader(
+   ID3D12GraphicsCommandList* const pCommandList,
+   const ShaderPipelineStateData& pipelineStateData,
+   const std::shared_ptr< std::vector<uint8_t> >& pVertexShaderData,
+   const std::shared_ptr< std::vector<uint8_t> >& pGeometryShaderData,
+   const std::shared_ptr< std::vector<uint8_t> >& pPixelShaderData,
+   const std::vector< std::shared_ptr< ShaderResourceInfo > >& arrayShaderResourceInfo,
+   const std::vector< std::shared_ptr< ShaderConstantInfo > >& arrayShaderConstantsInfo
+   )
+{
+   auto pResult = std::make_shared<Shader>(
+      this,
+      pipelineStateData,
+      pVertexShaderData,
+      pGeometryShaderData,
+      pPixelShaderData,
+      arrayShaderResourceInfo,
+      arrayShaderConstantsInfo
+      );
+   if (pResult && m_pDeviceResources)
+   {
+      ((IResource*)(pResult.get()))->OnDeviceRestored(
+         pCommandList,
+         m_pDeviceResources->GetD3dDevice()
+         );
+   }
+   return pResult;
+}
+
+std::shared_ptr< GeometryGeneric > DrawSystem::MakeGeometryGeneric(
+   ID3D12GraphicsCommandList* const pCommandList,
+   const D3D_PRIMITIVE_TOPOLOGY primitiveTopology,
+   const std::vector< D3D12_INPUT_ELEMENT_DESC >& inputElementDescArray,
+   const std::vector< float >& vertexDataRaw,
+   const int floatPerVertex
+   )
+{
+   auto pResult = std::make_shared<GeometryGeneric>(
+      this,
+      primitiveTopology,
+      inputElementDescArray,
+      vertexDataRaw,
+      floatPerVertex
+      );
+   if (pResult && m_pDeviceResources)
+   {
+      ((IResource*)(pResult.get()))->OnDeviceRestored(
+         pCommandList,
+         m_pDeviceResources->GetD3dDevice()
+         );
+   }
+   return pResult;
+}
+
+std::shared_ptr<CustomCommandList> DrawSystem::CreateCustomCommandList()
+{
+   if (m_pDeviceResources)
+   {
+      auto pCommandList = m_pDeviceResources->GetCustomCommandList();
+      return std::make_shared< CustomCommandList>(
+         *this,
+         pCommandList
+         );
+   }
+   return nullptr;
+}
+
+void DrawSystem::CustomCommandListFinish(ID3D12GraphicsCommandList* pCommandList)
+{
+   if (m_pDeviceResources)
+   {
+      m_pDeviceResources->CustomCommandListFinish(pCommandList);
+   }
+   return;
+}
 
 std::unique_ptr< DrawSystemFrame > DrawSystem::CreateNewFrame()
 {
    return std::make_unique< DrawSystemFrame >( *this );
 }
 
-void DrawSystem::Prepare()
+void DrawSystem::Prepare(
+   ID3D12GraphicsCommandList*& pCommandList
+   )
 {
-   if (nullptr == m_pDeviceResources)
+   if (nullptr != m_pDeviceResources)
    {
-      return;
+       m_pDeviceResources->Prepare(
+          pCommandList
+          );
    }
 
-   m_pDeviceResources->Prepare();
+   return;
 }
 
 void DrawSystem::Clear()
@@ -61,6 +164,39 @@ void DrawSystem::Present()
    }
 }
 
+std::shared_ptr<HeapWrapperItem> DrawSystem::MakeHeapWrapperCbvSrvUav(const int length)
+{
+   return HeapWrapperItem::Factory( 
+      m_pDeviceResources ? m_pDeviceResources->GetD3dDevice() : nullptr,
+      m_pHeapWrapperCbvSrvUav, 
+      length 
+      );
+}
+std::shared_ptr<HeapWrapperItem> DrawSystem::MakeHeapWrapperSampler(const int length)
+{
+   return HeapWrapperItem::Factory( 
+      m_pDeviceResources ? m_pDeviceResources->GetD3dDevice() : nullptr,
+      m_pHeapWrapperSampler, 
+      length 
+      );
+}
+std::shared_ptr<HeapWrapperItem> DrawSystem::MakeHeapWrapperRenderTargetView(const int length)
+{
+   return HeapWrapperItem::Factory( 
+      m_pDeviceResources ? m_pDeviceResources->GetD3dDevice() : nullptr,
+      m_pHeapWrapperRenderTargetView, 
+      length 
+      );
+}
+std::shared_ptr<HeapWrapperItem> DrawSystem::MakeHeapWrapperDepthStencilView(const int length)
+{
+   return HeapWrapperItem::Factory( 
+      m_pDeviceResources ? m_pDeviceResources->GetD3dDevice() : nullptr,
+      m_pHeapWrapperDepthStencilView, 
+      length 
+      );
+}
+
 void DrawSystem::WaitForGpu() noexcept
 {
    if (m_pDeviceResources)
@@ -77,8 +213,35 @@ void DrawSystem::OnResize()
    }
 }
 
+void DrawSystem::AddResource(IResource* const pResource)
+{
+   if (pResource)
+   {
+      m_listResource.push_back( pResource );
+   }
+}
+
+void DrawSystem::RemoveResource(IResource* const pResource)
+{
+   m_listResource.remove( pResource );
+}
+
+const int DrawSystem::GetBackBufferIndex() const
+{
+   if (nullptr != m_pDeviceResources)
+   {
+      m_pDeviceResources->GetBackBufferIndex();
+   }
+   return 0;
+}
+
+
 void DrawSystem::CreateDeviceResources()
 {
+   for (auto pIter : m_listResource)
+   {
+      pIter->OnDeviceLost();
+   }
    m_pDeviceResources.reset();
    m_pDeviceResources = std::make_unique< DeviceResources >(
       m_hWnd,
@@ -86,6 +249,18 @@ void DrawSystem::CreateDeviceResources()
       m_d3dFeatureLevel,
       m_options
       );
+
+   if (0 < m_listResource.size())
+   {
+      auto pCommandList = CreateCustomCommandList();
+      for (auto pIter : m_listResource)
+      {
+         pIter->OnDeviceRestored(
+            pCommandList->GetCommandList(),
+            m_pDeviceResources->GetD3dDevice()
+            );
+      }
+   }
 }
 
 

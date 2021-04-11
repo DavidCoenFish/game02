@@ -21,7 +21,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <FxCompile>
-      <ObjectFileOutput>$(OutDir)Resources\Shader\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(OutDirFullPath)%(RelativeDir)%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <CopyFileToFolders />
     <CopyFileToFolders>

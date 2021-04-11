@@ -7,6 +7,7 @@
 #include "Common/Application/CommandLine.h"
 #include "Common/Application/IApplication.h"
 #include "Common/Application/ApplicationBasic.h"
+#include "Common/Application/ApplicationTestTriangle.h"
 #include "Common/Application/ApplicationHolder.h"
 #include "Common/FileSystem/FileSystem.h"
 #include "Common/FileSystem/ReadOverlayDir.h"
@@ -49,13 +50,20 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    Logs
    );
 
-static const std::function< IApplication*(const IApplicationParam&) > GetFactory(const std::string& factoryKey)
+static const std::function< IApplication*(const IApplicationParam&) > GetFactory(const std::string& factoryKey, const std::filesystem::path& rootPath)
 {
    if (factoryKey == "ApplicationBasic")
    {
       return [](const IApplicationParam& applicationParam)
       {
          return new ApplicationBasic(applicationParam);
+      };
+   }
+   else if (factoryKey == "ApplicationTestTriangle")
+   {
+      return [=](const IApplicationParam& applicationParam)
+      {
+         return new ApplicationTestTriangle(applicationParam, rootPath);
       };
    }
    return [](const IApplicationParam& applicationParam)
@@ -88,8 +96,9 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
 
    if (2 <= pCommandLine->GetParamCount())
    {
-      std::filesystem::path path = std::filesystem::path("Task") / pCommandLine->GetParam(1) / "Application.json";
-      auto pFile = FileSystem::GetFileString(path);
+      std::filesystem::path path = std::filesystem::path("Task") / pCommandLine->GetParam(1);
+      std::filesystem::path applicationPath = path / "Application.json";
+      auto pFile = FileSystem::GetFileString(applicationPath);
       auto json = nlohmann::json::parse( pFile ? *pFile : "{}");
       JSONApplication applicationData;
       json.get_to(applicationData);
@@ -100,12 +109,13 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
       {
          result = WindowHelper(
             pApplicationHolder,
-            GetFactory(item.Factory),
+            GetFactory(item.Factory, path),
             hInstance,
             item.Name,
             item.FullScreen,
             item.Width,
             item.Height,
+            pCommandLine,
             nCmdShow
             );
       }
@@ -124,6 +134,10 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
             pApplicationHolder->Update();
          }
       }
+   }
+   else
+   {
+      LOG_MESSAGE_ERROR("Only got [%d] param, want at least a tast name", pCommandLine->GetParamCount());
    }
 
     return result;

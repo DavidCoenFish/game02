@@ -3,6 +3,7 @@
 #include "Common/DrawSystem/DeviceResources.h"
 #include "Common/DrawSystem/ScreenSizeResources.h"
 #include "Common/DrawSystem/d3dx12.h"
+#include "Common/DirectXTK12/GraphicsMemory.h"
 #include "Common/Log/Log.h"
 #include "Common/Util/Utf8.h"
 
@@ -15,8 +16,11 @@ DeviceResources::DeviceResources(
    : m_options(options)
    , m_backBufferCount(backBufferCount)
    , m_dxgiFactoryFlags(0)
+   , m_customCommandListFenceValue(0)
 {
    hWnd;
+   static int sCount = -1;
+   sCount += 1;
 
 #if defined(_DEBUG)
    // Enable the debug layer (requires the Graphics Tools "optional feature").
@@ -78,8 +82,11 @@ DeviceResources::DeviceResources(
       IID_PPV_ARGS(m_pDevice.ReleaseAndGetAddressOf())
       );
    DX::ThrowIfFailed(hr);
-
-   m_pDevice->SetName(L"DeviceResources");
+   {
+      wchar_t name[64] = {};
+      swprintf_s(name, L"Device:%d", sCount);
+      m_pDevice->SetName(name);
+   }
 
 #ifndef NDEBUG
    // Configure debug device (if active).
@@ -109,46 +116,59 @@ DeviceResources::DeviceResources(
    queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
    DX::ThrowIfFailed(m_pDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(m_pCommandQueue.ReleaseAndGetAddressOf())));
-
-   m_pCommandQueue->SetName(L"DeviceResources");
+   {
+      wchar_t name[64] = {};
+      swprintf_s(name, L"CommandQueue:%d", sCount);
+      m_pCommandQueue->SetName(name);
+   }
 
    CreateWindowSizeDependentResources(hWnd);
 
-   if (nullptr != m_pScreenSizeResources)
-   {
-      // Create a fence for tracking GPU execution progress.
-      const auto fenceValue = m_pScreenSizeResources->GetFenceValue();
-      DX::ThrowIfFailed(m_pDevice->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(m_pFence.ReleaseAndGetAddressOf())));
-      m_pScreenSizeResources->SetFenceValue(fenceValue + 1);
-      m_pFence->SetName(L"Fence");
-   }
-
-   m_fenceEvent.Attach(CreateEventEx(nullptr, nullptr, 0, EVENT_MODIFY_STATE | SYNCHRONIZE));
-   if (!m_fenceEvent.IsValid())
+   m_pGraphicsMemory = std::make_unique<DirectX::GraphicsMemory>(m_pDevice.Get());
+   if (nullptr == m_pGraphicsMemory)
    {
       throw std::exception("CreateEvent");
+   }
+
+   //Microsoft::WRL::ComPtr<ID3D12CommandAllocator> m_pCustomCommandAllocator;
+   //Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> m_pCustomCommandList;
+   //Microsoft::WRL::ComPtr<ID3D12Fence> m_pCustomCommandFence;
+   //Microsoft::WRL::Wrappers::Event m_customCommandFenceEvent;
+   DX::ThrowIfFailed(m_pDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(m_pCustomCommandAllocator.ReleaseAndGetAddressOf())));
+   {
+      wchar_t name[64] = {};
+      swprintf_s(name, L"CustomCommandAllocator:%d", sCount);
+      m_pCustomCommandAllocator->SetName(name);
+   }
+
+   DX::ThrowIfFailed(m_pDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_pCustomCommandAllocator.Get(), nullptr, IID_PPV_ARGS(m_pCustomCommandList.ReleaseAndGetAddressOf())));
+   {
+      wchar_t name[64] = {};
+      swprintf_s(name, L"CustomCommandList:%d", sCount);
+      m_pCustomCommandList->SetName(name);
+   }
+   m_pCustomCommandList->Close();
+
+   DX::ThrowIfFailed(m_pDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(m_pCustomCommandFence.ReleaseAndGetAddressOf())));
+   m_customCommandFenceEvent.Attach(CreateEventEx(nullptr, nullptr, 0, EVENT_MODIFY_STATE | SYNCHRONIZE));
+   if (!m_customCommandFenceEvent.IsValid())
+   {
+      throw std::exception("CustomCommandFence");
    }
 }
 
 DeviceResources::~DeviceResources()
 {
-   WaitForGpu();
+   WaitForGpu(); //can go accross frames
+   WaitForCustomCommand(); //make sure any outstanding command list are completed
 
-   for (UINT n = 0; n < m_backBufferCount; n++)
-   {
-      //m_commandAllocators[n].Reset();
-      //m_renderTargets[n].Reset();
-   }
+   m_pCustomCommandAllocator.Reset();
+   m_pCustomCommandList.Reset();
+   m_pCustomCommandFence.Reset();
 
-   //m_depthStencil.Reset();
    m_pCommandQueue.Reset();
-   //m_commandList.Reset();
-   m_pFence.Reset();
-   //m_rtvDescriptorHeap.Reset();
-   //m_dsvDescriptorHeap.Reset();
-
    m_pScreenSizeResources.reset();
-     //m_swapChain.Reset();
+   m_pGraphicsMemory.reset();
 
    m_pDevice.Reset();
    m_pDXGIFactory.Reset();
@@ -166,28 +186,54 @@ DeviceResources::~DeviceResources()
 
 void DeviceResources::WaitForGpu() noexcept
 {
-   if (m_pCommandQueue && m_pFence && m_fenceEvent.IsValid() && m_pScreenSizeResources)
+   if (m_pScreenSizeResources)
    {
-      // Schedule a Signal command in the GPU queue.
-      UINT64 fenceValue = m_pScreenSizeResources->GetFenceValue();
-      if (SUCCEEDED(m_pCommandQueue->Signal(m_pFence.Get(), fenceValue)))
+      m_pScreenSizeResources->WaitForGpu(m_pCommandQueue);
+   }
+   return;
+}
+
+void DeviceResources::WaitForCustomCommand() //make sure any outstanding command list are completed
+{
+   if (m_pCommandQueue && m_pCustomCommandFence && m_customCommandFenceEvent.IsValid())
+   {
+      if (SUCCEEDED(m_pCommandQueue->Signal(m_pCustomCommandFence.Get(), m_customCommandListFenceValue)))
       {
          // Wait until the Signal has been processed.
-         if (SUCCEEDED(m_pFence->SetEventOnCompletion(fenceValue, m_fenceEvent.Get())))
+         if (SUCCEEDED(m_pCustomCommandFence->SetEventOnCompletion(m_customCommandListFenceValue, m_customCommandFenceEvent.Get())))
          {
-            WaitForSingleObjectEx(m_fenceEvent.Get(), INFINITE, FALSE);
+            WaitForSingleObjectEx(m_customCommandFenceEvent.Get(), INFINITE, FALSE);
 
             // Increment the fence value for the current frame.
-            m_pScreenSizeResources->SetFenceValue(fenceValue + 1);
+            m_customCommandListFenceValue += 1;
          }
       }
    }
-   return;
 }
 
 void DeviceResources::OnResize(const HWND hWnd)
 {
    CreateWindowSizeDependentResources(hWnd);
+}
+
+const int DeviceResources::GetBackBufferIndex() const
+{
+   if (nullptr != m_pScreenSizeResources)
+   {
+      return m_pScreenSizeResources->GetBackBufferIndex();
+   }
+   return 0;
+}
+
+DirectX::GraphicsResource DeviceResources::AllocateUpload(const std::size_t size, void* const pDataOrNullptr, size_t alignment)
+{
+   const size_t alignedSize = (size + alignment - 1) & ~(alignment - 1);
+   auto graphicsResource = m_pGraphicsMemory->Allocate(alignedSize, alignment);
+   if (pDataOrNullptr)
+   {
+      memcpy(graphicsResource.Memory(), pDataOrNullptr, size);
+   }
+   return graphicsResource;
 }
 
 void DeviceResources::GetAdapter(IDXGIAdapter1** ppAdapter, const D3D_FEATURE_LEVEL d3dFeatureLevel)
@@ -284,30 +330,57 @@ void DeviceResources::CreateWindowSizeDependentResources(
 
 void DeviceResources::MoveToNextFrame()
 {
-   // Schedule a Signal command in the queue.
-   const UINT64 currentFenceValue = m_pScreenSizeResources->GetFenceValue();
-   DX::ThrowIfFailed(m_pCommandQueue->Signal(m_pFence.Get(), currentFenceValue));
-
-   m_pScreenSizeResources->UpdateBackBufferIndex();
-   const UINT64 nextBackBufferFenceValue = m_pScreenSizeResources->GetFenceValue();
-   // If the next frame is not ready to be rendered yet, wait until it is ready.
-   if (m_pFence->GetCompletedValue() < nextBackBufferFenceValue)
+   if (m_pScreenSizeResources)
    {
-      DX::ThrowIfFailed(m_pFence->SetEventOnCompletion(nextBackBufferFenceValue, m_fenceEvent.Get()));
-      WaitForSingleObjectEx(m_fenceEvent.Get(), INFINITE, FALSE);
+      m_pScreenSizeResources->MoveToNextFrame(m_pCommandQueue);
+   }
+}
+
+void DeviceResources::Prepare(
+   ID3D12GraphicsCommandList*& pCommandList
+   )
+{
+   if (nullptr != m_pScreenSizeResources)
+   {
+      m_pScreenSizeResources->Prepare(
+         pCommandList
+         );
+   }
+   return;
+}
+ID3D12Device* const DeviceResources::GetD3dDevice()
+{
+   return m_pDevice.Get();
+}
+//ID3D12CommandQueue* const DeviceResources::GetCommandQueue()
+//{
+//   return m_pCommandQueue.Get();
+//}
+
+ID3D12GraphicsCommandList* DeviceResources::GetCustomCommandList()
+{
+   WaitForCustomCommand();
+   DX::ThrowIfFailed(m_pCustomCommandAllocator->Reset());
+   DX::ThrowIfFailed(m_pCustomCommandList->Reset(m_pCustomCommandAllocator.Get(), nullptr));
+
+   DX::ThrowIfFailed(m_pCommandQueue->Signal(m_pCustomCommandFence.Get(), m_customCommandListFenceValue));
+
+   if (m_pCustomCommandFence->GetCompletedValue() < m_customCommandListFenceValue)
+   {
+      DX::ThrowIfFailed(m_pCustomCommandFence->SetEventOnCompletion(m_customCommandListFenceValue, m_customCommandFenceEvent.Get()));
+      WaitForSingleObjectEx(m_customCommandFenceEvent.Get(), INFINITE, FALSE);
    }
 
    // Set the fence value for the next frame.
-   m_pScreenSizeResources->SetFenceValue(currentFenceValue + 1);
+   m_customCommandListFenceValue += 1;
+
+   return m_pCustomCommandList.Get();
 }
 
-void DeviceResources::Prepare()
+void DeviceResources::CustomCommandListFinish(ID3D12GraphicsCommandList* pCommandList)
 {
-   if (nullptr == m_pScreenSizeResources)
-   {
-      return;
-   }
-   m_pScreenSizeResources->Prepare();
+   pCommandList->Close();
+   m_pCommandQueue->ExecuteCommandLists(1, CommandListCast(&pCommandList));
 }
 
 void DeviceResources::Clear()
@@ -345,6 +418,11 @@ const bool DeviceResources::Present()
       // Output information is cached on the DXGI Factory. If it is stale we need to create a new factory.
       DX::ThrowIfFailed(CreateDXGIFactory2(m_dxgiFactoryFlags, IID_PPV_ARGS(m_pDXGIFactory.ReleaseAndGetAddressOf())));
    }
+
+    if (m_pGraphicsMemory)
+    {
+       m_pGraphicsMemory->Commit(m_pCommandQueue.Get());
+    }
 
    return true;
 }

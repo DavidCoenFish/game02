@@ -2,18 +2,19 @@
 
 class DrawSystem;
 
-class DrawSystemFrame
+class CustomCommandList
 {
 public:
-   DrawSystemFrame(DrawSystem& drawSystem);
-   ~DrawSystemFrame();
+   CustomCommandList(
+      DrawSystem& drawSystem,
+      ID3D12GraphicsCommandList* pCommandList
+      );
+   ~CustomCommandList();
 
    ID3D12GraphicsCommandList* GetCommandList();
-   const int GetBackBufferIndex();
 
 private:
    DrawSystem& m_drawSystem;
    ID3D12GraphicsCommandList* m_pCommandList;
-   ID3D12CommandQueue* m_pCommandQueue;   
 
 };

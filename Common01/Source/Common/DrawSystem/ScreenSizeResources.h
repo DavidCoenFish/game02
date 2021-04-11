@@ -24,6 +24,7 @@ public:
    void SetFenceValue(const UINT64 value);
 
    void Prepare(
+      ID3D12GraphicsCommandList*& pCommandList,
       D3D12_RESOURCE_STATES beforeState = D3D12_RESOURCE_STATE_PRESENT,
       D3D12_RESOURCE_STATES afterState = D3D12_RESOURCE_STATE_RENDER_TARGET
       );
@@ -34,9 +35,13 @@ public:
       D3D12_RESOURCE_STATES beforeState = D3D12_RESOURCE_STATE_RENDER_TARGET
       );
    void UpdateBackBufferIndex();
+   const int GetBackBufferIndex() const { return m_backBufferIndex; }
 
    const int GetWidth() const { return m_width; }
    const int GetHeight() const { return m_height; }
+
+   void WaitForGpu(const Microsoft::WRL::ComPtr<ID3D12CommandQueue>& pCommandQueue) noexcept;
+   void MoveToNextFrame(const Microsoft::WRL::ComPtr<ID3D12CommandQueue>& pCommandQueue);
 
 private:
    CD3DX12_CPU_DESCRIPTOR_HANDLE GetRenderTargetView() const;
@@ -50,10 +55,13 @@ private:
    bool m_bAllowTearing;
    unsigned int m_backBufferCount;
    unsigned int m_backBufferIndex;
-   UINT64 m_fenceValues[MAX_BACK_BUFFER_COUNT];
 
    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> m_pCommandList;
    Microsoft::WRL::ComPtr<ID3D12CommandAllocator> m_pCommandAllocators[MAX_BACK_BUFFER_COUNT];
+   UINT64 m_fenceValues[MAX_BACK_BUFFER_COUNT];
+   Microsoft::WRL::ComPtr<ID3D12Fence> m_pFence;
+   Microsoft::WRL::Wrappers::Event m_fenceEvent;
+
    Microsoft::WRL::ComPtr<IDXGISwapChain3> m_pSwapChain;
    Microsoft::WRL::ComPtr<ID3D12Resource> m_pRenderTargets[MAX_BACK_BUFFER_COUNT];
    Microsoft::WRL::ComPtr<ID3D12Resource> m_pDepthStencil;

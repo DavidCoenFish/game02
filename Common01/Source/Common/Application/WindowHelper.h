@@ -3,6 +3,7 @@
 class ApplicationHolder;
 class IApplication;
 class IApplicationParam;
+class CommandLine;
 
 const int WindowHelper(
    const std::shared_ptr<ApplicationHolder>& pApplicationHolder,
@@ -12,6 +13,7 @@ const int WindowHelper(
    const bool bFullScreen,
    const int defaultWidth,
    const int defaultHeight,
+   const std::shared_ptr< CommandLine >& pCommandLine,
    const int nCmdShow
    );
 

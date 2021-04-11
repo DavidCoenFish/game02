@@ -41,6 +41,7 @@ const int WindowHelper(
    const bool bFullScreen,
    const int defaultWidth,
    const int defaultHeight,
+   const std::shared_ptr< CommandLine >& pCommandLine,
    const int nCmdShow
    )
 {
@@ -77,7 +78,8 @@ const int WindowHelper(
             pApplicationHolder,
             bFullScreen,
             defaultWidth,
-            defaultHeight
+            defaultHeight,
+            pCommandLine
             ));
       };
       DWORD dwStyle = bFullScreen ? WS_POPUP : WS_OVERLAPPEDWINDOW;
