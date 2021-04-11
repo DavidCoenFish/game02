@@ -3,7 +3,8 @@
    "Skip": false,
    "Priority": 0,
    "Dependants": [ "BuildApplication01Release" ],
-   "CommandLine": "Empty",
+   "CommandLine": "TestTriangle",
+   "DisabledCommandLine": "Empty",
    "Actions": [
       {
          "Factory": "Wait",
