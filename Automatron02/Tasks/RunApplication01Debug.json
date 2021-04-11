@@ -19,18 +19,6 @@
          "IntParam0": 1000
       },
       {
-         "Factory": "SysKeyDownAlt",
-         "StringParam0": "VK_RETURN"
-      },
-      {
-         "Factory": "Wait",
-         "IntParam0": 1000
-      },
-      {
-         "Factory": "SysKeyDownAlt",
-         "StringParam0": "VK_RETURN"
-      },
-      {
          "Factory": "Close"
       }
    ]
