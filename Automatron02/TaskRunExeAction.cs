@@ -11,7 +11,7 @@ namespace Automatron02
       public class TaskRunExeActionPOCO
       {
          public int Priority { get; set; }
-         public string[] Dependants { get; set; }
+         public string[] Dependency { get; set; }
          public bool Skip { get; set; }
          public string CommandLine { get; set; }
          public ActionPOCO[] Actions { get; set; }
@@ -86,7 +86,7 @@ namespace Automatron02
          return new TaskRunExeAction(
             name,
             data.Priority,
-            data.Dependants,
+            data.Dependency,
             data.Skip,
             data.CommandLine,
             actionList
@@ -110,10 +110,10 @@ namespace Automatron02
       {
          get => _name;
       }
-      private string[] _dependants;
-      public string[] Dependants
+      private string[] _dependency;
+      public string[] Dependency
       {
-         get => _dependants;
+         get => _dependency;
       }
       private bool _skip;
       public bool Skip
@@ -212,7 +212,7 @@ namespace Automatron02
       public TaskRunExeAction(
          string name,
          int priority,
-         string[] dependants,
+         string[] dependency,
          bool skip,
          string comandLine,
          System.Collections.Generic.List<System.Action<System.Diagnostics.Process>> actionList
@@ -220,7 +220,7 @@ namespace Automatron02
       {
          _priority = priority;
          _name = name;
-         _dependants = dependants;
+         _dependency = dependency;
          _skip = skip;
          _comandLine = comandLine;
          _actionList = actionList;

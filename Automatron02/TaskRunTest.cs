@@ -11,7 +11,7 @@ namespace Automatron02
       public class TaskRunTestPOCO
       {
          public int Priority { get; set; }
-         public string[] Dependants { get; set; }
+         public string[] Dependency { get; set; }
          public bool Skip { get; set; }
       }
 
@@ -21,7 +21,7 @@ namespace Automatron02
          return new TaskRunTest(
             name,
             data.Priority,
-            data.Dependants,
+            data.Dependency,
             data.Skip
             );
       }
@@ -36,10 +36,10 @@ namespace Automatron02
       {
          get => _name;
       }
-      private string[] _dependants;
-      public string[] Dependants
+      private string[] _dependency;
+      public string[] Dependency
       {
-         get => _dependants;
+         get => _dependency;
       }
       private bool _skip;
       public bool Skip
@@ -122,13 +122,13 @@ namespace Automatron02
       public TaskRunTest(
          string name,
          int priority,
-         string[] dependants,
+         string[] dependency,
          bool skip
          )
       {
          _priority = priority;
          _name = name;
-         _dependants = dependants;
+         _dependency = dependency;
          _skip = skip;
       }
    }

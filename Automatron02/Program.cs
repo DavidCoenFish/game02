@@ -16,7 +16,7 @@
          }
 
          var dependencyTask = new System.Collections.Generic.List<ITask>();
-         foreach (var dependancyName in task.Dependants)
+         foreach (var dependancyName in task.Dependency)
          {
             if (false == taskMap.ContainsKey(dependancyName))
             {

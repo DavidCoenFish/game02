@@ -10,7 +10,7 @@
       {
          get;
       }
-      string[] Dependants
+      string[] Dependency
       {
          get;
       }
@@ -25,7 +25,7 @@
       }
 
       //void Run(System.Collections.Generic.Dictionary<string, ITask> taskCollection);
-      bool Run(System.Collections.Generic.List<ITask> taskDependants);
+      bool Run(System.Collections.Generic.List<ITask> taskDependency);
       //void Run();
    }
 }

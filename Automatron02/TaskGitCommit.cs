@@ -11,7 +11,7 @@ namespace Automatron02
       public class TaskGitCommitPOCO
       {
          public int Priority { get; set; }
-         public string[] Dependants { get; set; }
+         public string[] Dependency { get; set; }
          public bool Skip { get; set; }
          public string Git { get; set; }
       }
@@ -34,7 +34,7 @@ namespace Automatron02
             rootPath,
             name,
             data.Priority,
-            data.Dependants,
+            data.Dependency,
             data.Skip,
             data.Git,
             commitMessage
@@ -51,10 +51,10 @@ namespace Automatron02
       {
          get => _name;
       }
-      private string[] _dependants;
-      public string[] Dependants
+      private string[] _dependency;
+      public string[] Dependency
       {
-         get => _dependants;
+         get => _dependency;
       }
       private bool _skip;
       public bool Skip
@@ -142,7 +142,7 @@ namespace Automatron02
          string rootPath,
          string name,
          int priority,
-         string[] dependants,
+         string[] dependency,
          bool skip,
          string git,
          string commitMessage
@@ -151,7 +151,7 @@ namespace Automatron02
          _rootPath = rootPath;
          _priority = priority;
          _name = name;
-         _dependants = dependants;
+         _dependency = dependency;
          _skip = skip;
          _git = git;
          _commitMessage = commitMessage;
