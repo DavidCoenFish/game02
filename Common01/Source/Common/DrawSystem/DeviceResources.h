@@ -6,8 +6,10 @@
 //   AllowTearing = 0x1,
 //   EnableHDR = 0x2
 //};
+class DrawSystem;
 class IResource;
 class ScreenSizeResources;
+class IRenderTarget;
 namespace DirectX
 {
    class GraphicsMemory;
@@ -21,7 +23,6 @@ public:
    static const unsigned int c_EnableHDR       = 0x2;
 
    DeviceResources(
-      const HWND hWnd,
       const unsigned int backBufferCount,
       const D3D_FEATURE_LEVEL d3dFeatureLevel,
       const unsigned int options
@@ -29,15 +30,19 @@ public:
    ~DeviceResources();
    void WaitForGpu() noexcept;
 
-   void OnResize(const HWND hWnd);
+   void OnResize(
+      DrawSystem* const pDrawSystem,
+      const HWND hWnd
+      );
    const int GetBackBufferIndex() const;
    DirectX::GraphicsResource AllocateUpload(const std::size_t size, void* const pDataOrNullptr, size_t alignment = 16);
 
    void Prepare(
       ID3D12GraphicsCommandList*& pCommandList
       );
-   void Clear();
+   //void Clear();
    const bool Present();
+   IRenderTarget* GetRenderTargetBackBuffer();
 
    ID3D12Device* const GetD3dDevice();
    //ID3D12CommandQueue* const GetCommandQueue();
@@ -45,12 +50,13 @@ public:
    ID3D12GraphicsCommandList* GetCustomCommandList();
    void CustomCommandListFinish(ID3D12GraphicsCommandList* pCommandList);
 
-   void ApplicationShuttingDown();
-private:
-   void GetAdapter(IDXGIAdapter1** ppAdapter, const D3D_FEATURE_LEVEL d3dFeatureLevel);
    void CreateWindowSizeDependentResources(
+      DrawSystem* const pDrawSystem,
       const HWND hWnd
       );
+
+private:
+   void GetAdapter(IDXGIAdapter1** ppAdapter, const D3D_FEATURE_LEVEL d3dFeatureLevel);
    void MoveToNextFrame();
    //void UpdateColorSpace();
 

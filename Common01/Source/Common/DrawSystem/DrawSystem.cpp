@@ -153,14 +153,14 @@ void DrawSystem::Prepare(
    return;
 }
 
-void DrawSystem::Clear()
-{
-   if (nullptr == m_pDeviceResources)
-   {
-      return;
-   }
-   m_pDeviceResources->Clear();
-}
+//void DrawSystem::Clear()
+//{
+//   if (nullptr == m_pDeviceResources)
+//   {
+//      return;
+//   }
+//   m_pDeviceResources->Clear();
+//}
 
 void DrawSystem::Present()
 {
@@ -173,6 +173,15 @@ void DrawSystem::Present()
    {
       CreateDeviceResources();
    }
+}
+
+IRenderTarget* DrawSystem::GetRenderTargetBackBuffer()
+{
+   if (m_pDeviceResources)
+   {
+      return m_pDeviceResources->GetRenderTargetBackBuffer();
+   }
+   return nullptr;
 }
 
 std::shared_ptr<HeapWrapperItem> DrawSystem::MakeHeapWrapperCbvSrvUav(const int length)
@@ -220,7 +229,7 @@ void DrawSystem::OnResize()
 {
    if (m_pDeviceResources)
    {
-      m_pDeviceResources->OnResize(m_hWnd);
+      m_pDeviceResources->OnResize(this, m_hWnd);
    }
 }
 
@@ -261,11 +270,12 @@ void DrawSystem::CreateDeviceResources()
    }
    m_pDeviceResources.reset();
    m_pDeviceResources = std::make_unique< DeviceResources >(
-      m_hWnd,
       2,
       m_d3dFeatureLevel,
       m_options
       );
+   //two pass construction as rendertargetbackbuffer calls MakeHeapWrapperRenderTargetView, MakeHeapWrapperDepthStencilView which need m_pDeviceResources assigned
+   m_pDeviceResources->CreateWindowSizeDependentResources(this, m_hWnd);
 
    if (0 < m_listResource.size())
    {

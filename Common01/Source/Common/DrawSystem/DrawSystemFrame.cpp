@@ -3,15 +3,19 @@
 #include "Common/DrawSystem/DrawSystemFrame.h"
 #include "Common/DrawSystem/DrawSystem.h"
 #include "Common/DrawSystem/d3dx12.h"
+#include "Common/DrawSystem/RenderTarget/IRenderTarget.h"
+#include "Common/DrawSystem/Shader/Shader.h"
+#include "Common/DrawSystem/Geometry/GeometryGeneric.h"
 
 DrawSystemFrame::DrawSystemFrame(DrawSystem& drawSystem)
    : m_drawSystem(drawSystem)
    , m_pCommandList(nullptr)
+   , m_pRenderTarget(nullptr)
 {
    m_drawSystem.Prepare(
       m_pCommandList
       );
-   m_drawSystem.Clear();
+   //m_drawSystem.Clear();
 }
 
 DrawSystemFrame::~DrawSystemFrame()
@@ -24,6 +28,7 @@ DrawSystemFrame::~DrawSystemFrame()
    //{
    //   m_pCommandQueue->ExecuteCommandLists(1, CommandListCast(m_pCommandList.GetAddressOf()));
    //}
+   SetRenderTarget(nullptr);
 
    m_drawSystem.Present();
 }
@@ -36,4 +41,27 @@ ID3D12GraphicsCommandList* DrawSystemFrame::GetCommandList()
 const int DrawSystemFrame::GetBackBufferIndex()
 {
    return m_drawSystem.GetBackBufferIndex();
+}
+
+void DrawSystemFrame::SetRenderTarget(IRenderTarget* const pRenderTarget)
+{
+   if (m_pRenderTarget)
+   {
+      m_pRenderTarget->EndRender(m_pCommandList);
+   }
+   m_pRenderTarget = pRenderTarget;
+   if (m_pRenderTarget)
+   {
+      m_pRenderTarget->StartRender(m_pCommandList);
+   }
+}
+
+void DrawSystemFrame::SetShader(Shader* const pShader)
+{
+   pShader->SetActivate(m_pCommandList, m_drawSystem.GetBackBufferIndex());
+}
+
+void DrawSystemFrame::Draw(GeometryGeneric* const pGeometry)
+{
+   pGeometry->Draw(m_pCommandList);
 }

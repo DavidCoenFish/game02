@@ -8,7 +8,6 @@
 #include "Common/Util/Utf8.h"
 
 DeviceResources::DeviceResources(
-   const HWND hWnd,
    const unsigned int backBufferCount,
    const D3D_FEATURE_LEVEL d3dFeatureLevel,
    const unsigned int options
@@ -18,7 +17,6 @@ DeviceResources::DeviceResources(
    , m_dxgiFactoryFlags(0)
    , m_customCommandListFenceValue(0)
 {
-   hWnd;
    static int sCount = -1;
    sCount += 1;
 
@@ -122,7 +120,7 @@ DeviceResources::DeviceResources(
       m_pCommandQueue->SetName(name);
    }
 
-   CreateWindowSizeDependentResources(hWnd);
+   //CreateWindowSizeDependentResources(pDrawSystem, hWnd);
 
    m_pGraphicsMemory = std::make_unique<DirectX::GraphicsMemory>(m_pDevice.Get());
    if (nullptr == m_pGraphicsMemory)
@@ -211,9 +209,9 @@ void DeviceResources::WaitForCustomCommand() //make sure any outstanding command
    }
 }
 
-void DeviceResources::OnResize(const HWND hWnd)
+void DeviceResources::OnResize(DrawSystem* const pDrawSystem, const HWND hWnd)
 {
-   CreateWindowSizeDependentResources(hWnd);
+   CreateWindowSizeDependentResources(pDrawSystem, hWnd);
 }
 
 const int DeviceResources::GetBackBufferIndex() const
@@ -289,6 +287,7 @@ void DeviceResources::GetAdapter(IDXGIAdapter1** ppAdapter, const D3D_FEATURE_LE
 }
 
 void DeviceResources::CreateWindowSizeDependentResources(
+   DrawSystem* const pDrawSystem, 
    const HWND hWnd
    )
 {
@@ -316,6 +315,7 @@ void DeviceResources::CreateWindowSizeDependentResources(
 
    const unsigned int swapFlag = (m_options & c_AllowTearing) ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u;
    m_pScreenSizeResources = std::make_unique<ScreenSizeResources>(
+      pDrawSystem,
       m_pDevice,
       m_pDXGIFactory,
       m_pCommandQueue,
@@ -383,14 +383,14 @@ void DeviceResources::CustomCommandListFinish(ID3D12GraphicsCommandList* pComman
    m_pCommandQueue->ExecuteCommandLists(1, CommandListCast(&pCommandList));
 }
 
-void DeviceResources::Clear()
-{
-   if (nullptr == m_pScreenSizeResources)
-   {
-      return;
-   }
-   m_pScreenSizeResources->Clear();
-}
+//void DeviceResources::Clear()
+//{
+//   if (nullptr == m_pScreenSizeResources)
+//   {
+//      return;
+//   }
+//   m_pScreenSizeResources->Clear();
+//}
 
 const bool DeviceResources::Present()
 {
@@ -425,5 +425,14 @@ const bool DeviceResources::Present()
     }
 
    return true;
+}
+
+IRenderTarget* DeviceResources::GetRenderTargetBackBuffer()
+{
+   if (nullptr != m_pScreenSizeResources)
+   {
+      return m_pScreenSizeResources->GetRenderTargetBackBuffer();
+   }
+   return nullptr;
 }
 

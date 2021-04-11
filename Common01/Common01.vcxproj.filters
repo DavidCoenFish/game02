@@ -34,6 +34,12 @@
     <Filter Include="Source\Common\DrawSystem\Geometry">
       <UniqueIdentifier>{914c4fdb-615f-412b-839f-cf4fa6d03723}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Common\DrawSystem\RenderTarget">
+      <UniqueIdentifier>{0013fa15-a403-475c-8496-b1ed8b000d00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common\DrawSystem\Math">
+      <UniqueIdentifier>{8b2ec63e-b3b9-4cc0-85b3-edfad31a8934}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Common01.props" />
@@ -155,6 +161,27 @@
     </ClCompile>
     <ClCompile Include="Source\Common\DrawSystem\Geometry\GeometryGeneric.cpp">
       <Filter>Source\Common\DrawSystem\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DrawSystem\Shader\ShaderTexture2D.cpp">
+      <Filter>Source\Common\DrawSystem\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DrawSystem\RenderTarget\RenderTargetBackbuffer.cpp">
+      <Filter>Source\Common\DrawSystem\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DrawSystem\RenderTarget\RenderTargetDepthData.cpp">
+      <Filter>Source\Common\DrawSystem\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DrawSystem\RenderTarget\RenderTargetFormatData.cpp">
+      <Filter>Source\Common\DrawSystem\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DrawSystem\RenderTarget\RenderTargetTexture.cpp">
+      <Filter>Source\Common\DrawSystem\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DrawSystem\RenderTarget\IRenderTarget.cpp">
+      <Filter>Source\Common\DrawSystem\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Math\VectorFloat4.cpp">
+      <Filter>Source\Common\DrawSystem\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -280,6 +307,27 @@
     </ClInclude>
     <ClInclude Include="Source\Common\DrawSystem\Geometry\GeometryGeneric.h">
       <Filter>Source\Common\DrawSystem\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DrawSystem\Shader\ShaderTexture2D.h">
+      <Filter>Source\Common\DrawSystem\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DrawSystem\RenderTarget\IRenderTarget.h">
+      <Filter>Source\Common\DrawSystem\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DrawSystem\RenderTarget\RenderTargetBackbuffer.h">
+      <Filter>Source\Common\DrawSystem\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DrawSystem\RenderTarget\RenderTargetDepthData.h">
+      <Filter>Source\Common\DrawSystem\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DrawSystem\RenderTarget\RenderTargetFormatData.h">
+      <Filter>Source\Common\DrawSystem\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DrawSystem\RenderTarget\RenderTargetTexture.h">
+      <Filter>Source\Common\DrawSystem\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Math\VectorFloat4.h">
+      <Filter>Source\Common\DrawSystem\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

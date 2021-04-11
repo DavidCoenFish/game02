@@ -103,10 +103,13 @@ void ApplicationTestTriangle::Update()
    BaseType::Update();
    if (m_pDrawSystem)
    {
-      auto pTemp = m_pDrawSystem->CreateNewFrame();
-      m_pDrawSystem->Clear();
-      m_pShader->SetActivate(pTemp->GetCommandList(), pTemp->GetBackBufferIndex());
-      m_pGeometry->Draw(pTemp->GetCommandList());
+      auto pFrame = m_pDrawSystem->CreateNewFrame();
+      pFrame->SetRenderTarget(m_pDrawSystem->GetRenderTargetBackBuffer());
+      pFrame->SetShader(m_pShader.get());
+      pFrame->Draw(m_pGeometry.get());
+      //m_pDrawSystem->Clear();
+      //m_pShader->SetActivate(pFrame->GetCommandList(), pFrame->GetBackBufferIndex());
+      //m_pGeometry->Draw(pFrame->GetCommandList());
    }
 }
 

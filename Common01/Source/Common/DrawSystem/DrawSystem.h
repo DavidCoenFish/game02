@@ -3,6 +3,7 @@
 class DeviceResources;
 class DrawSystemFrame;
 class IResource;
+class IRenderTarget; //* GetRenderTargetBackBuffer();
 class HeapWrapper;
 class HeapWrapperItem;
 class CustomCommandList;
@@ -67,8 +68,9 @@ public:
    std::unique_ptr< DrawSystemFrame > CreateNewFrame(); //ctor == Prepare, dtor == Present
 
    void Prepare(ID3D12GraphicsCommandList*& pCommandList);
-   void Clear();
+   //void Clear();
    void Present();
+   IRenderTarget* GetRenderTargetBackBuffer();
 
    std::shared_ptr<HeapWrapperItem> MakeHeapWrapperCbvSrvUav(const int length = 1);
    std::shared_ptr<HeapWrapperItem> MakeHeapWrapperSampler(const int length = 1);
