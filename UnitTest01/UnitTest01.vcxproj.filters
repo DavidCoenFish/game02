@@ -21,6 +21,9 @@
     <ClCompile Include="Source\CommonFileSystem.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\CommonDag.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\UnitTestPCH.h">

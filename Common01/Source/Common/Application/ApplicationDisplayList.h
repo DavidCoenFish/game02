@@ -1,11 +1,9 @@
 #pragma once
 
 #include "Common/Application/IApplication.h"
-//#include "Common/DrawSystem/Geometry/Geometry.h"
 class ApplicationHolder;
 class DrawSystem;
-class Shader;
-class GeometryGeneric;
+class DagCollection;
 
 class ApplicationDisplayList : public IApplication
 {
@@ -20,5 +18,6 @@ private:
 
 private:
    std::unique_ptr< DrawSystem > m_pDrawSystem;
+   std::shared_ptr< DagCollection > m_pDagCollection;
 
 };

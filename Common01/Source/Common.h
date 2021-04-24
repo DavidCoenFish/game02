@@ -50,6 +50,7 @@
 #include <mutex>
 #include <stdexcept>
 #include <string>
+#include <variant>
 #include <vector>
 
 #ifdef _DEBUG

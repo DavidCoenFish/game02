@@ -9,6 +9,8 @@
 #include "Common/DrawSystem/Geometry/GeometryGeneric.h"
 #include "Common/DrawSystem/Shader/Shader.h"
 #include "Common/JSON/JSONDrawSystem.h"
+#include "Common/JSON/JSONDagCollection.h"
+#include "Common/DAG/DagCollection.h"
 #include "json/json.hpp"
 
 
@@ -16,10 +18,12 @@ class JSONData
 {
 public:
    JSONDrawSystem drawSystem;
+   JSONDagCollection dagCollection;
 };
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    JSONData,
-   drawSystem
+   drawSystem,
+   dagCollection
    );
 
 
@@ -42,6 +46,20 @@ ApplicationDisplayList::ApplicationDisplayList(const IApplicationParam& applicat
       jsonData.drawSystem.targetFormatData,
       jsonData.drawSystem.targetDepthData
       );
+   {
+      std::map<std::string, std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)>> mapValue;
+      std::map<std::string, std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)>> mapCalculate;
+      //mapValue["shader"] = [=](const nlohmann::json& data){
+      //   auto pCommandList = m_pDrawSystem->CreateCustomCommandList();
+      //   return m_pDrawSystem->MakeShader(
+      //      pCommandList->GetCommandList()
+      //      );
+      //};
+
+
+      m_pDagCollection = JSONDagCollection::Factory(jsonData.dagCollection, mapValue, mapCalculate);
+   }
+
 }
 
 ApplicationDisplayList::~ApplicationDisplayList()
@@ -50,6 +68,8 @@ ApplicationDisplayList::~ApplicationDisplayList()
    {
       m_pDrawSystem->WaitForGpu();
    }
+   m_pDagCollection.reset();
+   m_pDrawSystem.reset();
 
    LOG_MESSAGE("ApplicationDisplayList dtor %p", this);
 }
@@ -61,6 +81,8 @@ void ApplicationDisplayList::Update()
    {
       auto pFrame = m_pDrawSystem->CreateNewFrame();
       pFrame->SetRenderTarget(m_pDrawSystem->GetRenderTargetBackBuffer());
+
+      //m_pDagCollection->
    }
 }
 

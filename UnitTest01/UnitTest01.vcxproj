@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\CommonApplicationCommandLine.cpp" />
+    <ClCompile Include="Source\CommonDag.cpp" />
     <ClCompile Include="Source\CommonFileSystem.cpp" />
     <ClCompile Include="Source\CommonLog.cpp" />
     <ClCompile Include="Source\UnitTestPCH.cpp">

@@ -43,6 +43,9 @@
     <Filter Include="Source\Common\JSON">
       <UniqueIdentifier>{b91b92c2-545d-4aa0-ae7b-769e864214bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Common\DAG">
+      <UniqueIdentifier>{6ecae4f4-4fef-4a84-9079-3da7e34a447f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Common01.props" />
@@ -199,6 +202,30 @@
       <Filter>Source\Common\JSON</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\JSON\JSONDrawSystem.cpp">
+      <Filter>Source\Common\JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DAG\DagNodeCalculate.cpp">
+      <Filter>Source\Common\DAG</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DAG\DagNodeValue.cpp">
+      <Filter>Source\Common\DAG</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DAG\DagValue.cpp">
+      <Filter>Source\Common\DAG</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DAG\DagValueVariant.cpp">
+      <Filter>Source\Common\DAG</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DAG\iDagNode.cpp">
+      <Filter>Source\Common\DAG</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DAG\iDagValue.cpp">
+      <Filter>Source\Common\DAG</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DAG\DagCollection.cpp">
+      <Filter>Source\Common\DAG</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\JSON\JSONDagCollection.cpp">
       <Filter>Source\Common\JSON</Filter>
     </ClCompile>
   </ItemGroup>
@@ -364,6 +391,30 @@
     </ClInclude>
     <ClInclude Include="Source\Common\Macro.h">
       <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DAG\DagCollection.h">
+      <Filter>Source\Common\DAG</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DAG\DagNodeCalculate.h">
+      <Filter>Source\Common\DAG</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DAG\DagNodeValue.h">
+      <Filter>Source\Common\DAG</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DAG\DagValue.h">
+      <Filter>Source\Common\DAG</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DAG\DagValueVariant.h">
+      <Filter>Source\Common\DAG</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DAG\iDagNode.h">
+      <Filter>Source\Common\DAG</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DAG\iDagValue.h">
+      <Filter>Source\Common\DAG</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\JSON\JSONDagCollection.h">
+      <Filter>Source\Common\JSON</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

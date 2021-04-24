@@ -1,9 +1,92 @@
 {
-   "drawSystem":{
+   "drawSystem": {
       "targetFormatData": {
          "format": "DXGI_FORMAT_B8G8R8A8_UNORM",
          "clearOnSet": true,
          "clearColor": [ 0.5, 0.5, 0.5, 1.0 ]
       }
+   },
+   "dagCollection": {
+      "valueArray": [
+         {
+            "name":"Shader0",
+            "type":"Shader",
+            "data": {
+               "pipelineState": {
+                  "topologyType": "D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE",
+                  "renderTargetFormat": [ "DXGI_FORMAT_B8G8R8A8_UNORM" ]
+               },
+               "vertexShader": "Resources\\Shader\\SimpleTriangleVertex.cso",
+               "pixelShader": "Resources\\Shader\\SimpleTrianglePixel.cso",
+               "inputElementDesc": [
+                  {
+                     "semantic": "POSITION",
+                     "format": "DXGI_FORMAT_R32G32_FLOAT"
+                  },
+                  {
+                     "semantic": "COLOR",
+                     "format": "DXGI_FORMAT_R32G32B32A32_FLOAT"
+                  }
+               ]
+            }
+         },
+         {
+            "name": "Geometry0",
+            "type": "Geometry",
+            "data": {
+            "inputElementDesc": [
+               {
+                  "semantic": "POSITION",
+                  "format": "DXGI_FORMAT_R32G32_FLOAT"
+               },
+               {
+                  "semantic": "COLOR",
+                  "format": "DXGI_FORMAT_R32G32B32A32_FLOAT"
+               }
+            ],
+            "floatPerVertex": 6,
+            "vertexData": [
+               0.0, 0.5,  1.0, 0.0, 0.0, 1.0, 
+               0.5, -0.5,   0.0, 1.0, 0.0, 1.0, 
+               -0.5, -0.5,  0.0, 0.0, 1.0, 1.0 
+            ],
+            "topology": "D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST"
+            }
+         }
+      ],
+      "calculateArray": [
+         {
+            "name": "GeometryList0",
+            "function": "GeometryList",
+            "stackInput": [
+               "Geometry0"
+            ]
+         },
+         {
+            "name": "Draw0",
+            "function": "Draw",
+            "orderedInput": [
+               "Shader0",
+               "GeometryList0"
+            ]
+         },
+         {
+            "name": "DrawList0",
+            "function": "DrawList",
+            "stackInput": [
+               "Draw0"
+            ]
+         },
+         {
+            "name": "_Render",
+            "function": "RenderList",
+            "orderedInput": [
+               "_FrameCount",
+               "_CustomCommandList",
+               "_BackBuffer",
+               "DrawList0"
+            ]
+         }
+      ]
    }
 }
