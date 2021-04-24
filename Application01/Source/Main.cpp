@@ -8,6 +8,7 @@
 #include "Common/Application/IApplication.h"
 #include "Common/Application/ApplicationBasic.h"
 #include "Common/Application/ApplicationTestTriangle.h"
+#include "Common/Application/ApplicationDisplayList.h"
 #include "Common/Application/ApplicationHolder.h"
 #include "Common/FileSystem/FileSystem.h"
 #include "Common/FileSystem/ReadOverlayDir.h"
@@ -17,28 +18,38 @@
 #include "Common/Util/Utf8.h"
 #include "json/json.hpp"
 
-struct JSONWindow
+class JSONWindow
 {
-   std::string Name;
-   bool FullScreen;
-   int Width;
-   int Height;
-   std::string Factory;
+public:
+   JSONWindow()
+      : fullScreen(false)
+      , width(800)
+      , height(600)
+   {
+      //nop
+   }
+   std::string name;
+   bool fullScreen;
+   int width;
+   int height;
+   std::string factory;
+   std::string data;
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    JSONWindow,
-   Name,
-   FullScreen,
-   Width,
-   Height,
-   Factory
+   name,
+   fullScreen,
+   width,
+   height,
+   factory,
+   data
    );
 
 struct JSONApplication
 {
-   std::vector< JSONWindow > Windows;
-   std::vector< std::string > Logs;
+   std::vector< JSONWindow > windows;
+   //std::vector< std::string > logs;
    //std::vector< JSONLog > Logs;
    //std::vector< JSONOverlayRead > OverlayRead; // beter to be under application or data control?
    //std::vector< JSONOverlayWrite > OverlayWrite; // beter to be under application or data control?
@@ -46,11 +57,11 @@ struct JSONApplication
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    JSONApplication, 
-   Windows,
-   Logs
+   windows
+   //Logs
    );
 
-static const std::function< IApplication*(const IApplicationParam&) > GetFactory(const std::string& factoryKey, const std::filesystem::path& rootPath)
+static const std::function< IApplication*(const IApplicationParam&) > GetFactory(const std::string& factoryKey, const std::filesystem::path& rootPath, const std::string& data)
 {
    if (factoryKey == "ApplicationBasic")
    {
@@ -64,6 +75,13 @@ static const std::function< IApplication*(const IApplicationParam&) > GetFactory
       return [=](const IApplicationParam& applicationParam)
       {
          return new ApplicationTestTriangle(applicationParam, rootPath);
+      };
+   }
+   else if (factoryKey == "ApplicationDisplayList")
+   {
+      return [=](const IApplicationParam& applicationParam)
+      {
+         return new ApplicationDisplayList(applicationParam, rootPath, data);
       };
    }
    return [](const IApplicationParam& applicationParam)
@@ -98,23 +116,22 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
    {
       std::filesystem::path path = std::filesystem::path("Task") / pCommandLine->GetParam(1);
       std::filesystem::path applicationPath = path / "Application.json";
-      auto pFile = FileSystem::GetFileString(applicationPath);
-      auto json = nlohmann::json::parse( pFile ? *pFile : "{}");
+      auto pString = FileSystem::GetFileString(applicationPath);
+      auto json = nlohmann::json::parse( pString ? *pString : "{}");
       JSONApplication applicationData;
       json.get_to(applicationData);
 
-      //std::vector<HWND> windows;
       auto pApplicationHolder = std::make_shared<ApplicationHolder>();
-      for(const auto& item : applicationData.Windows)
+      for(const auto& item : applicationData.windows)
       {
          result = WindowHelper(
             pApplicationHolder,
-            GetFactory(item.Factory, path),
+            GetFactory(item.factory, path, item.data),
             hInstance,
-            item.Name,
-            item.FullScreen,
-            item.Width,
-            item.Height,
+            item.name,
+            item.fullScreen,
+            item.width,
+            item.height,
             pCommandLine,
             nCmdShow
             );
@@ -137,7 +154,7 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
    }
    else
    {
-      LOG_MESSAGE_ERROR("Only got [%d] param, want at least a tast name", pCommandLine->GetParamCount());
+      LOG_MESSAGE_ERROR("Only got [%d] param, want at least a task name", pCommandLine->GetParamCount());
    }
 
     return result;

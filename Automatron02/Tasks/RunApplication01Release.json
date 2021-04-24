@@ -4,7 +4,7 @@
    "Priority": 0,
    "Dependency": [ "BuildApplication01Release" ],
    "CommandLine": "TestTriangle",
-   "DisabledCommandLine": "Empty",
+   "CommandLineArray": ["Empty", "TestTriangle"],
    "Actions": [
       {
          "Factory": "Wait",

@@ -4,6 +4,8 @@ struct CD3DX12_CPU_DESCRIPTOR_HANDLE;
 class RenderTargetBackBuffer;
 class DrawSystem;
 class IRenderTarget;
+struct RenderTargetFormatData;
+struct RenderTargetDepthData;
 
 class ScreenSizeResources
 {
@@ -19,8 +21,10 @@ public:
       const int width,
       const int height,
       const bool bAllowTearing,
-      const DXGI_FORMAT backBufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM,
-      const DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D32_FLOAT
+      //const DXGI_FORMAT backBufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM,
+      //const DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D32_FLOAT
+      const RenderTargetFormatData& targetFormatData,
+      const RenderTargetDepthData& targetDepthData
       );
    ~ScreenSizeResources();
 
@@ -66,14 +70,6 @@ private:
    Microsoft::WRL::Wrappers::Event m_fenceEvent;
 
    Microsoft::WRL::ComPtr<IDXGISwapChain3> m_pSwapChain;
-   //Microsoft::WRL::ComPtr<ID3D12Resource> m_pRenderTargets[MAX_BACK_BUFFER_COUNT];
-   //Microsoft::WRL::ComPtr<ID3D12Resource> m_pDepthStencil;
    std::unique_ptr< RenderTargetBackBuffer > m_pRenderTargetBackBuffer[MAX_BACK_BUFFER_COUNT];
-
-   //Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_rtvDescriptorHeap;
-   //Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_dsvDescriptorHeap;
-   //UINT m_rtvDescriptorSize;
-   //D3D12_VIEWPORT m_screenViewport;
-   //D3D12_RECT m_scissorRect;
 
 };

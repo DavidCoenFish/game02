@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Common/DrawSystem/RenderTarget/RenderTargetFormatData.h"
+#include "Common/DrawSystem/RenderTarget/RenderTargetDepthData.h"
 //enum class DeviceResourcesOptions
 //{
 //   None = 0,
@@ -10,6 +12,8 @@ class DrawSystem;
 class IResource;
 class ScreenSizeResources;
 class IRenderTarget;
+struct RenderTargetFormatData;
+struct RenderTargetDepthData;
 namespace DirectX
 {
    class GraphicsMemory;
@@ -25,7 +29,9 @@ public:
    DeviceResources(
       const unsigned int backBufferCount,
       const D3D_FEATURE_LEVEL d3dFeatureLevel,
-      const unsigned int options
+      const unsigned int options,
+      const RenderTargetFormatData& targetFormatData,
+      const RenderTargetDepthData& targetDepthData
       );
    ~DeviceResources();
    void WaitForGpu() noexcept;
@@ -66,6 +72,9 @@ private:
    unsigned int m_backBufferCount;
 
    unsigned int m_options;
+   RenderTargetFormatData m_targetFormatData;
+   RenderTargetDepthData m_targetDepthData;
+
    Microsoft::WRL::ComPtr<IDXGIFactory6> m_pDXGIFactory;
    DWORD m_dxgiFactoryFlags;
    Microsoft::WRL::ComPtr<ID3D12Device> m_pDevice;

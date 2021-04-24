@@ -14,12 +14,16 @@ DrawSystem::DrawSystem(
    const HWND hWnd,
    const unsigned int backBufferCount,
    const D3D_FEATURE_LEVEL d3dFeatureLevel,
-   const unsigned int options
+   const unsigned int options,
+   const RenderTargetFormatData& targetFormatData,
+   const RenderTargetDepthData& targetDepthData
    )
    : m_hWnd(hWnd)
    , m_backBufferCount(backBufferCount)
    , m_d3dFeatureLevel(d3dFeatureLevel)
    , m_options(options)
+   , m_targetFormatData(targetFormatData)
+   , m_targetDepthData(targetDepthData)
 {
    m_pHeapWrapperCbvSrvUav = std::make_shared< HeapWrapper >( this, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, backBufferCount, true );
    m_pHeapWrapperSampler = std::make_shared< HeapWrapper >( this, D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER );
@@ -272,7 +276,9 @@ void DrawSystem::CreateDeviceResources()
    m_pDeviceResources = std::make_unique< DeviceResources >(
       2,
       m_d3dFeatureLevel,
-      m_options
+      m_options,
+      m_targetFormatData,
+      m_targetDepthData
       );
    //two pass construction as rendertargetbackbuffer calls MakeHeapWrapperRenderTargetView, MakeHeapWrapperDepthStencilView which need m_pDeviceResources assigned
    m_pDeviceResources->CreateWindowSizeDependentResources(this, m_hWnd);

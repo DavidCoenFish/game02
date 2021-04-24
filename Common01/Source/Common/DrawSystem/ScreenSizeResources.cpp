@@ -26,8 +26,8 @@ ScreenSizeResources::ScreenSizeResources(
    const int width,
    const int height,
    const bool bAllowTearing,
-   const DXGI_FORMAT _backBufferFormat,
-   const DXGI_FORMAT depthBufferFormat
+   const RenderTargetFormatData& targetFormatData,
+   const RenderTargetDepthData& targetDepthData
    )
    : m_backBufferCount(backBufferCount)
    , m_backBufferIndex(0)
@@ -61,7 +61,7 @@ ScreenSizeResources::ScreenSizeResources(
       m_pCommandList->SetName(name);
    }
 
-   const DXGI_FORMAT backBufferFormat = NoSRGB(_backBufferFormat);
+   const DXGI_FORMAT backBufferFormat = NoSRGB(targetFormatData.format);
 
    {
       // Create a descriptor for the swap chain.
@@ -103,8 +103,8 @@ ScreenSizeResources::ScreenSizeResources(
 
    // Obtain the back buffers for this window which will be the final render targets
    // and create render target views for each of them.
-   RenderTargetFormatData targetFormatData(_backBufferFormat, true, VectorFloat4(0.5f, 0.5f, 0.5f, 1.0f));
-   RenderTargetDepthData targetDepthData(depthBufferFormat, true, 1.0f);
+   //RenderTargetFormatData targetFormatData(_backBufferFormat, true, VectorFloat4(0.5f, 0.5f, 0.5f, 1.0f));
+   //RenderTargetDepthData targetDepthData(depthBufferFormat, true, 1.0f);
    for (int n = 0; n < m_backBufferCount; n++)
    {
       m_pRenderTargetBackBuffer[n] = std::make_unique<RenderTargetBackBuffer>(

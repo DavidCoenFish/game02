@@ -1,13 +1,11 @@
 {
-   "Windows": [
+   "windows": [
       {
-         "Name": "Empty",
-         "FullScreen": false,
-         "Width": 800,
-         "Height": 600,
-         "Factory": "ApplicationBasic"
+         "name": "Empty",
+         "fullScreen": false,
+         "width": 800,
+         "height": 600,
+         "factory": "ApplicationBasic"
       }
-   ],
-   "Logs":[
-      ]
+   ]
 }

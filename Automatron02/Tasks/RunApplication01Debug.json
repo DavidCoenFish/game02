@@ -1,6 +1,6 @@
 {
    "Factory": "TaskRunExeAction",
-   "Skip": false,
+   "Skip": true,
    "Priority": 0,
    "Dependency": [ "BuildApplication01Debug" ],
    "CommandLine": "TestTriangle",

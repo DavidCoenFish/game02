@@ -24,6 +24,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Common\Application\ApplicationBasic.cpp" />
+    <ClCompile Include="Source\Common\Application\ApplicationDisplayList.cpp" />
     <ClCompile Include="Source\Common\Application\ApplicationTestTriangle.cpp" />
     <ClCompile Include="Source\Common\Application\CommandLine.cpp" />
     <ClCompile Include="Source\Common\Application\IApplication.cpp" />
@@ -61,6 +62,10 @@
     <ClCompile Include="Source\Common\FileSystem\ReadOverlayDir.cpp" />
     <ClCompile Include="Source\Common\FileSystem\IReadOverlay.cpp" />
     <ClCompile Include="Source\Common\FileSystem\WriteOverlayDir.cpp" />
+    <ClCompile Include="Source\Common\JSON\JSONDrawSystem.cpp" />
+    <ClCompile Include="Source\Common\JSON\JSONDrawSystemEnum.cpp" />
+    <ClCompile Include="Source\Common\JSON\JSONRenderTarget.cpp" />
+    <ClCompile Include="Source\Common\JSON\JSONVector.cpp" />
     <ClCompile Include="Source\Common\Log\ILogConsumer.cpp" />
     <ClCompile Include="Source\Common\Log\Log.cpp" />
     <ClCompile Include="Source\Common\Log\LogConsumerConsole.cpp" />
@@ -73,6 +78,7 @@
     <ClInclude Include="Source\Common.h" />
     <ClInclude Include="Source\CommonPCH.h" />
     <ClInclude Include="Source\Common\Application\ApplicationBasic.h" />
+    <ClInclude Include="Source\Common\Application\ApplicationDisplayList.h" />
     <ClInclude Include="Source\Common\Application\ApplicationTestTriangle.h" />
     <ClInclude Include="Source\Common\Application\CommandLine.h" />
     <ClInclude Include="Source\Common\Application\IApplication.h" />
@@ -111,11 +117,16 @@
     <ClInclude Include="Source\Common\FileSystem\ReadOverlayDir.h" />
     <ClInclude Include="Source\Common\FileSystem\IReadOverlay.h" />
     <ClInclude Include="Source\Common\FileSystem\WriteOverlayDir.h" />
+    <ClInclude Include="Source\Common\JSON\JSONDrawSystem.h" />
+    <ClInclude Include="Source\Common\JSON\JSONDrawSystemEnum.h" />
+    <ClInclude Include="Source\Common\JSON\JSONRenderTarget.h" />
+    <ClInclude Include="Source\Common\JSON\JSONVector.h" />
     <ClInclude Include="Source\Common\Log\ILogConsumer.h" />
     <ClInclude Include="Source\Common\Log\Log.h" />
     <ClInclude Include="Source\Common\Log\LogConsumerConsole.h" />
     <ClInclude Include="Source\Common\Log\LogConsumerWriteToFile.h" />
     <ClInclude Include="Source\Common\Log\LogScope.h" />
+    <ClInclude Include="Source\Common\Macro.h" />
     <ClInclude Include="Source\Common\Math\VectorFloat4.h" />
     <ClInclude Include="Source\Common\Util\Utf8.h" />
   </ItemGroup>

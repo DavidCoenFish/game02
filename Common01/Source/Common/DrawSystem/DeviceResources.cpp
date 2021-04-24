@@ -10,12 +10,16 @@
 DeviceResources::DeviceResources(
    const unsigned int backBufferCount,
    const D3D_FEATURE_LEVEL d3dFeatureLevel,
-   const unsigned int options
+   const unsigned int options,
+   const RenderTargetFormatData& targetFormatData,
+   const RenderTargetDepthData& targetDepthData
    )
    : m_options(options)
    , m_backBufferCount(backBufferCount)
    , m_dxgiFactoryFlags(0)
    , m_customCommandListFenceValue(0)
+   , m_targetFormatData(targetFormatData)
+   , m_targetDepthData(targetDepthData)
 {
    static int sCount = -1;
    sCount += 1;
@@ -324,7 +328,9 @@ void DeviceResources::CreateWindowSizeDependentResources(
       m_backBufferCount,
       width,
       height,
-      swapFlag
+      swapFlag,
+      m_targetFormatData,
+      m_targetDepthData
       );
 }
 

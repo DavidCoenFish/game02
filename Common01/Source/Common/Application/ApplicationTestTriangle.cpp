@@ -45,7 +45,7 @@ ApplicationTestTriangle::ApplicationTestTriangle(const IApplicationParam& applic
       ShaderPipelineStateData shaderPipelineStateData(
          inputElementDescArray,
          D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,
-         DXGI_FORMAT_D32_FLOAT,
+         DXGI_FORMAT_UNKNOWN, // DXGI_FORMAT_D32_FLOAT,
          renderTargetFormat,
          CD3DX12_BLEND_DESC(D3D12_DEFAULT),
          CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT),

@@ -25,7 +25,7 @@ void GeometryGeneric::Draw(ID3D12GraphicsCommandList* const pCommandList)
 {
    IGeometry::DrawImplementation(
       pCommandList,
-      m_vertexRawData.size() / m_floatPerVertex,
+      (UINT)(m_vertexRawData.size() / m_floatPerVertex),
       m_primitiveTopology,
       m_vertexBufferView
       );
@@ -44,7 +44,7 @@ void GeometryGeneric::OnDeviceRestored(
       m_pDrawSystem,
       pCommandList,
       pDevice,
-      m_vertexRawData.size() / m_floatPerVertex,
+      (int)(m_vertexRawData.size() / m_floatPerVertex),
       sizeof(float) * m_floatPerVertex,
       m_pVertexBuffer,
       m_vertexBufferView,

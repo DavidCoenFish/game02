@@ -40,6 +40,9 @@
     <Filter Include="Source\Common\DrawSystem\Math">
       <UniqueIdentifier>{8b2ec63e-b3b9-4cc0-85b3-edfad31a8934}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Common\JSON">
+      <UniqueIdentifier>{b91b92c2-545d-4aa0-ae7b-769e864214bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Common01.props" />
@@ -182,6 +185,21 @@
     </ClCompile>
     <ClCompile Include="Source\Common\Math\VectorFloat4.cpp">
       <Filter>Source\Common\DrawSystem\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Application\ApplicationDisplayList.cpp">
+      <Filter>Source\Common\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\JSON\JSONDrawSystemEnum.cpp">
+      <Filter>Source\Common\JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\JSON\JSONRenderTarget.cpp">
+      <Filter>Source\Common\JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\JSON\JSONVector.cpp">
+      <Filter>Source\Common\JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\JSON\JSONDrawSystem.cpp">
+      <Filter>Source\Common\JSON</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -328,6 +346,24 @@
     </ClInclude>
     <ClInclude Include="Source\Common\Math\VectorFloat4.h">
       <Filter>Source\Common\DrawSystem\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Application\ApplicationDisplayList.h">
+      <Filter>Source\Common\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\JSON\JSONDrawSystemEnum.h">
+      <Filter>Source\Common\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\JSON\JSONRenderTarget.h">
+      <Filter>Source\Common\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\JSON\JSONVector.h">
+      <Filter>Source\Common\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\JSON\JSONDrawSystem.h">
+      <Filter>Source\Common\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Macro.h">
+      <Filter>Source\Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

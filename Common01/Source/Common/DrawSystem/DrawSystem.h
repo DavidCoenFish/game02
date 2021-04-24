@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Common/DrawSystem/RenderTarget/RenderTargetFormatData.h"
+#include "Common/DrawSystem/RenderTarget/RenderTargetDepthData.h"
+
 class DeviceResources;
 class DrawSystemFrame;
 class IResource;
@@ -26,7 +29,9 @@ public:
       const HWND hWnd,
       const unsigned int backBufferCount = 2,
       const D3D_FEATURE_LEVEL d3dFeatureLevel = D3D_FEATURE_LEVEL_11_0,
-      const unsigned int options = 0
+      const unsigned int options = 0,
+      const RenderTargetFormatData& targetFormatData = RenderTargetFormatData(DXGI_FORMAT_B8G8R8A8_UNORM),
+      const RenderTargetDepthData& targetDepthData = RenderTargetDepthData()
       );
    ~DrawSystem();
    void WaitForGpu() noexcept;
@@ -85,6 +90,9 @@ private:
    unsigned int m_backBufferCount;
    D3D_FEATURE_LEVEL m_d3dFeatureLevel;
    unsigned int m_options;
+   RenderTargetFormatData m_targetFormatData;
+   RenderTargetDepthData m_targetDepthData;
+
    std::unique_ptr< DeviceResources > m_pDeviceResources;
 
    std::list< IResource* > m_listResource;
