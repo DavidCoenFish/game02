@@ -9,7 +9,7 @@ public:
 
 private:
    virtual const int GetPriority() const override { return m_priority; }
-   virtual std::shared_ptr< std::vector<uint8_t> > GetFileData(const std::filesystem::path& path) override;
+   virtual std::shared_ptr< std::vector<uint8_t> > ReadFileLoadData(const std::filesystem::path& path) override;
 
 private:
    int m_priority;

@@ -33,8 +33,8 @@ ApplicationDisplayList::ApplicationDisplayList(const IApplicationParam& applicat
    LOG_MESSAGE("ApplicationDisplayList ctor %p", this);
 
    std::filesystem::path dataPath = rootPath / data;
-   auto pFile = FileSystem::GetFileString(dataPath);
-   auto json = nlohmann::json::parse( pFile ? *pFile : "{}");
+   auto fileString = FileSystem::DataToString(FileSystem::ReadFileLoadData(dataPath));
+   auto json = nlohmann::json::parse( fileString );
    JSONData jsonData;
    json.get_to(jsonData);
 
@@ -56,6 +56,7 @@ ApplicationDisplayList::ApplicationDisplayList(const IApplicationParam& applicat
       //      );
       //};
 
+      //mapCalculate
 
       m_pDagCollection = JSONDagCollection::Factory(jsonData.dagCollection, mapValue, mapCalculate);
    }

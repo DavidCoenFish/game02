@@ -37,8 +37,8 @@ ApplicationTestTriangle::ApplicationTestTriangle(const IApplicationParam& applic
 
    auto pCommandList = m_pDrawSystem->CreateCustomCommandList();
    {
-      auto pVertexShaderData = FileSystem::GetFileData(rootPath / "VertexShader.cso");
-      auto pPixelShaderData = FileSystem::GetFileData(rootPath / "PixelShader.cso");
+      auto pVertexShaderData = FileSystem::ReadFileLoadData(rootPath / "VertexShader.cso");
+      auto pPixelShaderData = FileSystem::ReadFileLoadData(rootPath / "PixelShader.cso");
       std::vector<DXGI_FORMAT> renderTargetFormat;
       renderTargetFormat.push_back(DXGI_FORMAT_B8G8R8A8_UNORM);
 

@@ -15,7 +15,7 @@ WriteOverlayDir::~WriteOverlayDir()
 }
 
 //http://www.cplusplus.com/reference/fstream/ofstream/ofstream/
-const bool WriteOverlayDir::SaveFileData(const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend)
+const bool WriteOverlayDir::WriteFileSaveData(const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend)
 {
    const auto localPath = m_basePath / path;
 
@@ -39,7 +39,7 @@ const bool WriteOverlayDir::SaveFileData(const std::filesystem::path& path, cons
    return true;
 }
 
-const bool WriteOverlayDir::DeleteSaveFile(const std::filesystem::path& path)
+const bool WriteOverlayDir::WriteFileDelete(const std::filesystem::path& path)
 {
    //std::error_code ec;
    if (true == std::filesystem::remove(path))

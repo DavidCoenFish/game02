@@ -116,8 +116,8 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
    {
       std::filesystem::path path = std::filesystem::path("Task") / pCommandLine->GetParam(1);
       std::filesystem::path applicationPath = path / "Application.json";
-      auto pString = FileSystem::GetFileString(applicationPath);
-      auto json = nlohmann::json::parse( pString ? *pString : "{}");
+      auto fileString = FileSystem::DataToString(FileSystem::ReadFileLoadData(applicationPath));
+      auto json = nlohmann::json::parse( fileString );
       JSONApplication applicationData;
       json.get_to(applicationData);
 

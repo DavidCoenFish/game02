@@ -14,12 +14,12 @@ public:
 
 private:
    virtual const int GetPriority() const override { return m_priority; }
-   virtual std::shared_ptr< std::vector<uint8_t> > GetFileData(const std::filesystem::path& path) override;
+   virtual std::shared_ptr< std::vector<uint8_t> > ReadFileLoadData(const std::filesystem::path& path) override;
 
    virtual const int GetMask() const override { return m_mask; }
-   virtual const bool SaveFileData(const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend) override;
+   virtual const bool WriteFileSaveData(const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend) override;
    //return true if delete worked
-   virtual const bool DeleteSaveFile(const std::filesystem::path& path) override;
+   virtual const bool WriteFileDelete(const std::filesystem::path& path) override;
 
 private:
    int m_priority;

@@ -19,45 +19,42 @@ have not committed to implementing a file cache, main consumer is shaders?
    what if read and write work on same file, invalidate file cache for file on write?
    as well as a file data cache, what about what files exists
    (note, the operating system also keeps recently accessed files in memory....)
+
 */
 namespace FileSystem
 {
    const std::filesystem::path GetModualDir(HINSTANCE hInstance);
    const std::filesystem::path GetTempDir();
 
+   const std::string DataToString(const std::shared_ptr< std::vector<uint8_t> >& pData);
+   const std::string DataToString(const std::vector<uint8_t>& data);
+   const std::vector<uint8_t> StringToData(const std::string& string);
+
    //read is done by priority, file of a highest priority for path will be read
    void AddReadOverlay( const std::shared_ptr< IReadOverlay >& pOverlay );
    void RemoveReadOverlay( const std::shared_ptr< IReadOverlay >& pOverlay );
-   void CleadReadOverlay();
-   // or need to add/ remove overlay on change of priority
-   //void OnOverlayChangePrioiry( const std::shared_ptr< IReadOverlay >& pOverlay );
+   void ClearReadOverlay();
 
    //write is done by filter
    void AddWriteOverlay( const std::shared_ptr< IWriteOverlay >& pOverlay );
    void RemoveWriteOverlay( const std::shared_ptr< IWriteOverlay >& pOverlay );
-   void CleadWriteOverlay();
+   void ClearWriteOverlay();
 
-   //const bool GetFileExist(const std::filesystem::path& path) const;
-   std::shared_ptr< std::vector<uint8_t> > GetFileData(const std::filesystem::path& path, const bool bCacheFile = false);
-   std::shared_ptr< std::string > GetFileString(const std::filesystem::path& path, const bool bCacheFile = false);
-   // or does something else handle the async and we need to be thread safe....
-   //std::shared_ptr< AsyncJob< std::shared_ptr< std::vector<uint8_t> > > > GetFileDataAsync(const std::filesystem::path& path, const bool bCacheFile = false);
+   std::shared_ptr< std::vector<uint8_t> > ReadFileLoadData(const std::filesystem::path& path, const bool bCacheFile = false);
+   void ReadClearFileCache();
 
-   //class FoundReadFile{ GetPath(); GetFileString(); GetFileData(); }
-   //void GatherReadFiles(std::vector< std::shared_ptr< FoundReadFile >>& foundFiles, const std::filesystem::path& path);
+   //test exists/ search for file list of readable files by path, array of extentions. 
+   //   how many functions? (test file exisits, search files in folder (with or without extentions?), get highest priority version of file accross overlay and extention array)
+   //    FoundFileData::ReadFileLoadData(), want a path to get back to the correct overlay to do the load
+   //    FoundFileData::GetPath(), display list of save games, 
+   //    FoundFileData::GetOverlayName? GetDateStamp?
+   //std::shared_ptr< FoundFileData > ReadFileExists(file path)
+   //std::shared_ptr< FoundFileData > ReadFileExistsExtentionFilter(file path no extention, extention priority filter array)
+   //std::vector< std::shared_ptr< FoundFileData > > ReadFolderFileList(folder path)
+   //std::vector< std::shared_ptr< FoundFileData > > ReadFolderFileListExtentionFilter(folder path, extention priority filter array)
 
    //write overlays, cloud? temp dir? local dir? is a 32 bit mask sufficient for all the write overlays
-   const int SaveFileData(const int filter, const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend = false);
-   const int SaveFileString(const int filter, const std::filesystem::path& path, const std::string& data, const bool bAppend = false);
-   const int DeleteSaveFile(const int filter, const std::filesystem::path& path);
-   //std::shared_ptr< AsyncJob< int > > > SaveFileDataAsync(const int filter, const std::filesystem::path& path, const std::vector<uint8_t>& data);
-
-   //void GatherWriteFiles(std::vector< std::shared_ptr< std::filesystem::path >>& foundFiles, const std::filesystem::path& path);
-
-   //void ClearFileCacheFile(const std::filesystem::path& path);
-   //void ClearFileCacheFile(const IReadOverlay& readOverlay);
-   //void ClearFileCache();
-
-   //std::map< std::filesystem::path, std::shared_ptr< FileCacheValue > > m_fileCache;
+   const int WriteFileSaveData(const int filter, const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend = false);
+   const int WriteFileDelete(const int filter, const std::filesystem::path& path);
 
 };

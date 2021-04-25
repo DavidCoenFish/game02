@@ -18,8 +18,8 @@ namespace CommonFileSystem
          FileSystem::AddWriteOverlay(pOverlay);
          Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreNotEqual(L"", FileSystem::GetTempDir().c_str());
          Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreNotEqual(L"", FileSystem::GetModualDir(nullptr).c_str());
-         FileSystem::CleadReadOverlay();
-         FileSystem::CleadWriteOverlay();
+         FileSystem::ClearReadOverlay();
+         FileSystem::ClearWriteOverlay();
       }
 
       TEST_METHOD(StringPriority)
@@ -70,16 +70,15 @@ namespace CommonFileSystem
          }
 
          {
-            auto pFile = FileSystem::GetFileData(filePath);
+            auto pFile = FileSystem::ReadFileLoadData(filePath);
             Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsNotNull( pFile.get() );
          }
          {
-            auto pFile = FileSystem::GetFileString(filePath);
-            Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsNotNull( pFile.get() );
-            Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual("abc", pFile->c_str() );
+            auto fileString = FileSystem::DataToString(FileSystem::ReadFileLoadData(filePath));
+            Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual("abc", fileString.c_str() );
          }
-         FileSystem::CleadReadOverlay();
-         FileSystem::CleadWriteOverlay();
+         FileSystem::ClearReadOverlay();
+         FileSystem::ClearWriteOverlay();
       }
    };
 }

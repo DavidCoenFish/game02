@@ -22,7 +22,23 @@ static std::vector< std::shared_ptr< IWriteOverlay > >& GetArrayOverlayWrite()
    return sArrayOverlayWrite;
 }
 
-static const std::string DataToString(const std::vector<uint8_t>& data)
+std::mutex s_fileCacheMutex;
+static std::map< std::filesystem::path, std::shared_ptr< std::vector<uint8_t> > >& GetFileCache()
+{
+   static std::map< std::filesystem::path, std::shared_ptr< std::vector<uint8_t> > > sFileCache;
+   return sFileCache;
+}
+
+const std::string FileSystem::DataToString(const std::shared_ptr< std::vector<uint8_t> >& pData)
+{
+   if (nullptr != pData)
+   {
+      return DataToString(*pData);
+   }
+   return std::string();
+}
+
+const std::string FileSystem::DataToString(const std::vector<uint8_t>& data)
 {
 #if 0
    data.push_back(0);
@@ -34,7 +50,7 @@ static const std::string DataToString(const std::vector<uint8_t>& data)
 #endif
 }
 
-static const std::vector<uint8_t> StringToData(const std::string& string)
+const std::vector<uint8_t> FileSystem::StringToData(const std::string& string)
 {
    static_assert(sizeof(char) == sizeof(uint8_t));
    //const std::vector<uint8_t> result((uint8_t*)string.data(), string.size());
@@ -73,7 +89,7 @@ void FileSystem::RemoveReadOverlay( const std::shared_ptr< IReadOverlay >& pOver
    auto& arrayOverlayRead = GetArrayOverlayRead();
    arrayOverlayRead.erase(std::remove(arrayOverlayRead.begin(), arrayOverlayRead.end(), pOverlay), arrayOverlayRead.end());
 }
-void FileSystem::CleadReadOverlay()
+void FileSystem::ClearReadOverlay()
 {
    GetArrayOverlayRead().clear();
 }
@@ -88,38 +104,45 @@ void FileSystem::RemoveWriteOverlay( const std::shared_ptr< IWriteOverlay >& pOv
    auto& arrayOverlayWrite = GetArrayOverlayWrite();
    arrayOverlayWrite.erase(std::remove(arrayOverlayWrite.begin(), arrayOverlayWrite.end(), pOverlay), arrayOverlayWrite.end());
 }
-void FileSystem::CleadWriteOverlay()
+void FileSystem::ClearWriteOverlay()
 {
    GetArrayOverlayWrite().clear();
 }
 
-std::shared_ptr< std::vector<uint8_t> > FileSystem::GetFileData(const std::filesystem::path& path, const bool bCacheFile)
+std::shared_ptr< std::vector<uint8_t> > FileSystem::ReadFileLoadData(const std::filesystem::path& path, const bool bCacheFile)
 {
    bCacheFile;
+   if (true == bCacheFile)
+   {
+      std::lock_guard< std::mutex > lock(s_fileCacheMutex);
+      auto &map = GetFileCache();
+      auto found = map.find(path);
+      if (found != map.end())
+      {
+         return found->second;
+      }
+   }
+
    auto& arrayOverlayRead = GetArrayOverlayRead();
    for( const auto& item : arrayOverlayRead)
    {
-      auto pResult = item->GetFileData(path);
+      auto pResult = item->ReadFileLoadData(path);
       if (nullptr != pResult)
       {
+         if (true == bCacheFile)
+         {
+            std::lock_guard< std::mutex > lock(s_fileCacheMutex);
+            auto &map = GetFileCache();
+            map[path] = pResult;
+         }
+
          return pResult;
       }
    }
    return std::shared_ptr< std::vector<uint8_t> >();
 }
 
-std::shared_ptr< std::string > FileSystem::GetFileString(const std::filesystem::path& path, const bool bCacheFile)
-{
-   auto pData = GetFileData(path, bCacheFile);
-   if (nullptr != pData)
-   {
-      auto pResult = std::make_shared< std::string >( DataToString( *pData ) );
-      return pResult;
-   }
-   return nullptr;
-}
-
-const int FileSystem::SaveFileData(const int filter, const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend)
+const int FileSystem::WriteFileSaveData(const int filter, const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend)
 {
    int result = 0;
    auto& arrayOverlayWrite = GetArrayOverlayWrite();
@@ -129,7 +152,7 @@ const int FileSystem::SaveFileData(const int filter, const std::filesystem::path
       {
          continue;
       }
-      if (true == item->SaveFileData(path, data, bAppend))
+      if (true == item->WriteFileSaveData(path, data, bAppend))
       {
          result |= item->GetMask();
       }
@@ -137,14 +160,7 @@ const int FileSystem::SaveFileData(const int filter, const std::filesystem::path
    return result;
 }
 
-const int FileSystem::SaveFileString(const int filter, const std::filesystem::path& path, const std::string& data, const bool bAppend)
-{
-   const auto arrayData = StringToData(data);
-   const int result = SaveFileData(filter, path, arrayData, bAppend);
-   return result;
-}
-
-const int FileSystem::DeleteSaveFile(const int filter, const std::filesystem::path& path)
+const int FileSystem::WriteFileDelete(const int filter, const std::filesystem::path& path)
 {
    int result = 0;
    auto& arrayOverlayWrite = GetArrayOverlayWrite();
@@ -154,10 +170,16 @@ const int FileSystem::DeleteSaveFile(const int filter, const std::filesystem::pa
       {
          continue;
       }
-      if (true == item->DeleteSaveFile(path))
+      if (true == item->WriteFileDelete(path))
       {
          result |= item->GetMask();
       }
    }
    return result;
+}
+
+void FileSystem::ReadClearFileCache()
+{
+   std::lock_guard< std::mutex > lock(s_fileCacheMutex);
+   GetFileCache().clear();
 }

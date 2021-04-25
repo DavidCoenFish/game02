@@ -19,7 +19,7 @@ OverlayMemory::~OverlayMemory()
    //nop
 }
 
-std::shared_ptr< std::vector<uint8_t> > OverlayMemory::GetFileData(const std::filesystem::path& path)
+std::shared_ptr< std::vector<uint8_t> > OverlayMemory::ReadFileLoadData(const std::filesystem::path& path)
 {
    auto found = m_memoryFiles.find(path);
    if (found != m_memoryFiles.end())
@@ -29,7 +29,7 @@ std::shared_ptr< std::vector<uint8_t> > OverlayMemory::GetFileData(const std::fi
    return nullptr;
 }
 
-const bool OverlayMemory::SaveFileData(const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend)
+const bool OverlayMemory::WriteFileSaveData(const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend)
 {
    if (true == bAppend)
    {
@@ -46,7 +46,7 @@ const bool OverlayMemory::SaveFileData(const std::filesystem::path& path, const 
 }
 
 //return true if delete worked
-const bool OverlayMemory::DeleteSaveFile(const std::filesystem::path& path)
+const bool OverlayMemory::WriteFileDelete(const std::filesystem::path& path)
 {
    auto found = m_memoryFiles.find(path);
    if (found != m_memoryFiles.end())

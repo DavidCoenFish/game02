@@ -14,7 +14,7 @@ ReadOverlayDir::~ReadOverlayDir()
    //nop
 }
 
-std::shared_ptr< std::vector<uint8_t> > ReadOverlayDir::GetFileData(const std::filesystem::path& path)
+std::shared_ptr< std::vector<uint8_t> > ReadOverlayDir::ReadFileLoadData(const std::filesystem::path& path)
 {
    const auto localPath = m_basePath / path;
    std::ifstream stream(localPath.c_str(), std::ios::in | std::ios::binary);
