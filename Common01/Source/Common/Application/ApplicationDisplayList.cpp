@@ -10,7 +10,11 @@
 #include "Common/DrawSystem/Shader/Shader.h"
 #include "Common/JSON/JSONDrawSystem.h"
 #include "Common/JSON/JSONDagCollection.h"
+#include "Common/JSON/JSONShader.h"
 #include "Common/DAG/DagCollection.h"
+#include "Common/DAG/DagValue.h"
+#include "Common/DAG/DagNodeValue.h"
+#include "Common/DAG/iDagNode.h"
 #include "json/json.hpp"
 
 
@@ -26,6 +30,18 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    dagCollection
    );
 
+std::shared_ptr< std::vector<uint8_t> > LoadFile(const std::filesystem::path& rootPath, const std::string& fileName)
+{
+   if (true == fileName.empty())
+   {
+      return nullptr;
+   }
+   auto newPath = rootPath / fileName;
+   auto pResult = FileSystem::ReadFileLoadData(newPath, true);
+   return pResult;
+}
+
+typedef std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)> NodeValueFactory;
 
 ApplicationDisplayList::ApplicationDisplayList(const IApplicationParam& applicationParam, const std::filesystem::path& rootPath, const std::string& data)
    : IApplication(applicationParam)
@@ -47,14 +63,30 @@ ApplicationDisplayList::ApplicationDisplayList(const IApplicationParam& applicat
       jsonData.drawSystem.targetDepthData
       );
    {
-      std::map<std::string, std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)>> mapValue;
+      std::map<std::string, NodeValueFactory> mapValue;
+      mapValue["Shader"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
+         JSONShader jsonShader;
+         data.get_to(jsonShader);
+         auto pCommandList = m_pDrawSystem->CreateCustomCommandList();
+         auto pShader = m_pDrawSystem->MakeShader(
+            pCommandList->GetCommandList(),
+            jsonShader.pipelineState,
+            LoadFile(rootPath, jsonShader.vertexShader),
+            LoadFile(rootPath, jsonShader.geometryShader),
+            LoadFile(rootPath, jsonShader.pixelShader)
+            );
+         auto pValue = DagValue<std::shared_ptr< Shader >>::Factory(pShader);
+         auto pResult = DagNodeValue::Factory( pValue, false );
+         return pResult;
+      };
+
       std::map<std::string, std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)>> mapCalculate;
-      //mapValue["shader"] = [=](const nlohmann::json& data){
-      //   auto pCommandList = m_pDrawSystem->CreateCustomCommandList();
-      //   return m_pDrawSystem->MakeShader(
-      //      pCommandList->GetCommandList()
-      //      );
-      //};
+      //mapValue.insert(std::pair<std::string, std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)>>( 
+      //   "shader",
+         
+         //const std::vector< std::shared_ptr< ShaderResourceInfo > >& arrayShaderResourceInfo = std::vector< std::shared_ptr< ShaderResourceInfo > >(),
+         //const std::vector< std::shared_ptr< ShaderConstantInfo > >& arrayShaderConstantsInfo = std::vector< std::shared_ptr< ShaderConstantInfo > >()
+
 
       //mapCalculate
 

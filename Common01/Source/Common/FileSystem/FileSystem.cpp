@@ -111,7 +111,11 @@ void FileSystem::ClearWriteOverlay()
 
 std::shared_ptr< std::vector<uint8_t> > FileSystem::ReadFileLoadData(const std::filesystem::path& path, const bool bCacheFile)
 {
-   bCacheFile;
+   if (true == path.empty())
+   {
+      return nullptr;
+   }
+
    if (true == bCacheFile)
    {
       std::lock_guard< std::mutex > lock(s_fileCacheMutex);

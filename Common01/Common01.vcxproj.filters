@@ -228,6 +228,12 @@
     <ClCompile Include="Source\Common\JSON\JSONDagCollection.cpp">
       <Filter>Source\Common\JSON</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Common\JSON\JSONShader.cpp">
+      <Filter>Source\Common\JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\JSON\JSONInputElementDesc.cpp">
+      <Filter>Source\Common\JSON</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CommonPCH.h">
@@ -414,6 +420,12 @@
       <Filter>Source\Common\DAG</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\JSON\JSONDagCollection.h">
+      <Filter>Source\Common\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\JSON\JSONShader.h">
+      <Filter>Source\Common\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\JSON\JSONInputElementDesc.h">
       <Filter>Source\Common\JSON</Filter>
     </ClInclude>
   </ItemGroup>
