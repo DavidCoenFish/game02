@@ -234,6 +234,9 @@
     <ClCompile Include="Source\Common\JSON\JSONInputElementDesc.cpp">
       <Filter>Source\Common\JSON</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Common\JSON\JSONGeometry.cpp">
+      <Filter>Source\Common\JSON</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CommonPCH.h">
@@ -426,6 +429,9 @@
       <Filter>Source\Common\JSON</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\JSON\JSONInputElementDesc.h">
+      <Filter>Source\Common\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\JSON\JSONGeometry.h">
       <Filter>Source\Common\JSON</Filter>
     </ClInclude>
   </ItemGroup>

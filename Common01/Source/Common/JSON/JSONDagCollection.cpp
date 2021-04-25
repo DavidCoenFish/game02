@@ -29,16 +29,17 @@
 //}
 //
 std::shared_ptr< DagCollection > JSONDagCollection::Factory(
-      const JSONDagCollection& jsonDagCollection,
-      const std::map<std::string, std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)>>& valueMap,
-      const std::map<std::string, std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)>>& calculateMap
-      )
+   const JSONDagCollection& jsonDagCollection,
+   const std::vector< std::pair< std::string, std::shared_ptr< iDagNode > > >& inbuiltDagValues,
+   const std::map<std::string, ValueFactory>& valueFactoryMap,
+   const std::map<std::string, ValueFactory>& calculateFactoryMap
+   )
 {
    std::shared_ptr< DagCollection > pResult = std::make_shared< DagCollection >();
    for (const auto& item : jsonDagCollection.valueArray)
    {
-      auto found = valueMap.find(item.type);
-      if (valueMap.end() == found)
+      auto found = valueFactoryMap.find(item.type);
+      if (valueFactoryMap.end() == found)
       {
          LOG_MESSAGE_ERROR("Failed to find node value type:%s", item.type.c_str());
          continue;
@@ -47,12 +48,17 @@ std::shared_ptr< DagCollection > JSONDagCollection::Factory(
       pResult->AddDagNode(item.name, pNode);
    }
 
+   for (const auto& item : inbuiltDagValues)
+   {
+      pResult->AddDagNode(item.first, item.second);
+   }
+
    for (const auto& item : jsonDagCollection.calculateArray)
    {
-      auto found = calculateMap.find(item.function);
-      if (calculateMap.end() == found)
+      auto found = calculateFactoryMap.find(item.type);
+      if (calculateFactoryMap.end() == found)
       {
-         LOG_MESSAGE_ERROR("Failed to find node calculate function:%s", item.function.c_str());
+         LOG_MESSAGE_ERROR("Failed to find node calculate type:%s", item.type.c_str());
          continue;
       }
       auto pNode = found->second(item.data);

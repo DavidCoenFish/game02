@@ -2,7 +2,13 @@
 #include "Common\dag\dagnodecalculate.h"
 #include "Common\dag\idagvalue.h"
 
-DagNodeCalculate::DagNodeCalculate( const std::function< std::shared_ptr< iDagValue >(const std::vector< iDagNode* >&, const std::vector< iDagNode* >&, const std::shared_ptr< iDagValue >&) >& pCalculateCallback )
+std::shared_ptr< DagNodeCalculate > DagNodeCalculate::Factory(const CalculateFunction& pCalculateCallback)
+{
+   std::shared_ptr< DagNodeCalculate > pResult = std::make_shared< DagNodeCalculate >( pCalculateCallback );
+   return pResult;
+}
+
+DagNodeCalculate::DagNodeCalculate( const CalculateFunction& pCalculateCallback )
    : m_pCalculateCallback( pCalculateCallback )
    , m_dirty( true )
 {

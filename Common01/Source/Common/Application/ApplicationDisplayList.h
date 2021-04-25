@@ -4,6 +4,7 @@
 class ApplicationHolder;
 class DrawSystem;
 class DagCollection;
+class iDagNode;
 
 class ApplicationDisplayList : public IApplication
 {
@@ -19,5 +20,9 @@ private:
 private:
    std::unique_ptr< DrawSystem > m_pDrawSystem;
    std::shared_ptr< DagCollection > m_pDagCollection;
+   std::shared_ptr< iDagNode > m_pDagFrameCount;
+   std::shared_ptr< iDagNode > m_pDagBackBuffer;
+   std::shared_ptr< iDagNode > m_pDagDrawSystemFrame;
+   std::shared_ptr< iDagNode > m_pDagRender;
 
 };

@@ -9,8 +9,12 @@ class iDagValue;
 class DagNodeCalculate : public iDagNode
 {
 public:
+   typedef std::function< std::shared_ptr< iDagValue >(const std::vector< iDagNode* >&, const std::vector< iDagNode* >&, const std::shared_ptr< iDagValue >&) > CalculateFunction;
+
+   static std::shared_ptr< DagNodeCalculate > Factory(const CalculateFunction& pCalculateCallback);
+
    //array stack, array indexed, value
-   DagNodeCalculate( const std::function< std::shared_ptr< iDagValue >(const std::vector< iDagNode* >&, const std::vector< iDagNode* >&, const std::shared_ptr< iDagValue >&) >& pCalculateCallback );
+   DagNodeCalculate( const CalculateFunction& pCalculateCallback );
    ~DagNodeCalculate();
 
 private:
@@ -28,7 +32,7 @@ private:
    std::vector< iDagNode* > m_arrayInputStack;
    std::vector< iDagNode* > m_arrayInputIndex;
    bool m_dirty;
-   std::function< std::shared_ptr< iDagValue >(const std::vector< iDagNode* >&, const std::vector< iDagNode* >&, const std::shared_ptr< iDagValue >&) > m_pCalculateCallback;
+   CalculateFunction m_pCalculateCallback;
    std::shared_ptr< iDagValue > m_pValue;
 
    std::vector< iDagNode* > m_arrayOutput;

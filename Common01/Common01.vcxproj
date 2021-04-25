@@ -72,6 +72,7 @@
     <ClCompile Include="Source\Common\JSON\JSONDagCollection.cpp" />
     <ClCompile Include="Source\Common\JSON\JSONDrawSystem.cpp" />
     <ClCompile Include="Source\Common\JSON\JSONDrawSystemEnum.cpp" />
+    <ClCompile Include="Source\Common\JSON\JSONGeometry.cpp" />
     <ClCompile Include="Source\Common\JSON\JSONInputElementDesc.cpp" />
     <ClCompile Include="Source\Common\JSON\JSONRenderTarget.cpp" />
     <ClCompile Include="Source\Common\JSON\JSONShader.cpp" />
@@ -137,6 +138,7 @@
     <ClInclude Include="Source\Common\JSON\JSONDagCollection.h" />
     <ClInclude Include="Source\Common\JSON\JSONDrawSystem.h" />
     <ClInclude Include="Source\Common\JSON\JSONDrawSystemEnum.h" />
+    <ClInclude Include="Source\Common\JSON\JSONGeometry.h" />
     <ClInclude Include="Source\Common\JSON\JSONInputElementDesc.h" />
     <ClInclude Include="Source\Common\JSON\JSONRenderTarget.h" />
     <ClInclude Include="Source\Common\JSON\JSONShader.h" />
