@@ -11,6 +11,7 @@ some logs may want to flush on every write and not have any external dependencie
 some logs may only want to write at application end of life?
 some logs may want to append a log file
 some logs may only want to save out file for messages of certain topic
+some logs want to emit to stdout/console/push
 */
 
 enum class LogTopic

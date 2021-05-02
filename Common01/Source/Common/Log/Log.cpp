@@ -4,15 +4,15 @@
 #include "Common/Log/ILogConsumer.h"
 
 //this doesn't gain much in this case, is a patteren to lazy init static vectors
-static std::vector< ILogConsumer* >& GetFunctorArray()
+static std::vector< ILogConsumer* >& GetLogConsumerArray()
 {
-   static std::vector< ILogConsumer* > s_functorArray;
-   return s_functorArray;
+   static std::vector< ILogConsumer* > s_logConsumerArray;
+   return s_logConsumerArray;
 }
 
 static void AddMessageInternal(const int topic, const std::string& message)
 {
-   const auto& functorArray = GetFunctorArray();
+   const auto& functorArray = GetLogConsumerArray();
    for (auto pIter : functorArray)
    {
       pIter->AddMessage(topic, message);
@@ -48,7 +48,7 @@ void Log::AddLogConsumer(
    ILogConsumer& logConsumer
    )
 {
-   auto& functorArray = GetFunctorArray();
+   auto& functorArray = GetLogConsumerArray();
    functorArray.push_back(&logConsumer);
 }
 
@@ -56,7 +56,7 @@ void Log::RemoveLogConsumer(
    ILogConsumer& logConsumer
    )
 {
-   auto& functorArray = GetFunctorArray();
+   auto& functorArray = GetLogConsumerArray();
    functorArray.erase(std::remove(functorArray.begin(), functorArray.end(), &logConsumer), functorArray.end());
 }
 

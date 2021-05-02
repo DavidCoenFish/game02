@@ -7,6 +7,14 @@
          "height": 600,
          "factory": "ApplicationDisplayList",
          "data": "Data0.json"
+      },
+      {
+         "name": "DisplayList2",
+         "fullScreen": false,
+         "width": 800,
+         "height": 600,
+         "factory": "ApplicationDisplayList",
+         "data": "Data0.json"
       }
    ]
 }

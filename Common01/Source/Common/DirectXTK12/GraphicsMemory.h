@@ -174,6 +174,7 @@ namespace DirectX
         class Impl;
 
         std::unique_ptr<Impl> pImpl;
+
     };
 }
 
