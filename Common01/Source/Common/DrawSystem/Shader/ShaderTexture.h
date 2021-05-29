@@ -4,10 +4,10 @@
 
 class HeapWrapperItem;
 
-class ShaderTexture2D : public IResource
+class ShaderTexture : public IResource
 {
 public:
-   ShaderTexture2D(
+   ShaderTexture(
       DrawSystem* const pDrawSystem,
       const std::shared_ptr< HeapWrapperItem >& shaderResource,
       const D3D12_RESOURCE_DESC& desc, 

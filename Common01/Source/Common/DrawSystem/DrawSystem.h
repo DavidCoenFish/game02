@@ -16,6 +16,7 @@ class ShaderConstantInfo;
 class ShaderResourceInfo;
 class ShaderConstantBuffer;
 class GeometryGeneric;
+class ShaderTexture;
 namespace DirectX
 {
    class GraphicsMemory;
@@ -66,6 +67,15 @@ public:
       const std::vector< float >& vertexDataRaw,
       const int floatPerVertex
       );
+
+   std::shared_ptr< ShaderTexture > MakeTexture(
+      ID3D12GraphicsCommandList* const pCommandList,
+      const std::shared_ptr< HeapWrapperItem >& shaderResource,
+      const D3D12_RESOURCE_DESC& desc, 
+      const D3D12_SHADER_RESOURCE_VIEW_DESC& shaderResourceViewDesc,
+      const std::vector<uint8_t>& data
+      );
+
 
    std::shared_ptr<CustomCommandList> CreateCustomCommandList();
    void CustomCommandListFinish(ID3D12GraphicsCommandList* pCommandList);

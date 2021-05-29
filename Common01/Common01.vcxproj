@@ -62,7 +62,7 @@
     <ClCompile Include="Source\Common\DrawSystem\Shader\ShaderConstantInfo.cpp" />
     <ClCompile Include="Source\Common\DrawSystem\Shader\ShaderPipelineStateData.cpp" />
     <ClCompile Include="Source\Common\DrawSystem\Shader\ShaderResourceInfo.cpp" />
-    <ClCompile Include="Source\Common\DrawSystem\Shader\ShaderTexture2D.cpp" />
+    <ClCompile Include="Source\Common\DrawSystem\Shader\ShaderTexture.cpp" />
     <ClCompile Include="Source\Common\FileSystem\FileSystem.cpp" />
     <ClCompile Include="Source\Common\FileSystem\IWriteOverlay.cpp" />
     <ClCompile Include="Source\Common\FileSystem\OverlayMemory.cpp" />
@@ -128,7 +128,7 @@
     <ClInclude Include="Source\Common\DrawSystem\Shader\ShaderConstantInfo.h" />
     <ClInclude Include="Source\Common\DrawSystem\Shader\ShaderPipelineStateData.h" />
     <ClInclude Include="Source\Common\DrawSystem\Shader\ShaderResourceInfo.h" />
-    <ClInclude Include="Source\Common\DrawSystem\Shader\ShaderTexture2D.h" />
+    <ClInclude Include="Source\Common\DrawSystem\Shader\ShaderTexture.h" />
     <ClInclude Include="Source\Common\FileSystem\FileSystem.h" />
     <ClInclude Include="Source\Common\FileSystem\IWriteOverlay.h" />
     <ClInclude Include="Source\Common\FileSystem\OverlayMemory.h" />

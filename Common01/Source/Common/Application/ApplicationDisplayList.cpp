@@ -98,6 +98,22 @@ ApplicationDisplayList::ApplicationDisplayList(const IApplicationParam& applicat
          auto pResult = DagNodeValue::Factory( pValue, false );
          return pResult;
       };
+      mapValue["Texture2D"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
+         JSONGeometry jsonGeometry;
+         data.get_to(jsonGeometry);
+         auto pCommandList = m_pDrawSystem->CreateCustomCommandList();
+         auto pGeometry = m_pDrawSystem->MakeGeometryGeneric(
+            pCommandList->GetCommandList(),
+            jsonGeometry.topology,
+            jsonGeometry.inputElementDesc,
+            jsonGeometry.vertexData,
+            jsonGeometry.floatPerVertex
+            );
+         auto pValue = DagValue<std::shared_ptr< GeometryGeneric >>::Factory(pGeometry);
+         auto pResult = DagNodeValue::Factory( pValue, false );
+         return pResult;
+      };
+
 
       std::map<std::string, NodeCalculateFactory> mapCalculate;
       mapCalculate["GeometryList"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {

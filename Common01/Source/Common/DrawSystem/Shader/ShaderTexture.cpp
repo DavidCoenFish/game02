@@ -1,13 +1,13 @@
 #include "CommonPCH.h"
 
-#include "Common/DrawSystem/Shader/ShaderTexture2D.h"
+#include "Common/DrawSystem/Shader/ShaderTexture.h"
 #include "Common/DrawSystem/HeapWrapper/HeapWrapperItem.h"
 #include "Common/DrawSystem/DrawSystem.h"
 #include "Common/DrawSystem/d3dx12.h"
 #include "Common/DirectXTK12/DirectXHelpers.h"
 #include "Common/DirectXTK12/GraphicsMemory.h"
 
-ShaderTexture2D::ShaderTexture2D(
+ShaderTexture::ShaderTexture(
    DrawSystem* const pDrawSystem,
    const std::shared_ptr< HeapWrapperItem >& shaderResource,
    const D3D12_RESOURCE_DESC& desc, 
@@ -24,17 +24,17 @@ ShaderTexture2D::ShaderTexture2D(
    return;
 }
 
-void ShaderTexture2D::OnDeviceLost()
+void ShaderTexture::OnDeviceLost()
 {
    m_pResource.Reset();
 }
 
-std::shared_ptr< HeapWrapperItem > ShaderTexture2D::GetHeapWrapperItem() const
+std::shared_ptr< HeapWrapperItem > ShaderTexture::GetHeapWrapperItem() const
 {
    return m_shaderResource;
 }
 
-void ShaderTexture2D::UploadCreateResource(
+void ShaderTexture::UploadCreateResource(
    DrawSystem* const pDrawSystem,
    ID3D12GraphicsCommandList* const pCommandList,
    ID3D12Device* const pDevice,
@@ -94,13 +94,13 @@ void ShaderTexture2D::UploadCreateResource(
    return;
 }
 
-//std::vector<uint8_t>& ShaderTexture2D::GetData()
+//std::vector<uint8_t>& ShaderTexture::GetData()
 //{
 //   m_bDataDirty = true;
 //   return m_data;
 //}
 
-//void ShaderTexture2D::WriteData(
+//void ShaderTexture::WriteData(
 //   const int x,
 //   const int y,
 //   const size_t dataSizeBytes,
@@ -134,7 +134,7 @@ void ShaderTexture2D::UploadCreateResource(
 //}
 
 
-//void ShaderTexture2D::UploadChangesIfNeeded(
+//void ShaderTexture::UploadChangesIfNeeded(
 //   ID3D12GraphicsCommandList* const pCommandList
 //   )
 //{
@@ -194,7 +194,7 @@ void ShaderTexture2D::UploadCreateResource(
 //   pCommandList->ResourceBarrier(m_pResource.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 //}
 
-void ShaderTexture2D::OnDeviceRestored(
+void ShaderTexture::OnDeviceRestored(
    ID3D12GraphicsCommandList* const pCommandList,
    ID3D12Device* const pDevice
    )

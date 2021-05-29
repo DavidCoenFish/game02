@@ -168,7 +168,7 @@
     <ClCompile Include="Source\Common\DrawSystem\Geometry\GeometryGeneric.cpp">
       <Filter>Source\Common\DrawSystem\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\DrawSystem\Shader\ShaderTexture2D.cpp">
+    <ClCompile Include="Source\Common\DrawSystem\Shader\ShaderTexture.cpp">
       <Filter>Source\Common\DrawSystem\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\DrawSystem\RenderTarget\RenderTargetBackbuffer.cpp">
@@ -362,7 +362,7 @@
     <ClInclude Include="Source\Common\DrawSystem\Geometry\GeometryGeneric.h">
       <Filter>Source\Common\DrawSystem\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\DrawSystem\Shader\ShaderTexture2D.h">
+    <ClInclude Include="Source\Common\DrawSystem\Shader\ShaderTexture.h">
       <Filter>Source\Common\DrawSystem\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\DrawSystem\RenderTarget\IRenderTarget.h">

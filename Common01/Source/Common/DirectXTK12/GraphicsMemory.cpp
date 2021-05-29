@@ -230,28 +230,12 @@ public:
 
     ~Impl()
     {
-    //#if (defined(_XBOX_ONE) && defined(_TITLE)) || defined(_GAMING_XBOX)
-    //    s_graphicsMemory = nullptr;
-    //#else
-    //    if (mDeviceAllocator && mDeviceAllocator->GetDevice())
-    //    {
-    //        s_graphicsMemory.erase(mDeviceAllocator->GetDevice());
-    //    }
-    //#endif
         mDeviceAllocator.reset();
     }
 
     void Initialize(_In_ ID3D12Device* device)
     {
         mDeviceAllocator = std::make_unique<DeviceAllocator>(device);
-
-    //#if !(defined(_XBOX_ONE) && defined(_TITLE)) && !defined(_GAMING_XBOX)
-    //    if (s_graphicsMemory.find(device) != s_graphicsMemory.cend())
-    //    {
-    //        throw std::exception("GraphicsMemory is a per-device singleton");
-    //    }
-    //    s_graphicsMemory[device] = this;
-    //#endif
     }
 
     GraphicsResource Allocate(size_t size, size_t alignment)
@@ -300,19 +284,8 @@ public:
 }
 
     GraphicsMemory* mOwner;
-//#if (defined(_XBOX_ONE) && defined(_TITLE)) || defined(_GAMING_XBOX)
-//    static GraphicsMemory::Impl* s_graphicsMemory;
-//#else
-//    static std::map<ID3D12Device*, GraphicsMemory::Impl*> s_graphicsMemory;
-//#endif
 
 private:
-    //#if (defined(_XBOX_ONE) && defined(_TITLE)) || defined(_GAMING_XBOX)
-    //DirectX::GraphicsMemory::Impl* DirectX::GraphicsMemory::Impl::s_graphicsMemory = nullptr;
-    //#else
-    //std::map<ID3D12Device*, DirectX::GraphicsMemory::Impl*> DirectX::GraphicsMemory::Impl::s_graphicsMemory;
-    //#endif
-
     std::unique_ptr<DeviceAllocator> mDeviceAllocator;
 
     size_t  m_peakCommited;
