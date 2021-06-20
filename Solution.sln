@@ -5,6 +5,7 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "notes", "notes", "{E5933B47-5209-4485-8787-25C2389C5E5F}"
 	ProjectSection(SolutionItems) = preProject
+		notes\javascript.txt = notes\javascript.txt
 		notes\notes.txt = notes\notes.txt
 	EndProjectSection
 EndProject
@@ -31,6 +32,52 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest01", "UnitTest01\Un
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Automatron02", "Automatron02\Automatron02.csproj", "{A787ABEC-4279-4580-836E-6A64D591685D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prototype", "prototype", "{F30D2D26-3C12-45FA-BB18-00599EE2BA66}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "erfworld00", "erfworld00", "{C1B9788D-1844-4FE2-91C5-0A4567D5221E}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\index.htm = prototype\erfworld00\index.htm
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "css", "css", "{AB504D5A-3CB9-41A3-9CAD-45EB229173C0}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\css\barebones.css = prototype\erfworld00\css\barebones.css
+		prototype\erfworld00\css\normalize.css = prototype\erfworld00\css\normalize.css
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "js", "js", "{C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\app.js = prototype\erfworld00\js\app.js
+		prototype\erfworld00\js\client.js = prototype\erfworld00\js\client.js
+		prototype\erfworld00\js\view.js = prototype\erfworld00\js\view.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mock", "mock", "{F1C5EB28-E9B2-4535-BD19-61934263B117}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\mock\data_store.js = prototype\erfworld00\js\mock\data_store.js
+		prototype\erfworld00\js\mock\database.js = prototype\erfworld00\js\mock\database.js
+		prototype\erfworld00\js\mock\network.js = prototype\erfworld00\js\mock\network.js
+		prototype\erfworld00\js\mock\server.js = prototype\erfworld00\js\mock\server.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "util", "util", "{2B870DEA-A150-40FE-B89E-E97B0C06B049}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\util\full_screen_toggle.js = prototype\erfworld00\js\util\full_screen_toggle.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "view", "view", "{0602D94A-F68F-4B9D-ADF2-B767329F2989}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\view\template_default.js = prototype\erfworld00\js\view\template_default.js
+		prototype\erfworld00\js\view\template_dialog.js = prototype\erfworld00\js\view\template_dialog.js
+		prototype\erfworld00\js\view\template_loading.js = prototype\erfworld00\js\view\template_loading.js
+		prototype\erfworld00\js\view\template_vertical_button_stack.js = prototype\erfworld00\js\view\template_vertical_button_stack.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unittest", "unittest", "{C33B548C-5FBB-4842-8C72-480192A123C0}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\unittest\database.js = prototype\erfworld00\js\unittest\database.js
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +116,15 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C1B9788D-1844-4FE2-91C5-0A4567D5221E} = {F30D2D26-3C12-45FA-BB18-00599EE2BA66}
+		{AB504D5A-3CB9-41A3-9CAD-45EB229173C0} = {C1B9788D-1844-4FE2-91C5-0A4567D5221E}
+		{C9DAC3BF-96FD-4094-BE2A-0459F1750D5B} = {C1B9788D-1844-4FE2-91C5-0A4567D5221E}
+		{F1C5EB28-E9B2-4535-BD19-61934263B117} = {C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}
+		{2B870DEA-A150-40FE-B89E-E97B0C06B049} = {C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}
+		{0602D94A-F68F-4B9D-ADF2-B767329F2989} = {C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}
+		{C33B548C-5FBB-4842-8C72-480192A123C0} = {C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01849243-7DF1-40D0-80A9-36CDCC951EE5}
