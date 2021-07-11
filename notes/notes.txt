@@ -46,5 +46,8 @@ premultiplied
 
    RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-
-
+prototype erfworld
+   get loading screen
+     "loading" "[progress]" "client [version]" "database [version]"
+   get launch screen
+   get warlord creation

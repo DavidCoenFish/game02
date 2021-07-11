@@ -1,19 +1,185 @@
 (function () {
-   var mUserData
+   var mAuthoriseToken = undefined;
+   var mStateData = {
+      "clientVersion": "0.0.0.0",
+      "userId": undefined,
+      "language": undefined,
+      "region": undefined,
+      };
+   var mStateFactory = {};
+   var mState = undefined;
+   var mLocaleCache = {
+      "__id__":"en-au",
+      "__language__": "English",
+      "__region__": "Australia",
+      "Progress": "Progress",
+      "{0}": "{0}",
+      "Client Version:[{0}]": "Client Version:[{0}]",
+      "Database Version:[{0}]": "Database Version:[{0}]",
+      // for this to work, after things are being pushed through mStateData, there could be a mStateData["error"]? 
+      // then AsyncGetLocalisedText would need to resolve data earlier, else it resolves on callback and could have stale mStateData
+      //"Error:[{0}]": "Error:[{0}]",
+      //"Debug:[{0}]": "Debug:[{0}]",
+   };
+   //trying to accomodate change of language
+   //what modules have been merged into the localeCache, <module name, language-region>
+   var mLocaleModule = {
+      "default" : "en-au"
+   };
+   // <modual name, callback chain>
+   var mLocaleRequestCallback = {};
+
    App.Client.View_OnClick = function (screenDialogName, elementName, groupData, verb, subject, x, y) {
+      if (mState) {
+         mState.OnClick(screenDialogName, elementName, groupData, verb, subject, x, y);
+      }
    };
    App.Client.View_OnDrag = function (screenDialogName, elementName, groupData, verb, subject, dx, dy, dragFinished) {
+      if (mState) {
+         mState.OnDrag(screenDialogName, elementName, groupData, verb, subject, dx, dy, dragFinished);
+      }
    };
    App.Client.View_RegisterAsyncEnabled = function (callbackEnabled, callbackError, screenDialogName, elementName) {
+      if (mState) {
+         mState.RegisterAsyncEnabled(callbackEnabled, callbackError, screenDialogName, elementName);
+      }
    };
-   App.Client.View_RemoveAsyncEnabled = function (callbackEnabled, callbackError) {
-   };
+   //App.Client.View_RemoveAsyncEnabled = function (callbackEnabled, callbackError) {
+   //};
    App.Client.View_RegisterAsyncText = function (callbackText, callbackError, screenDialogName, elementName) {
+      if (mState) {
+         mState.RegisterAsyncText(callbackText, callbackError, screenDialogName, elementName);
+      }
    };
-   App.Client.View_RemoveAsyncText = function (callbackText, callbackError) {
-   };
+   //App.Client.View_RemoveAsyncText = function (callbackText, callbackError) {
+   //};
+   App.Client.RegisterState = function (name, factory) {
+      mStateFactory[name] = factory;
+   }
+   App.Client.SetState = function (name) {
+      if (false === name in mStateFactory) {
+         App.View.ConsoleError("State not found:" + String(name));
+         return;
+      }
+      if (mState) {
+         mState.Dtor();
+         mState = undefined;
+      }
+      var defaultState = {
+         OnClick: App.Unimplemented,
+         OnDrag: App.Unimplemented,
+         RegisterAsyncEnabled: App.Unimplemented,
+         RegisterAsyncText: App.Unimplemented,
+         Dtor: App.Unimplemented,
+      };
+      var factory = mStateFactory[name];
+      mState = factory(defaultState, mStateData);
+   }
+   App.Client.SetAuthoriseToken = function (authoriseToken) {
+      mAuthoriseToken = authoriseToken;
+   }
+
+   function ResolveLocalisedTextData(element) {
+      var tokenArray = element.split(".");
+      var result = "";
+      var trace = mStateData;
+      tokenArray.forEach(function (element, index, array) {
+         if (element in trace) {
+            trace = trace[element];
+         }
+      });
+      if (trace !== mStateData) {
+         result = String(trace);
+      }
+      return result;
+   }
+
+   //example data ["clientVersion", "someHashInStateData.anotherHash.someKey"]
+   function ResolveLocalisedText(key, data) {
+      var value = key;
+      if (key in mLocaleCache) {
+         value = mLocaleCache[key];
+      }
+      if (data && value) {
+         var arrayValue = [];
+         data.forEach(function (element, index, array) {
+            arrayValue[index] = ResolveLocalisedTextData(element);
+         });
+         value.replace(/{(\d+)}/g, function (match, number) {
+            return typeof arrayValue[number] !== "undefined" ? arrayValue[number] : match;
+         });
+      }
+      return value;
+   }
+   App.Client.AsyncGetLocalisedText = function (in_callback, in_module, in_key, in_data) {
+      var module = (undefined === in_module) ? "default" : in_module;
+      var language = mStateData["language"];
+      var region = mStateData["region"];
+      var localeKey = language;
+      if (region !== undefined) {
+         localeKey += "-" + region;
+      }
+      if (module in mLocaleModule) {
+         if (localeKey === mLocaleModule[module]) {
+            if (module in mLocaleRequestCallback) {
+               var currentQueue = mLocaleRequestCallback[module];
+               var newQueue = function () {
+                  in_callback(ResolveLocalisedText(in_key, in_data));
+                  currentQueue();
+               }
+               mLocaleRequestCallback[module] = newQueue();
+               return;
+            } else {
+               in_callback(ResolveLocalisedText(in_key, in_data));
+               return;
+            }
+         }
+      }
+
+      mLocaleModule[module] = localeKey;
+      //clear existing callbacks, as we could have a new language selected
+      delete mLocaleRequestCallback[module];
+
+      var mAttempt = 0;
+      var GetLocaleModule = function ()
+      {
+         var endpoint = "db/locale/" + module + "/" + language;
+         if (region) {
+            endpoint += "/" + region;
+         }
+         var CallbackPass = function (body) {
+            Object.assign(mLocaleCache, body);
+            if (module in mLocaleRequestCallback) {
+               var callback = mLocaleRequestCallback[module];
+               callback();
+            }
+            delete mLocaleRequestCallback[module];
+         }
+
+         var CallbackError = function () {
+            mAttempt++;
+            App.View.CallbackError("Get locale module failed attempt:" + String(mAttempt) + " module:" + module + " language:" + language + " [region:]" + region );
+            if (mAttempt < 5) {
+               GetLocaleModule();
+            } else {
+               App.View.CallbackError("Get locale module failed giving up module:" + module + " language:" + language + " [region:]" + region);
+            }
+         }
+
+         App.Network.Client_GET(
+            CallbackPass,
+            CallbackError,
+            mAuthoriseToken,
+            endpoint
+            );
+         return;
+      }
+      GetLocaleModule();
+   }
+
    function Main() {
-      App.View.Client_SetScreen("loading0", "templateLoading", null);
+      SetState("boot");
+      //App.View.Client_SetScreen("loading0", "templateLoading", null);
    }
    App.RegisterOnLoad(Main);
 })();

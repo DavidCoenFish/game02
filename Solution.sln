@@ -68,15 +68,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "util", "util", "{2B870DEA-A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "view", "view", "{0602D94A-F68F-4B9D-ADF2-B767329F2989}"
 	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\view\console.js = prototype\erfworld00\js\view\console.js
 		prototype\erfworld00\js\view\template_default.js = prototype\erfworld00\js\view\template_default.js
 		prototype\erfworld00\js\view\template_dialog.js = prototype\erfworld00\js\view\template_dialog.js
 		prototype\erfworld00\js\view\template_loading.js = prototype\erfworld00\js\view\template_loading.js
 		prototype\erfworld00\js\view\template_vertical_button_stack.js = prototype\erfworld00\js\view\template_vertical_button_stack.js
+		prototype\erfworld00\js\view\version.js = prototype\erfworld00\js\view\version.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unittest", "unittest", "{C33B548C-5FBB-4842-8C72-480192A123C0}"
 	ProjectSection(SolutionItems) = preProject
 		prototype\erfworld00\js\unittest\database.js = prototype\erfworld00\js\unittest\database.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{615BDA11-3744-4B28-8A2E-23869F1DBD59}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\client\state_boot.js = prototype\erfworld00\js\client\state_boot.js
+		prototype\erfworld00\js\client\state_launch.js = prototype\erfworld00\js\client\state_launch.js
+		prototype\erfworld00\js\client\state_new_game.js = prototype\erfworld00\js\client\state_new_game.js
 	EndProjectSection
 EndProject
 Global
@@ -125,6 +134,7 @@ Global
 		{2B870DEA-A150-40FE-B89E-E97B0C06B049} = {C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}
 		{0602D94A-F68F-4B9D-ADF2-B767329F2989} = {C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}
 		{C33B548C-5FBB-4842-8C72-480192A123C0} = {C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}
+		{615BDA11-3744-4B28-8A2E-23869F1DBD59} = {C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01849243-7DF1-40D0-80A9-36CDCC951EE5}

@@ -2,8 +2,9 @@
    var mTemplateMap = {};
    var mScreen = undefined;
    var mDialogStack = [];
+   var mDefaultTemplateName;
 
-   App.View.Client_SetScreen = function (name, templateName, data) {
+   App.View.Client_SetScreen = function (templateName, name, data) {
       if (false === templateName in mTemplateMap) {
          App.View.Client_ConsoleError("Template for screen not found name:" + name + " templateName:" + templateName);
          return;
@@ -15,7 +16,7 @@
       mScreen = factory(document, document.body, name, data);
       return;
    };
-   App.View.Client_PushDialog = function (name, templateName, data) {
+   App.View.Client_PushDialog = function (templateName, name, data) {
       if (false === templateName in mTemplateMap) {
          App.View.Client_ConsoleError("Template for dialog not found name:" + name + " templateName:" + templateName);
          return;
@@ -42,11 +43,24 @@
          }
       }
    };
+   App.View.Client_GetDefaultTemplateName = function () {
+      return mDefaultTemplateName;
+   };
+   App.View.Client_OnGetUserData = function () {
+      //
+      var button = document.createElement("button");
+
+
+   }
    App.View.ConsoleError = function (message) {
       console.error(message);
    };
    App.View.ConsoleDebug = function (message) {
       console.log(message);
+   };
+   App.View.SetDefaultTemplateName = function (defaultTemplateName) {
+      mDefaultTemplateName = defaultTemplateName;
+      return;
    };
    App.View.AddTemplate = function (templateName, factory) {
       mTemplateMap[templateName] = factory;

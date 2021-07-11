@@ -36,12 +36,12 @@
       window.attachEvent('onload', full_screen_toggle);
    } else {
       if (window.onload) {
-         var curronload = window.onload;
-         var newonload = function (evt) {
-            curronload(evt);
+         var currentOnLoad = window.onload;
+         var newOnLoad = function (evt) {
+            currentOnLoad(evt);
             full_screen_toggle(evt);
          };
-         window.onload = newonload;
+         window.onload = newOnLoad;
       } else {
          window.onload = full_screen_toggle;
       }

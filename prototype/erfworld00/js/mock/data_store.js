@@ -1,5 +1,6 @@
 (function () {
    App.Database.SetData({
+      "version":"0.0.0.0",
       "Terrain": {
          "RawHeightLow": -1.0,
          "RawHeightHigh": 1.0,

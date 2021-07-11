@@ -8,9 +8,22 @@
    App.Network.Client_GetUserDataAuthoriseToken = function (callbackPass, callbackError, userName, password) {
       setTimeout(function () {
          callbackPass({
-            "AuthoriseToken": "dummy",
-            "userId":"f552f056-2fbb-463b-84a9-18c422fd4289",
-            "localeKey":"en-au"
+            "authoriseToken": "dummy",
+            "state": {
+               "userId": 0, //"f552f056-2fbb-463b-84a9-18c422fd4289",
+               "language": "en", //ISO 639-1
+               "region": "au", //ISO 3166-1 alpha-2
+               "dataVersion": "0.0.0.0", //database version
+               //a minimum set of localisation keys to prep the loading screen
+            },
+            //"boot": {
+            //   //"Progress": "Progress",
+            //   //"{0}": "{0}",
+            //   "Client Version:[{0}]": "Client Version:[{0}]",
+            //   "Database Version:[{0}]": "Database Version:[{0}]",
+            //   "Error:[{0}]": "Error:[{0}]",
+            //   "Debug:[{0}]": "Debug:[{0}]",
+            //}
          });
       }, MakeMockLatencyDelayMillisecond());
    };

@@ -42,6 +42,7 @@ var App = (function () {
    return {
       "RegisterOnLoad": RegisterOnLoad,
       "RegisterBeforeUnload": RegisterBeforeUnload,
+      "Unimplemented": Unimplemented,
 
       "Globals": {
          mockNetworkLatencyMillisecond: 100,
@@ -52,19 +53,19 @@ var App = (function () {
       },
       "View": {
          // if you want a loading screen, use ClientSetScreen("loading", "loading0", null)?
-         //"ClientSetLoading": Unimplemented,
-
-         //screen/dialog name, template name, data
+         //template name, screen/dialog name, data
          "Client_SetScreen": Unimplemented,
-         //screen/dialog name, template name, data
+         //template name, screen/dialog name, data
          "Client_PushDialog": Unimplemented,
          "Client_PopDialog": Unimplemented,
          "Client_ClearAllDialog": Unimplemented,
-
+         "Client_GetDefaultTemplateName": Unimplemented,
+         "Client_OnGetUserData": Unimplemented,
          //message
          "ConsoleError": Unimplemented,
          //message
          "ConsoleDebug": Unimplemented,
+         "SetDefaultTemplateName": Unimplemented,
          //templateName, factory
          "AddTemplate": Unimplemented
       },
@@ -81,11 +82,19 @@ var App = (function () {
          "View_OnDrag": Unimplemented,
          //callback enabled, callback error, screen/dialog name, id
          "View_RegisterAsyncEnabled": Unimplemented,
-         "View_RemoveAsyncEnabled": Unimplemented,
+         //"View_RemoveAsyncEnabled": Unimplemented,
          // locale, progress bar, slider?
-         //callback enabled, callback error, screen/dialog name, id
+         //callback text, callback error, screen/dialog name, id
          "View_RegisterAsyncText": Unimplemented,
-         "View_RemoveAsyncText": Unimplemented,
+         //"View_RemoveAsyncText": Unimplemented,
+         //name, factory
+         "RegisterState": Unimplemented,
+         //name
+         "SetState": Unimplemented,
+         //authoriseToken
+         "SetAuthoriseToken": Unimplemented,
+         //callback, module, key, data
+         "AsyncGetLocalisedText": Unimplemented,
       },
       "Network": {
          //special function to get Authorize token or just use ClientPOST
