@@ -36,124 +36,184 @@ var App = (function () {
          }
       }
    }
+   var m_logArray = [];
+   var m_logCallback = undefined;
+   function LogMessage(in_module, in_filter, in_message) {
+      if (undefined === m_logCallback) {
+         m_logArray.push([in_module, in_filter, in_message]);
+      } else {
+         m_logCallback(in_module, in_filter, in_message);
+      }
+      switch (in_filter) {
+         case "Error":
+            console.log(in_module + ":" + in_message);
+            break;
+         case "Warning":
+            console.warn(in_module + ":" + in_message);
+            break;
+         default:
+         case "Info":
+            console.info(in_module + ":" + in_message);
+            break;
+      }
+   }
+   function SetLogCallback(in_callback) {
+      m_logCallback = in_callback;
+      if (undefined !== m_logCallback) {
+         for (let i = 0; i < m_logArray.length; i++) {
+            var data = m_logArray[i];
+            m_logCallback(data[0], data[1], data[2]);
+         }
+         m_logArray = [];
+      }
+   }
+
    /*
     document the public interface of each module, plus a hint at what module will be calling the public interface
     */
    return {
+      "Unimplemented": Unimplemented,
       "RegisterOnLoad": RegisterOnLoad,
       "RegisterBeforeUnload": RegisterBeforeUnload,
-      "Unimplemented": Unimplemented,
+      "LogMessage": LogMessage, //module, filter, message
+      //AddLogCallback ?
+      "SetLogCallback": SetLogCallback, //fn(module, filter, message)
 
       "Globals": {
          mockNetworkLatencyMillisecond: 100,
          mockNetworkLatencyMillisecondPlusMinus: 50,
-         mockDatabaseLatencyMillisecond: 100,
-         mockDatabaseLatencyMillisecondPlusMinus: 50,
          //mockNetworkErrorRate?
+         mockDatabaseLatencyMillisecond: 100,
+         mockDatabaseLatencyMillisecondPlusMinus: 50
       },
       "View": {
-         // if you want a loading screen, use ClientSetScreen("loading", "loading0", null)?
-         //template name, screen/dialog name, data
-         "Client_SetScreen": Unimplemented,
-         //template name, screen/dialog name, data
-         "Client_PushDialog": Unimplemented,
-         "Client_PopDialog": Unimplemented,
-         "Client_ClearAllDialog": Unimplemented,
-         "Client_GetDefaultTemplateName": Unimplemented,
-         "Client_OnGetUserData": Unimplemented,
-         //message
-         "ConsoleError": Unimplemented,
-         //message
-         "ConsoleDebug": Unimplemented,
-         "SetDefaultTemplateName": Unimplemented,
-         //templateName, factory
-         "AddTemplate": Unimplemented
-      },
-      "Client": {
-         //// have one registed error callback (that people can forget) or oblige every async function to have an error callback   
-         ////function callback(error message)
-         //"ViewRegisterErrorCallback": Unimplemented,
-         ////callback pass, callback error, locale key, modual name, key, 
-         //"ViewAsyncGetLocalisedKey": Unimplemented,
+         "Root_AddTemplate": Unimplemented, //templateName, factory
+         "Client_AddTemplate": Unimplemented,//templateName, factory
 
-         //screen name, element name, group data, verb, subject, x, y
-         "View_OnClick": Unimplemented,
-         //screen name, element name, normalised value, mouse finished dragging?
-         "View_OnDrag": Unimplemented,
-         //callback enabled, callback error, screen/dialog name, id
-         "View_RegisterAsyncEnabled": Unimplemented,
-         //"View_RemoveAsyncEnabled": Unimplemented,
-         // locale, progress bar, slider?
-         //callback text, callback error, screen/dialog name, id
-         "View_RegisterAsyncText": Unimplemented,
-         //"View_RemoveAsyncText": Unimplemented,
-         //name, factory
-         "RegisterState": Unimplemented,
-         //name
-         "SetState": Unimplemented,
-         //authoriseToken
-         "SetAuthoriseToken": Unimplemented,
-         //callback, module, key, data
-         "AsyncGetLocalisedText": Unimplemented,
+         // if you want a loading screen, use ClientSetScreen("loading", "loading0", null)?
+         //"Client_AddRenderLayer": Unimplemented, //name
+         "Client_AddScreen": Unimplemented,//template name, name, IDataSource, takeFocusWhenReady, transitionHint, renderLayerHint
+         "Client_RemoveScreen": Unimplemented, //name
+
+         "Client_AddRenderLayer": Unimplemented, //name
+         //addTransition?
+
+         "LogError": function (in_message) {
+            App.LogMessage("View", "Error", in_message);
+         },
+         "LogWarning": function (in_message) {
+            App.LogMessage("View", "Warning", in_message);
+         },
+         "LogInfo": function (in_message) {
+            App.LogMessage("View", "Info", in_message);
+         },
+      },
+      /*
+      IDataSource : {
+         "Dtor"
+         "SetFocus" //true/false
+         "OnButtonClick" //elementName, group data, verb, subject
+         "OnElementInput" //elementName
+         "GetValueBool"
+         "GetValueInt"
+         "GetValueString"
+         // named structs or generic? GetValueDataButton, GetValueArrayDataButton or just GetValueObject
+         "GetValueObject"
+         "GetValueArray"
+         "MakeGeneratorBool"
+         "MakeGeneratorInt"
+         "MakeGeneratorString"
+         // named structs or generic?
+         "MakeGeneratorObject"
+         "MakeGeneratorArray"
+      }
+       */
+
+      "Client": {
+         // use RegisterOnLoad instead, allows unittest to add itself. alternative Root_ApplicationInPoint and Root_AddTask?
+         //"Root_ApplicationInPoint": Unimplemented,
+
+         "Root_AddStateFactory": Unimplemented, //stateName, factory
+         "Client_AddStateFactory": Unimplemented, //stateName, factory
+         "Client_SetState": Unimplemented, //name
+
+         "Root_SetData": Unimplemented,//data
+         "Client_SetDataValue": Unimplemented,//key, value
+         "Client_GetDataValue": Unimplemented,//key
+         "Client_AddDataChangeCallback": Unimplemented,//key, callback
+         "Client_RemoveDataChangeCallback": Unimplemented,
+
+         "Client_AsyncGetLocalisedText": Unimplemented,//callback, module, key, array of data keys to be converted to text to fill in format blanks of text (__0__, __1__, __2__, ...)
+         "Client_SetAuthoriseToken": Unimplemented,//authoriseToken
+
+         "Client_MakeDefaultDataSource": Unimplemented,
+
+         "LogError": function (in_message) {
+            App.LogMessage("Client", "Error", in_message);
+         },
+         "LogWarning": function (in_message) {
+            App.LogMessage("Client", "Warning", in_message);
+         },
+         "LogInfo": function (in_message) {
+            App.LogMessage("Client", "Info", in_message);
+         },
       },
       "Network": {
          //special function to get Authorize token or just use ClientPOST
-         //ClientAuthorise(pass callback, error callback, username, password), or assume all logged in for now? return {"AuthoriseToken", "userId", "localeKey"}
-         "Client_GetUserDataAuthoriseToken": Unimplemented,
-         //[create] callback pass, callback error, Authorize token, endpoint, data
-         "Client_POST": Unimplemented,
-         //[read] callback pass, callback error, Authorize token, endpoint
-         "Client_GET": Unimplemented,
-         //[update] callback pass, callback error, Authorize token, endpoint, data
-         "Client_PUT": Unimplemented,
-         //[delete] callback pass, callback error, Authorize token, endpoint
-         "Client_DELETE": Unimplemented
+         "Client_AsyncGetAuthoriseTokenAndBootstrapData": Unimplemented,//ClientAuthorise(pass callback, error callback, username, password), or assume all logged in for now? return {"AuthoriseToken", "userId", "localeKey"}
+         "Client_POST": Unimplemented,//[create] callback pass, callback error, Authorize token, endpoint, data
+         "Client_GET": Unimplemented,//[read] callback pass, callback error, Authorize token, endpoint
+         "Client_PUT": Unimplemented,//[update] callback pass, callback error, Authorize token, endpoint, data
+         "Client_DELETE": Unimplemented,//[delete] callback pass, callback error, Authorize token, endpoint
+
+         "LogError": function (in_message) {
+            App.LogMessage("Network", "Error", in_message);
+         },
+         "LogWarning": function (in_message) {
+            App.LogMessage("Network", "Warning", in_message);
+         },
+         "LogInfo": function (in_message) {
+            App.LogMessage("Network", "Info", in_message);
+         },
       },
       "Server": {
-         //request, response
+         "Network_RequestListener": Unimplemented,//request, response
          // request { "url", "headers", "method", "body"} ("onError"?)
          // response { "setHeader", "writeHead", "write", "end"} ("onError"?)
-         "Network_RequestListener": Unimplemented
+
+         "LogError": function (in_message) {
+            App.LogMessage("Server", "Error", in_message);
+         },
+         "LogWarning": function (in_message) {
+            App.LogMessage("Server", "Warning", in_message);
+         },
+         "LogInfo": function (in_message) {
+            App.LogMessage("Server", "Info", in_message);
+         },
       },
       "Database": {
          //https://redis.io/commands
-         //key value [EX seconds|PX milliseconds|EXAT timestamp|PXAT milliseconds-timestamp|KEEPTTL] [NX|XX] [GET]
-         "Server_SET": Unimplemented,
-         //key
-         "Server_GET": Unimplemented,
-         //key value [key value...]
-         "Server_MSET": Unimplemented,
-         //key [key ...]
-         "Server_MGET": Unimplemented,
-         //key [key ...]
-         "Server_EXISTS": Unimplemented,
-         //key [key ...]
-         "Server_DEL": Unimplemented,
-         //key
-         "Server_INCR": Unimplemented,
-         //key delta 
-         "Server_INCRBY": Unimplemented,
-         //key
-         "Server_DECR": Unimplemented,
-         //key delta
-         "Server_DECRBY": Unimplemented,
+         "Server_SET": Unimplemented,//key value [EX seconds|PX milliseconds|EXAT timestamp|PXAT milliseconds-timestamp|KEEPTTL] [NX|XX] [GET]
+         "Server_GET": Unimplemented,//key
+         "Server_MSET": Unimplemented,//key value [key value...]
+         "Server_MGET": Unimplemented,//key [key ...]
+         "Server_EXISTS": Unimplemented,//key [key ...]
+         "Server_DEL": Unimplemented,//key [key ...]
+         "Server_INCR": Unimplemented,//key
+         "Server_INCRBY": Unimplemented,//key delta 
+         "Server_DECR": Unimplemented,//key
+         "Server_DECRBY": Unimplemented,//key delta
 
          //LPUSH, RPUSH, LPOP, RPOP, LRANGE, LTRIM
 
-         //key field
-         "Server_HGET": Unimplemented,
-         //key
-         "Server_HGETALL": Unimplemented,
-         //key field [field ...]
-         "Server_HDEL": Unimplemented,
-         //key field
-         "Server_HEXISTS": Unimplemented,
+         "Server_HGET": Unimplemented,//key field
+         "Server_HGETALL": Unimplemented,//key
+         "Server_HDEL": Unimplemented,//key field [field ...]
+         "Server_HEXISTS": Unimplemented,//key field
          //HINCRBY
 
-         //key member [member ...]
-         "Server_SADD": Unimplemented,
-         //key
-         "Server_SMEMBERS": Unimplemented,
+         "Server_SADD": Unimplemented,//key member [member ...]
+         "Server_SMEMBERS": Unimplemented,//key
 
          //PUBLISH
          //SUBSCRIBE
@@ -162,8 +222,30 @@ var App = (function () {
          //...
 
          //allow preloading data into database
-         "SetData": Unimplemented
+         "Root_SetData": Unimplemented,//data
+
+         "LogError": function (in_message) {
+            App.LogMessage("Database", "Error", in_message);
+         },
+         "LogWarning": function (in_message) {
+            App.LogMessage("Database", "Warning", in_message);
+         },
+         "LogInfo": function (in_message) {
+            App.LogMessage("Database", "Info", in_message);
+         },
       },
+
+      "Unittest": {
+         "LogError": function (in_message) {
+            App.LogMessage("Unittest", "Error", in_message);
+         },
+         "LogWarning": function (in_message) {
+            App.LogMessage("Unittest", "Warning", in_message);
+         },
+         "LogInfo": function (in_message) {
+            App.LogMessage("Unittest", "Info", in_message);
+         },
+      }
    };
 })();
 

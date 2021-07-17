@@ -49,43 +49,67 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "js", "js", "{C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}"
 	ProjectSection(SolutionItems) = preProject
 		prototype\erfworld00\js\app.js = prototype\erfworld00\js\app.js
-		prototype\erfworld00\js\client.js = prototype\erfworld00\js\client.js
-		prototype\erfworld00\js\view.js = prototype\erfworld00\js\view.js
+		prototype\erfworld00\js\full_screen_toggle.js = prototype\erfworld00\js\full_screen_toggle.js
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mock", "mock", "{F1C5EB28-E9B2-4535-BD19-61934263B117}"
-	ProjectSection(SolutionItems) = preProject
-		prototype\erfworld00\js\mock\data_store.js = prototype\erfworld00\js\mock\data_store.js
-		prototype\erfworld00\js\mock\database.js = prototype\erfworld00\js\mock\database.js
-		prototype\erfworld00\js\mock\network.js = prototype\erfworld00\js\mock\network.js
-		prototype\erfworld00\js\mock\server.js = prototype\erfworld00\js\mock\server.js
-	EndProjectSection
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "network", "network", "{F1C5EB28-E9B2-4535-BD19-61934263B117}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "util", "util", "{2B870DEA-A150-40FE-B89E-E97B0C06B049}"
-	ProjectSection(SolutionItems) = preProject
-		prototype\erfworld00\js\util\full_screen_toggle.js = prototype\erfworld00\js\util\full_screen_toggle.js
-	EndProjectSection
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{2B870DEA-A150-40FE-B89E-E97B0C06B049}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "view", "view", "{0602D94A-F68F-4B9D-ADF2-B767329F2989}"
 	ProjectSection(SolutionItems) = preProject
-		prototype\erfworld00\js\view\console.js = prototype\erfworld00\js\view\console.js
-		prototype\erfworld00\js\view\template_default.js = prototype\erfworld00\js\view\template_default.js
-		prototype\erfworld00\js\view\template_dialog.js = prototype\erfworld00\js\view\template_dialog.js
-		prototype\erfworld00\js\view\template_loading.js = prototype\erfworld00\js\view\template_loading.js
-		prototype\erfworld00\js\view\template_vertical_button_stack.js = prototype\erfworld00\js\view\template_vertical_button_stack.js
-		prototype\erfworld00\js\view\version.js = prototype\erfworld00\js\view\version.js
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unittest", "unittest", "{C33B548C-5FBB-4842-8C72-480192A123C0}"
-	ProjectSection(SolutionItems) = preProject
-		prototype\erfworld00\js\unittest\database.js = prototype\erfworld00\js\unittest\database.js
+		prototype\erfworld00\js\view\view.js = prototype\erfworld00\js\view\view.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{615BDA11-3744-4B28-8A2E-23869F1DBD59}"
 	ProjectSection(SolutionItems) = preProject
-		prototype\erfworld00\js\client\state_boot.js = prototype\erfworld00\js\client\state_boot.js
-		prototype\erfworld00\js\client\state_launch.js = prototype\erfworld00\js\client\state_launch.js
-		prototype\erfworld00\js\client\state_new_game.js = prototype\erfworld00\js\client\state_new_game.js
+		prototype\erfworld00\js\client\client.js = prototype\erfworld00\js\client\client.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database", "database", "{07374206-5915-4538-A47C-3D54D436B5B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "template", "template", "{5F6E9CDC-14EA-46EA-9A88-DF31D2120257}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dialog", "dialog", "{C063568B-8AE2-47A0-8449-1625840E0279}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\view\template\dialog\general.js = prototype\erfworld00\js\view\template\dialog\general.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "overlay", "overlay", "{F31022EA-4E6F-400B-865F-7D52E365303E}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\view\template\overlay\console.js = prototype\erfworld00\js\view\template\overlay\console.js
+		prototype\erfworld00\js\view\template\overlay\version.js = prototype\erfworld00\js\view\template\overlay\version.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "screen", "screen", "{545DBC9C-5782-454A-A4BD-29F9D602766D}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\view\template\screen\boot_strap.js = prototype\erfworld00\js\view\template\screen\boot_strap.js
+		prototype\erfworld00\js\view\template\screen\loading.js = prototype\erfworld00\js\view\template\screen\loading.js
+		prototype\erfworld00\js\view\template\screen\vertical_button_stack.js = prototype\erfworld00\js\view\template\screen\vertical_button_stack.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mock", "mock", "{7475F16E-AF0F-4419-A31D-D68CC798DA3C}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\database\mock\data.js = prototype\erfworld00\js\database\mock\data.js
+		prototype\erfworld00\js\database\mock\database.js = prototype\erfworld00\js\database\mock\database.js
+		prototype\erfworld00\js\database\mock\unittest.js = prototype\erfworld00\js\database\mock\unittest.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mock", "mock", "{8C7ACEE6-E59B-40FE-A65B-85AF8ECE5212}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\network\mock\network.js = prototype\erfworld00\js\network\mock\network.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "state", "state", "{CBE27294-8C56-4870-985A-CFA2A2FAA95A}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\client\state\boot.js = prototype\erfworld00\js\client\state\boot.js
+		prototype\erfworld00\js\client\state\launch.js = prototype\erfworld00\js\client\state\launch.js
+		prototype\erfworld00\js\client\state\new_game.js = prototype\erfworld00\js\client\state\new_game.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mock", "mock", "{6F0AD655-3327-4BC4-BDFA-4736C211FFD4}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\server\mock\server.js = prototype\erfworld00\js\server\mock\server.js
 	EndProjectSection
 EndProject
 Global
@@ -133,8 +157,16 @@ Global
 		{F1C5EB28-E9B2-4535-BD19-61934263B117} = {C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}
 		{2B870DEA-A150-40FE-B89E-E97B0C06B049} = {C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}
 		{0602D94A-F68F-4B9D-ADF2-B767329F2989} = {C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}
-		{C33B548C-5FBB-4842-8C72-480192A123C0} = {C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}
 		{615BDA11-3744-4B28-8A2E-23869F1DBD59} = {C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}
+		{07374206-5915-4538-A47C-3D54D436B5B0} = {C9DAC3BF-96FD-4094-BE2A-0459F1750D5B}
+		{5F6E9CDC-14EA-46EA-9A88-DF31D2120257} = {0602D94A-F68F-4B9D-ADF2-B767329F2989}
+		{C063568B-8AE2-47A0-8449-1625840E0279} = {5F6E9CDC-14EA-46EA-9A88-DF31D2120257}
+		{F31022EA-4E6F-400B-865F-7D52E365303E} = {5F6E9CDC-14EA-46EA-9A88-DF31D2120257}
+		{545DBC9C-5782-454A-A4BD-29F9D602766D} = {5F6E9CDC-14EA-46EA-9A88-DF31D2120257}
+		{7475F16E-AF0F-4419-A31D-D68CC798DA3C} = {07374206-5915-4538-A47C-3D54D436B5B0}
+		{8C7ACEE6-E59B-40FE-A65B-85AF8ECE5212} = {F1C5EB28-E9B2-4535-BD19-61934263B117}
+		{CBE27294-8C56-4870-985A-CFA2A2FAA95A} = {615BDA11-3744-4B28-8A2E-23869F1DBD59}
+		{6F0AD655-3327-4BC4-BDFA-4736C211FFD4} = {2B870DEA-A150-40FE-B89E-E97B0C06B049}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01849243-7DF1-40D0-80A9-36CDCC951EE5}

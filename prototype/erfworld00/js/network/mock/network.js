@@ -5,25 +5,21 @@
    }
 
    //http://www.sean-crist.com/professional/pages/language_region_codes/index.html
-   App.Network.Client_GetUserDataAuthoriseToken = function (callbackPass, callbackError, userName, password) {
+   App.Network.Client_AsyncGetAuthoriseTokenAndBootstrapData = function (callbackPass, callbackError, userName, password) {
       setTimeout(function () {
          callbackPass({
-            "authoriseToken": "dummy",
-            "state": {
-               "userId": 0, //"f552f056-2fbb-463b-84a9-18c422fd4289",
-               "language": "en", //ISO 639-1
-               "region": "au", //ISO 3166-1 alpha-2
-               "dataVersion": "0.0.0.0", //database version
+            "AuthoriseToken": "dummy",
+            "StateData": {
+               "UserId": 0, //"f552f056-2fbb-463b-84a9-18c422fd4289",
+               "Language": "en", //ISO 639-1
+               "Region": "au", //ISO 3166-1 alpha-2
+               "DatabaseVersion": "0.0.0.0", //database version
+               "ClientVersion": "0.0.0.0"
                //a minimum set of localisation keys to prep the loading screen
             },
-            //"boot": {
-            //   //"Progress": "Progress",
-            //   //"{0}": "{0}",
-            //   "Client Version:[{0}]": "Client Version:[{0}]",
-            //   "Database Version:[{0}]": "Database Version:[{0}]",
-            //   "Error:[{0}]": "Error:[{0}]",
-            //   "Debug:[{0}]": "Debug:[{0}]",
-            //}
+            //ViewTemplate
+            //ClientState
+            "SetState": "launch"
          });
       }, MakeMockLatencyDelayMillisecond());
    };
