@@ -35,6 +35,7 @@
                m_generator.Dtor();
             }
             in_rootElement.removeChild(m_container);
+            in_dataSource.Dtor();
          }
       };
    };

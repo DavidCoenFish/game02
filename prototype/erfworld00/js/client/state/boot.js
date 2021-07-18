@@ -65,5 +65,5 @@
          }
       }
    };
-   App.Client.Root_AddStateFactory("boot", Factory);
+   App.Client.Root_AddStateFactory("Boot", Factory);
 })();

@@ -16,9 +16,7 @@
       var m_generator = undefined;
       {
          var child = in_document.createElement("div");
-         //child.innerHTML = "...";
          m_container.appendChild(child);
-
          m_generator = in_dataSource.MakeGeneratorLocaleKey("{0}", undefined, ["progressText"], function (in_string) {
             child.innerHTML = in_string;
          });
@@ -30,6 +28,7 @@
                m_generator.Dtor();
             }
             in_rootElement.removeChild(m_container);
+            in_dataSource.Dtor();
          }
       };
    };

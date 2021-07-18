@@ -112,7 +112,7 @@ var App = (function () {
       IDataSource : {
          "Dtor"
          "SetFocus" //true/false
-         "OnButtonClick" //elementName, group data, verb, subject
+         "OnButtonClick" //in_verb, in_object
          "OnElementInput" //elementName
          "GetValueBool"
          "GetValueInt"
@@ -120,12 +120,14 @@ var App = (function () {
          // named structs or generic? GetValueDataButton, GetValueArrayDataButton or just GetValueObject
          "GetValueObject"
          "GetValueArray"
-         "MakeGeneratorBool"
+         "GetValueLocaleKey" //in_localeKey, in_module, in_dataKeyArray
+         "MakeGeneratorBool" //in_key, in_callback
          "MakeGeneratorInt"
          "MakeGeneratorString"
          // named structs or generic?
          "MakeGeneratorObject"
          "MakeGeneratorArray"
+         "MakeGeneratorLocaleKey"//in_localeKey, in_module, in_dataKeyArray, callback
       }
        */
 
@@ -146,6 +148,7 @@ var App = (function () {
          "Client_AsyncGetLocalisedText": Unimplemented,//callback, module, key, array of data keys to be converted to text to fill in format blanks of text (__0__, __1__, __2__, ...)
          "Client_SetAuthoriseToken": Unimplemented,//authoriseToken
 
+         "Client_MakeGeneratorLocaleKey": Unimplemented,
          "Client_MakeDefaultDataSource": Unimplemented,
 
          "LogError": function (in_message) {

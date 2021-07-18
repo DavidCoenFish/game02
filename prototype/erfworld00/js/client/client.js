@@ -191,6 +191,7 @@
          },
       };
    }
+   App.Client.Client_MakeGeneratorLocaleKey = MakeGeneratorLocaleKey;
    App.Client.Client_MakeDefaultDataSource = function () {
       return {
          "Dtor": function () {
@@ -227,7 +228,7 @@
 
       App.View.Client_AddScreen("overlay_version", "overlay_version", App.Client.Client_MakeDefaultDataSource(), false, undefined, "top_overlay");
 
-      App.Client.Client_SetState("boot");
+      App.Client.Client_SetState("Boot");
    }
    App.RegisterOnLoad(Main);
 

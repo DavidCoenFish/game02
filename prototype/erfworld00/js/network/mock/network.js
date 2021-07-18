@@ -18,7 +18,7 @@
             },
             //ViewTemplate
             //ClientState
-            "SetState": "launch"
+            "SetState": "Launch"
          });
       }, MakeMockLatencyDelayMillisecond());
    };
