@@ -14,8 +14,7 @@
                "Language": "en", //ISO 639-1
                "Region": "au", //ISO 3166-1 alpha-2
                "DatabaseVersion": "0.0.0.0", //database version
-               "ClientVersion": "0.0.0.0"
-               //a minimum set of localisation keys to prep the loading screen
+               "ServerVersion": "0.0.0.0"
             },
             //ViewTemplate
             //ClientState

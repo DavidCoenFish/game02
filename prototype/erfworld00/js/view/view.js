@@ -12,7 +12,7 @@
          return m_renderLayer[in_name];
       }
       var div = document.createElement("div");
-      div.innerHTML = in_name;
+      //div.innerHTML = in_name;
       //div.style.background = "red";
       div.style.position = "absolute";
       div.style.top = "0px";

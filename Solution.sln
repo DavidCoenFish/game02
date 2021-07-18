@@ -83,8 +83,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "overlay", "overlay", "{F310
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "screen", "screen", "{545DBC9C-5782-454A-A4BD-29F9D602766D}"
 	ProjectSection(SolutionItems) = preProject
-		prototype\erfworld00\js\view\template\screen\boot_strap.js = prototype\erfworld00\js\view\template\screen\boot_strap.js
 		prototype\erfworld00\js\view\template\screen\loading.js = prototype\erfworld00\js\view\template\screen\loading.js
+		prototype\erfworld00\js\view\template\screen\progress.js = prototype\erfworld00\js\view\template\screen\progress.js
 		prototype\erfworld00\js\view\template\screen\vertical_button_stack.js = prototype\erfworld00\js\view\template\screen\vertical_button_stack.js
 	EndProjectSection
 EndProject

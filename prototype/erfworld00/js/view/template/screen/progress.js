@@ -5,29 +5,24 @@
       m_container.style.position = "absolute";
       m_container.style.left = "0px";
       m_container.style.right = "0px";
+      m_container.style.top = "0px";
       m_container.style.bottom = "0px";
       m_container.style.display = "flex";
-      //m_container.style.flexDirection = "column-reverse";
-      m_container.style.flexDirection = "row";
-      //m_container.style.alignItems = "center";
+      m_container.style.flexDirection = "column";
       m_container.style.justifyContent = "center";
+      m_container.style.alignItems = "center";
       in_rootElement.appendChild(m_container);
 
       var m_generator = undefined;
-      function AddElement(in_localeKey, in_dataKeyArray) {
+      {
          var child = in_document.createElement("div");
-         //child.innerHTML = in_name;
-         //child.style.background = "blue";
-         child.style.fontSize = "0.5em"
-         child.style.opacity = 0.5;
-         child.style.margin = "0.5em";
+         //child.innerHTML = "...";
          m_container.appendChild(child);
 
-         m_generator = in_dataSource.MakeGeneratorLocaleKey(in_localeKey, undefined, in_dataKeyArray, function (in_string) {
+         m_generator = in_dataSource.MakeGeneratorLocaleKey("{0}", undefined, ["progressText"], function (in_string) {
             child.innerHTML = in_string;
          });
       }
-      AddElement("Version {0} {1} {2}", ["DatabaseVersion", "ServerVersion", "ClientVersion"]);
 
       return {
          "Dtor": function () {
@@ -38,5 +33,5 @@
          }
       };
    };
-   App.View.Root_AddTemplate("overlay_version", Factory);
+   App.View.Root_AddTemplate("progress", Factory);
 })();
