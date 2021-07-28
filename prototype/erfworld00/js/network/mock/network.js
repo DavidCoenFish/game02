@@ -27,7 +27,7 @@
       return {
          "url": endpoint,
          "headers": {
-            "authorize_token": authorizeToken
+            "authorize_token": authorizeToken //{"userId":,"session":}?
          },
          "method": method,
          "body": body
@@ -38,8 +38,19 @@
       var mStatusCode = 0; //500; //Internal Server Error
       var mHeader = {};
       var mBody = undefined;
+      var mThis = undefined;
+      function Status(statusCode) {
+         mStatusCode = statusCode;
+         return mThis;
+      }
+      function Json(data) {
+         SetHeader('Content-Type', 'application/json');
+         mBody = JSON.stringify(data);
+         return mThis;
+      }
       function SetHeader(name, value) {
          mHeader[name] = value;
+         return mThis;
       }
       function WriteHead(statusCode, statusMessage, headers) {
          mStatusCode = statusCode;
@@ -53,6 +64,7 @@
                mHeader[key] = headers[key];
             });
          }
+         return mThis;
       }
       function Write(chunk, encoding, callback) {
          if (mBody !== undefined) {
@@ -63,6 +75,7 @@
          if (callback) {
             callback();
          }
+         return mThis;
       }
       function End(data, encoding, callback) {
          if (data) {
@@ -73,13 +86,18 @@
          } else {
             callbackPass(mBody);
          }
+         return mThis;
       }
-      return {
+      //will self referencing cause memory bloat?
+      mThis = {
+         "status": Status,
+         "json": Json,
          "setHeader": SetHeader,
          "writeHead": WriteHead,
          "write": Write,
          "end": End
       };
+      return mThis;
    }
 
    //[create]

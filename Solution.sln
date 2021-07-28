@@ -38,6 +38,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "erfworld00", "erfworld00", "{C1B9788D-1844-4FE2-91C5-0A4567D5221E}"
 	ProjectSection(SolutionItems) = preProject
 		prototype\erfworld00\index.htm = prototype\erfworld00\index.htm
+		prototype\erfworld00\notes.txt = prototype\erfworld00\notes.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "css", "css", "{AB504D5A-3CB9-41A3-9CAD-45EB229173C0}"
@@ -79,6 +80,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "overlay", "overlay", "{F310
 	ProjectSection(SolutionItems) = preProject
 		prototype\erfworld00\js\view\template\overlay\console.js = prototype\erfworld00\js\view\template\overlay\console.js
 		prototype\erfworld00\js\view\template\overlay\version.js = prototype\erfworld00\js\view\template\overlay\version.js
+		prototype\erfworld00\js\view\template\overlay\waiting.js = prototype\erfworld00\js\view\template\overlay\waiting.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "screen", "screen", "{545DBC9C-5782-454A-A4BD-29F9D602766D}"
@@ -110,6 +112,22 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mock", "mock", "{6F0AD655-3327-4BC4-BDFA-4736C211FFD4}"
 	ProjectSection(SolutionItems) = preProject
 		prototype\erfworld00\js\server\mock\server.js = prototype\erfworld00\js\server\mock\server.js
+		prototype\erfworld00\js\server\mock\unittest.js = prototype\erfworld00\js\server\mock\unittest.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "route", "route", "{7B944584-18FB-4D92-B4BE-7794C3D542CB}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\server\mock\route\api.js = prototype\erfworld00\js\server\mock\route\api.js
+		prototype\erfworld00\js\server\mock\route\api_guest.js = prototype\erfworld00\js\server\mock\route\api_guest.js
+		prototype\erfworld00\js\server\mock\route\api_login.js = prototype\erfworld00\js\server\mock\route\api_login.js
+		prototype\erfworld00\js\server\mock\route\api_logout.js = prototype\erfworld00\js\server\mock\route\api_logout.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "middleware", "middleware", "{263260A3-4349-40BB-8A28-924F2C8F0483}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\server\mock\middleware\build_links.js = prototype\erfworld00\js\server\mock\middleware\build_links.js
+		prototype\erfworld00\js\server\mock\middleware\response_json.js = prototype\erfworld00\js\server\mock\middleware\response_json.js
+		prototype\erfworld00\js\server\mock\middleware\user_authorise.js = prototype\erfworld00\js\server\mock\middleware\user_authorise.js
 	EndProjectSection
 EndProject
 Global
@@ -167,6 +185,8 @@ Global
 		{8C7ACEE6-E59B-40FE-A65B-85AF8ECE5212} = {F1C5EB28-E9B2-4535-BD19-61934263B117}
 		{CBE27294-8C56-4870-985A-CFA2A2FAA95A} = {615BDA11-3744-4B28-8A2E-23869F1DBD59}
 		{6F0AD655-3327-4BC4-BDFA-4736C211FFD4} = {2B870DEA-A150-40FE-B89E-E97B0C06B049}
+		{7B944584-18FB-4D92-B4BE-7794C3D542CB} = {6F0AD655-3327-4BC4-BDFA-4736C211FFD4}
+		{263260A3-4349-40BB-8A28-924F2C8F0483} = {6F0AD655-3327-4BC4-BDFA-4736C211FFD4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01849243-7DF1-40D0-80A9-36CDCC951EE5}

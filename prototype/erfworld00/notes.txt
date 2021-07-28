@@ -1,0 +1,85 @@
+boot
+
+request /api from server, response, get state hint/view template name? no, server has no awarness of client? get server/database version and links for actions
+{
+   A authorisation required
+   C create, have an enpoint xxx/create_meta to get the metadata for the object input 
+   R read
+   U update, have an enpoint xxx/update_meta to get the metadata for the object input
+   D delete
+}
+
+R /api
+C /api/login {username:username, password?salt:password}
+C /api/guest (instread of user, have a guest?
+
+can view map, read bestiary, without authorasiation?
+
+send in header, {session id, user id}, 
+database has a tempoary key for the session "user.:user_id.session.:session_id,
+
+//create a pre_game, allows reroll, editing, before deply to game world
+ACR /api/:user_id/pre_game
+ARUD /api/:user_id/pre_game/:game_id
+AC /api/:user_id/pre_game/:game_id/reroll
+AC /api/:user_id/pre_game/:game_id/seal
+
+ACR /api/:user_id/game 
+ARUD /api/:user_id/game/:game_id
+
+/api/:user_id/game/:game_id/unit/:unit_id
+/api/:user_id/game/:game_id/building/:building_id
+ACRU /api/:user_id/game/:game_id/turn
+/api/:user_id/game/:game_id/turn/:turn_id/command/:command_id
+
+/api/map/:x/:y
+/api/map/:x_low/:x_high/:y_low/:y_high
+
+R /api
+response { 
+  data{ VersionServer : "0.0.0.0", VersionDatabase : "0.0.0.0" }
+  links [ 
+    [ "C", "login", /api/login {username:string, passwordHash:int, }]
+    [ "C", "guest", /api/guest ]
+  ]
+}
+C /api/login  {username, password}
+C /api/guest
+response {
+  data { userid }
+  links [
+    [R user /api/user/:user_id]
+  ]
+}
+R /api/user/:user_id
+response {
+  data{ currency }
+  links [
+    //[C newgame /api/user/:user_id/newgame]
+    [CRUD new_game /api/user/:user_id/game]
+    [R news /api/user/:user_id/news]
+  ]
+}
+R game /api/user/:user_id/game
+response {
+  data{ count, max_count }
+  links [R 
+}
+
+how to know what /api/login wants a input?
+do we have a "C /api/user/:user_id/newgame" or "CR /api/user/:user_id/game" 
+CRUD create, read, update, delete
+
+var endpointApiLoginUpdate = Router.AddEndpoint("login_update", "R", "/api/login/update")
+var endpointApiLoginCreate = Router.AddEndpoint("login_create", "R", "/api/login/create")
+var endpointApiLogin = Router.AddEndpoint("login", "ACRUD", "/api/login", [endpointApiLoginCreate, endpointApiLoginUpdate])
+var endpointApiGuest = Router.AddEndpoint("guest", "C", "/api/Guset")
+var endpointApi = Router.AddEndpoint("root", "R", "/api", [endpointApiGuest, endpointApiLogin])
+
+var endpointApiLogin = Router.AddEndpoint("ACRUD", "/api/user/:user_id/game", [link endpointObject...])
+
+endpointObject {
+   //"GetResponseCallback"
+   "GetResponseLinkData" // return array of link metadata eg. ["ACRUD", "new_game", "/api/user/:user_id/game"]
+}
+

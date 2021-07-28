@@ -159,6 +159,20 @@
       m_authoriseToken = in_authoriseToken;
    }
 
+   App.Client.Client_GetAuthoriseToken = function () {
+      return m_authoriseToken;
+   }
+
+   App.Client.Client_MakeGeneratorBool = MakeGeneratorBool;
+
+   function MakeGeneratorBool(in_dataKey, in_callback) {
+      App.Client.Client_AddDataChangeCallback(in_dataKey, in_callback);
+      return {
+         "Dtor": function () {
+            App.Client.Client_RemoveDataChangeCallback(in_dataKey, in_callback);
+         },
+      };
+   }
    function MakeGeneratorLocaleKey(in_localeKey, in_module, in_dataKeyArray, in_callback) {
       var currentTextValue = "";
       function GenerateLocaleCallback() {
@@ -191,13 +205,43 @@
          },
       };
    }
+   App.Client.Client_MakeGeneratorBool = MakeGeneratorBool;
    App.Client.Client_MakeGeneratorLocaleKey = MakeGeneratorLocaleKey;
+
    App.Client.Client_MakeDefaultDataSource = function () {
       return {
          "Dtor": function () {
          },
+         "MakeGeneratorBool": MakeGeneratorBool,
          "MakeGeneratorLocaleKey": MakeGeneratorLocaleKey
       };
+   }
+
+   var m_progressCount = 0;
+   function UpdateProgress() {
+      progressText = ".";
+      for (let i = 0; i < m_progressCount; ++i) {
+         progressText += ".";
+      }
+      m_progressCount = (m_progressCount + 1) % 4;
+      App.Client.Client_SetDataValue("ProgressText", progressText);
+   }
+   var m_progressInterval = undefined; //setInterval(UpdateProgress, 500);
+
+   function CallbackShowProgress(in_value) {
+      switch (in_value) {
+         case true:
+            if (undefined === m_progressInterval) {
+               m_progressInterval = setInterval(UpdateProgress, 500);
+            }
+            break;
+         default:
+            if (undefined !== m_progressInterval) {
+               clearInterval(m_progressInterval);
+               m_progressInterval = undefined;
+            }
+            break;
+      }
    }
 
    function CallbackLocaleKey() {
@@ -214,6 +258,7 @@
    }
 
    function Main() {
+      App.Client.Client_AddDataChangeCallback("ShowProgress", CallbackShowProgress);
       App.Client.Client_AddDataChangeCallback("Language", CallbackLocaleKey);
       App.Client.Client_AddDataChangeCallback("Region", CallbackLocaleKey);
       CallbackLocaleKey();
@@ -227,6 +272,7 @@
       App.View.Client_AddRenderLayer("top_overlay");
 
       App.View.Client_AddScreen("overlay_version", "overlay_version", App.Client.Client_MakeDefaultDataSource(), false, undefined, "top_overlay");
+      App.View.Client_AddScreen("overlay_waiting", "overlay_waiting", App.Client.Client_MakeDefaultDataSource(), false, undefined, "top_overlay");
 
       App.Client.Client_SetState("Boot");
    }

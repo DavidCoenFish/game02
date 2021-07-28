@@ -7,7 +7,7 @@
    }
 
    function SanityCheck0() {
-      App.Unittest.LogInfo("SanityCheck0");
+      App.Unittest.LogInfo(" SanityCheck0");
       CheckValue(0, App.Database.Server_EXISTS("unittest"), "SanityCheck0_0");
       App.Database.Server_SET("unittest", 4);
       CheckValue(1, App.Database.Server_EXISTS("unittest"), "SanityCheck0_1");

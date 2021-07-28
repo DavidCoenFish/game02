@@ -86,6 +86,7 @@ var App = (function () {
          mockDatabaseLatencyMillisecond: 100,
          mockDatabaseLatencyMillisecondPlusMinus: 50
       },
+
       "View": {
          "Root_AddTemplate": Unimplemented, //templateName, factory
          "Client_AddTemplate": Unimplemented,//templateName, factory
@@ -148,6 +149,7 @@ var App = (function () {
          "Client_AsyncGetLocalisedText": Unimplemented,//callback, module, key, array of data keys to be converted to text to fill in format blanks of text (__0__, __1__, __2__, ...)
          "Client_SetAuthoriseToken": Unimplemented,//authoriseToken
 
+         "Client_MakeGeneratorBool": Unimplemented,
          "Client_MakeGeneratorLocaleKey": Unimplemented,
          "Client_MakeDefaultDataSource": Unimplemented,
 
@@ -161,6 +163,7 @@ var App = (function () {
             App.LogMessage("Client", "Info", in_message);
          },
       },
+
       "Network": {
          //special function to get Authorize token or just use ClientPOST
          "Client_AsyncGetAuthoriseTokenAndBootstrapData": Unimplemented,//ClientAuthorise(pass callback, error callback, username, password), or assume all logged in for now? return {"AuthoriseToken", "userId", "localeKey"}
@@ -179,10 +182,20 @@ var App = (function () {
             App.LogMessage("Network", "Info", in_message);
          },
       },
+
       "Server": {
+         // allow register of "AuthoriseCallback", "AddResponseLinks", "EndResponse" to be added to 
+         "Root_AddNamedCallback": Unimplemented,
+         "Root_GetNamedCallback": Unimplemented,
+         //routeCallback(req, res, next)
+         "Root_AddRoute": Unimplemented, //route string, callback map
+
+         //route string "/foo/:foo_id/bar", callback map { "C":[CreateCallback], "R":[RequestCallback], "U":[Update..],"D":[Delete...]}, [link array]
+         //request.params = { "foo_id" : value }
+
          "Network_RequestListener": Unimplemented,//request, response
          // request { "url", "headers", "method", "body"} ("onError"?)
-         // response { "setHeader", "writeHead", "write", "end"} ("onError"?)
+         // response { "setHeader", "writeHead", "write", "status", "json", "end"} ("onError"?)
 
          "LogError": function (in_message) {
             App.LogMessage("Server", "Error", in_message);
@@ -194,6 +207,7 @@ var App = (function () {
             App.LogMessage("Server", "Info", in_message);
          },
       },
+
       "Database": {
          //https://redis.io/commands
          "Server_SET": Unimplemented,//key value [EX seconds|PX milliseconds|EXAT timestamp|PXAT milliseconds-timestamp|KEEPTTL] [NX|XX] [GET]
@@ -249,6 +263,7 @@ var App = (function () {
             App.LogMessage("Unittest", "Info", in_message);
          },
       }
+
    };
 })();
 

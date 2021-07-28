@@ -3,6 +3,7 @@
 
       function CreateNewGame() {
          //create a new game
+         //App.Network.Client_POST.
          // on success, goto pregame edit, 
          // on fail, return to launch
       }
