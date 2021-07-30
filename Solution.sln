@@ -121,6 +121,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "route", "route", "{7B944584
 		prototype\erfworld00\js\server\mock\route\api_guest.js = prototype\erfworld00\js\server\mock\route\api_guest.js
 		prototype\erfworld00\js\server\mock\route\api_login.js = prototype\erfworld00\js\server\mock\route\api_login.js
 		prototype\erfworld00\js\server\mock\route\api_logout.js = prototype\erfworld00\js\server\mock\route\api_logout.js
+		prototype\erfworld00\js\server\mock\route\api_user.js = prototype\erfworld00\js\server\mock\route\api_user.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "middleware", "middleware", "{263260A3-4349-40BB-8A28-924F2C8F0483}"
