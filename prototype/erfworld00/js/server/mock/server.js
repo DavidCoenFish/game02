@@ -83,8 +83,6 @@ Netflix: 9 different codes
   }
 }
 
-
-
 <!-- resources [document, collection(server-managed directory of resources), store(client-managed resource repository)] -->
 /api/v1 GET
 /api/v1/users POST, GET
@@ -130,190 +128,96 @@ Netflix: 9 different codes
 /api/v1/actions/delete-user ->resonspe 202 acknoledged with a new location of confirm + ETag
 /api/v1/actions/delete-user-confirm
 -->
-
-
-
-
-/v0
-what would a rest api look like, plus generating the links for each state in the response (Hypermedia as the Engine of Application State)
-[POST, GET, PUT, DELETE] //create, read, update, delete...crud
-get /api
-   response {"DataVersion" : "0.0.0.0", "ServerVersion" : "0.0.0.0"}
-   ////links
-   //when not logged in, request has auth token with {sessionid, userid} not matching database temp key "user.[userid].session.[sessionid]"
-   post login /api/login
-   post login /api/guest
-   //when logged in
-   post logout /api/logout, request has auth token with {sessionid, userid} matching database temp key "user.[userid].session.[sessionid]"
-   get api/map
-   get api/data/terrain
-   get api/data/bestiary
-
-post /api/login
-   response auth token? {sessionid, userid}
-   ////links
-   post /api/user/[userid]/newgame
-   get /api/user/[userid]/game
-
-post /api/user (create new user)
-get /api/user/[userid]
-   response {stats? options?}
-   post /api/user/[userid]/delete
-   ?post /api/user/[userid]/confirmdelete
-
-get /api/user/[userid]/game
-   resonse list of games for the user
-   //// or is the links each game to continue
-   get /api/user/[userid]/game/[gameid]
-
-post /api/user/[userid]/newgame
-   response {gameid}
-   get /api/user/[userid]/game/[gameid]
-
-get /api/user/[userid]/game/[gameid]
-   ////links
-   // just created
-   /api/user/[userid]/game/[gameid]/seal
-   /api/user/[userid]/game/[gameid]/reroll
-   /api/user/[userid]/game/[gameid]/edit
-   /api/user/[userid]/game/[gameid]/abandon
-   // sealed game (post create), still alive, turn avaliable
-   /api/user/[userid]/game/[gameid]/endturn
-   /api/user/[userid]/game/[gameid]/unit {characters,buildings}
-   /api/user/[userid]/game/[gameid]/abandon
-   // sealed game, no turn avaliable
-   /api/user/[userid]/game/[gameid]/abandon
-   use abandon to increment score on user?
-
-//requires session?
-get /api/map/
-//requires session
-get /api/data/bestiary/
-get /api/data/terrain/
-
-say you had a set of games to continue, and you wanted to enforce max of 8 games (so options to replace, remove?)
-don't get the new_game option if at max game slots
-don't want client to construct uri, but for a table, how about template links
-
-get /api/user/[userid]/game
-   reponse [{gameid, date last used, nb of units, name and level fav unit, in use by session hint}]
-   ////links [template on gameid]
-   get /api/user/[userid]/game/[gameid]
-   delete /api/user/[userid]/game/[gameid]
-
-
-
-
-function get(path, ...middleware) {
-    var req = {}; var res = {}; var next; var func;
-
-    function next() {
-        func = middleware.shift();
-        if (typeof func === 'function') {
-            func(req, res, next);
-        }
-    }
-
-    next();
-}
-
      */
 
-   var m_namedCallbackMap = {};
-   App.Server.Root_AddNamedCallback = function (in_name, in_callback) {
-      m_namedCallbackMap[in_name] = in_callback;
-   };
-   App.Server.Root_GetNamedCallback = function (in_name) {
-      return m_namedCallbackMap[in_name];
-   };
-
-   var m_routeRoot = { "path" : "/", "children": {} }; //{run:function(in_request, in_pathSegment), children:{}, callbackMap:{}}
-   //have a mock inbuild route middleware to deal with url paths
-   //route string "/foo/:foo_id/bar", callback map { "POST":[CreateCallback], "GET":[RequestCallback], "PUT":[Update..],"DELETE":[Delete...]}, [link array]
-   App.Server.Root_AddRoute = function (in_routeString, in_callbackMap) {
-      var routeArray = in_routeString.split("/");
-      if ((0 < routeArray.length) && ("" === routeArray[0])) {
-         routeArray.shift();
+   function FilterMiddleware(in_route, in_method, in_request) {
+      if (("" !== in_method) && (in_method !== in_request.method)) {
+         return false;
       }
-      var tractRouteString = "";
-      var trace = m_routeRoot;
-      for (var index = 0; index < routeArray.length; ++index) {
-         var pathSegment = routeArray[index];
-         tractRouteString += "/" + pathSegment;
-         if (pathSegment in trace.children) {
-            trace = trace.children[pathSegment];
-         } else {
-            if (":" === pathSegment[0]) {
-               var paramName = pathSegment.substring(1);
-               var node1 = {
-                  "run": function (in_request, in_response, in_pathSegment) {
-                     in_request.params[paramName] = in_pathSegment;
-                  },
-                  "children": {}
-               };
-               trace.children[""] = node1;
-               trace = node1;
-            } else {
-               var node2 = {
-                  "children": {}
-               };
-               trace.children[pathSegment] = node2;
-               trace = node2;
-            }
-            trace.path = tractRouteString;
-         }
+      if (("" !== in_route) && (in_route !== in_request.method)) {
+         return false;
       }
-      //append our in_callbackMap, do we replace or concat callback arrays?
-      trace.callbackMap = Object.assign(trace.callbackMap ? trace.callbackMap : {}, in_callbackMap);
-   };
+      return true;
+   }
 
-   //request.params = { "foo_id" : value }
-   // request { "url", "headers", "method", "body", "param"} ("onError"?)
-   // response { "statusCode", "setHeader", "writeHead", "write", "end"} ("onError"?)
-   App.Server.Network_RequestListener = function (in_request, in_response) {
-
-      if (false === ("params" in in_request)) {
-         in_request.params = {};
+   App.Server.Root_Use = function (in_path, in_method, in_callback) {
+      m_middlewareStack.Use(in_path, in_method, in_callback);
+   }
+   App.Server.Root_MakeMiddlewareStack = function () {
+      var m_stack = [];
+      function Use(in_path, in_method, in_callback) {
+         m_stack.push({
+            "route": in_path ? in_path : "",
+            "method": in_method ? in_method : "",
+            "handle": in_callback,
+         });
       }
-
-      //our mock server is just has a hard coded router
-      var routeArray = in_request.url.split("/");
-      if ((0 < routeArray.length) && ("" === routeArray[0])) {
-         routeArray.shift();
-      }
-
-      var trace = m_routeRoot;
-      for (var index = 0; index < routeArray.length; ++index) {
-         if (undefined === trace) {
-            break;
-         }
-         var pathSegment = routeArray[index];
-         if (pathSegment in trace.children) {
-            trace = trace.children[pathSegment];
-         } else if ("run" in trace) {
-            trace.run(in_request, in_response, pathSegment);
-            trace = trace.children[""];
-         }
-      }
-      if ((undefined !== trace) && (undefined !== trace.callbackMap) && (in_request.method in trace.callbackMap)) {
-         in_request.route = trace;
-         var callbackArray = trace.callbackMap[in_request.method];
+      function RequestListener(in_request, in_response, in_next) {
          var callbackIndex = 0;
          var func = undefined;
+         var data = undefined;
          var next = function () {
-            if (callbackIndex < callbackArray.length) {
-               func = callbackArray[callbackIndex];
-               callbackIndex += 1;
+            if (callbackIndex <= m_stack.length) {
+               if (callbackIndex < m_stack.length) {
+                  data = m_stack[callbackIndex];
+                  callbackIndex += 1;
+                  //do we skip/ filter this middleware (on route or method)
+                  if (false === FilterMiddleware(data.route, data.method, in_request)) {
+                     next();
+                     return;
+                  }
+                  func = data.handle;
+               } else {
+                  func = in_next;
+                  callbackIndex += 1;
+               }
                if (typeof func === 'function') {
                   func(in_request, in_response, next);
                }
             }
          }
          next();
-      } else {
-         in_response.status(404);
-         in_response.end();
       }
-
+      return {
+         "Use": Use, //in_path, in_method, in_callback(in_request, in_response, in_next)
+         "RequestListener": RequestListener //in_request, in_response, in_next
+      };
    }
+   var m_middlewareStack = App.Server.Root_MakeMiddlewareStack();
+
+   //allow easiy way to share state between mutiple src files without "include",
+   var m_state = {};
+   App.Server.Root_SetKeyValue = function (in_key, in_value) {
+      m_state[in_key] = in_value;
+   }
+   App.Server.Root_GetKeyValue = function (in_key) {
+      return m_state[in_key];
+   }
+
+   App.Server.Root_SetResponseError = function (in_request, in_response, in_status, in_errorLogMessage) {
+      in_response.status(in_status);
+      in_response.end();
+      //for security, don't return anything for body of error?
+      App.Server.LogError(`${in_request.method} ${in_request.url} resulteded in ${in_status} ${in_errorLogMessage}`);
+   }
+
+   //https://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid
+   App.Server.Root_MakeUUID = function () {
+      var buf = new Uint32Array(4);
+      window.crypto.getRandomValues(buf);
+      var idx = -1;
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+         idx++;
+         var r = (buf[idx >> 3] >> ((idx % 8) * 4)) & 15;
+         var v = c === 'x' ? r : (r & 0x3 | 0x8);
+         return v.toString(16);
+      });
+   }
+
+   // request { "url", "headers", "method", "body" }
+   // response { "status", "json", "end"}
+   App.Server.Network_RequestListener = function (in_request, in_response) {
+      m_middlewareStack.RequestListener(in_request, in_response);
+   }
+
 })();

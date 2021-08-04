@@ -184,18 +184,19 @@ var App = (function () {
       },
 
       "Server": {
-         // allow register of "AuthoriseCallback", "AddResponseLinks", "EndResponse" to be added to 
-         "Root_AddNamedCallback": Unimplemented,
-         "Root_GetNamedCallback": Unimplemented,
-         //routeCallback(req, res, next)
-         "Root_AddRoute": Unimplemented, //route string, callback map
+         //register a middleware for use
+         "Root_Use": Unimplemented, //(path, method, callback(request,response,next))  
+         "Root_MakeMiddlewareStack": Unimplemented,
+         //allow easiy way to share state between mutiple src files without "include", 
+         "Root_SetKeyValue": Unimplemented,
+         "Root_GetKeyValue": Unimplemented,
 
-         //route string "/foo/:foo_id/bar", callback map { "C":[CreateCallback], "R":[RequestCallback], "U":[Update..],"D":[Delete...]}, [link array]
-         //request.params = { "foo_id" : value }
+         "Root_SetResponseError": Unimplemented, //request, response, status, error log message
+         "Root_MakeUUID": Unimplemented,
 
+         // request { "url", "headers", "method", "body"}
+         // response { "status", "json", "end"}
          "Network_RequestListener": Unimplemented,//request, response
-         // request { "url", "headers", "method", "body"} ("onError"?)
-         // response { "setHeader", "writeHead", "write", "status", "json", "end"} ("onError"?)
 
          "LogError": function (in_message) {
             App.LogMessage("Server", "Error", in_message);
@@ -231,6 +232,10 @@ var App = (function () {
 
          "Server_SADD": Unimplemented,//key member [member ...]
          "Server_SMEMBERS": Unimplemented,//key
+
+         "Server_ZRANGE": Unimplemented,//key min max
+         "Server_ZADD": Unimplemented,//key [NX|XX] [GT|LT] [CH] [INCR] score member [score member ...]
+         "Server_ZREM": Unimplemented,//key member [member ...]
 
          //PUBLISH
          //SUBSCRIBE

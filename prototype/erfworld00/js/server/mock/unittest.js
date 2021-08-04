@@ -27,6 +27,7 @@
          },
          "json": function (in_json) {
             m_content = JSON.stringify(in_json);
+            m_end = true;
             return result;
          },
          "getContent": function () {
@@ -55,13 +56,14 @@
 
    function TestEndpointApi() {
       App.Unittest.LogInfo(" TestEndpointApi");
-      var request = MakeRequest("GET", "/api");
+      var request = MakeRequest("GET", "/v0/api");
       var response = MakeResponse();
 
       App.Server.Network_RequestListener(request, response);
 
       CheckValue(200, response.getStatus(), "status ok");
       CheckValue(true, response.getEnd(), "request ended");
+      App.Server.LogInfo(response.getContent());
 
    }
 

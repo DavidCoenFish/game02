@@ -26,10 +26,10 @@
          m_generatorState = in_dataSource.MakeGeneratorBool("ShowProgress", function (in_bool) {
             switch (in_bool) {
                default:
-                  m_container.display.style = "none";
+                  m_container.style.display = "none";
                   break;
                case true:
-                  m_container.display.style = "flex";
+                  m_container.style.display = "flex";
                   break;
             }
          });

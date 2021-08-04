@@ -1,0 +1,77 @@
+laura, 176.241
+fiawat, 173.619
+palotti, 158.088
+collis, 152.129
+trand, 150.948
+nina, 148.483
+wolfe, 137.116
+miko, 92.098
+lilith,73.306
+mars,69.082
+paradise,61.715
+gaia,55.441
+alba,55.420
+caitlyn,54.309
+betty,51.856
+carol,51.661
+fiadi,43.025
+rin,38.188
+ansell,33.423
+eyma,33.422,
+luna,32.850
+asmodeus,17.276
+abaddon,17.276
+beelzebub,16.042
+mammon,16.042
+sylvia,12.620
+hadina,11.136
+ymir, 6.282
+karasu,6.181
+fiattina,4.924
+gascoigne,3.693
+ebisu,3.693
+bhukkhuni,2.462
+fiates,1.231
+
+
+laura*   5,2         2           1        2
+collis,  4,1         3           5,1      3
+fiawat*  6           5,1         5,1      5,1
+trand*   5,3         2           1        3
+nina*    4,4,2       1           1        2
+palotti, 1           2           1        4,4,2
+wolfe,   1           2           2        6,1
+lilith,  3,5         2           3        4
+sylvia*  5           1           3,2      2
+alba,    4           2           1        5,3
+fiadi    2           2           2        2,4
+gaia     2           4,1         5        1
+paradise 1           2           4,1      5
+ymir     5           2           1        3,2
+carol    1           5,3         2        3
+luna     1           2           5,3      3
+miko     3           5,4         5,4      3
+mammon   5,3         3           2        4
+eyma     1           5           2        2
+gascoigne   1        2           4,2      1
+betty    1           4,3         2        2
+bhikkhuni   2        2           4,3      1
+mars     5,3         2           1        4
+ebisu    1           5,3         4        2
+caitlyn  4           4           5,3      2
+hadina*  5,4         3           1        3
+fiates   1           5,4         3        3
+karasu   5           3,2         1        2
+ansell   1           5           2        4,1
+rin      5,4         3           3        5,4
+fiattina 1           3           2        5,3
+beelzebub 5,3        3           3        3
+abaddon  5,3         4           2        3
+asmodeus 5,3         3           4        2
+
+
+
+
+
+
+
