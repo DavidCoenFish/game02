@@ -35,10 +35,22 @@
 
       <script src="js/server/mock/server.js"></script>
       <script src="js/server/mock/unittest.js"></script>
+      <!--start order importaint-->
       <script src="js/server/mock/middleware/deal_url.js"></script>
       <script src="js/server/mock/middleware/route.js"></script>
       <script src="js/server/mock/middleware/not_found.js"></script>
-      <script src="js/server/mock/route/v0/api.js"></script>
+      <!--end order importaint-->
+      <script src="js/server/mock/middleware/authorize_user_session.js"></script>
+      <script src="js/server/mock/route/api.js"></script>
+      <script src="js/server/mock/route/api/v0.js"></script>
+      <script src="js/server/mock/route/api/v0/actions.js"></script>
+      <script src="js/server/mock/route/api/v0/actions/game-endturn.js"></script>
+      <script src="js/server/mock/route/api/v0/actions/guest.js"></script>
+      <script src="js/server/mock/route/api/v0/actions/login.js"></script>
+      <script src="js/server/mock/route/api/v0/actions/new-user.js"></script>
+      <script src="js/server/mock/route/api/v0/actions/promote-guest.js"></script>
+      <script src="js/server/mock/route/api/v0/games.js"></script>
+      <script src="js/server/mock/route/api/v0/users.js"></script>
 
       <script src="js/database/mock/database.js"></script>
       <script src="js/database/mock/data.js"></script>

@@ -84,7 +84,10 @@ var App = (function () {
          mockNetworkLatencyMillisecondPlusMinus: 50,
          //mockNetworkErrorRate?
          mockDatabaseLatencyMillisecond: 100,
-         mockDatabaseLatencyMillisecondPlusMinus: 50
+         mockDatabaseLatencyMillisecondPlusMinus: 50,
+
+         databaseGuestTimeoutSeconds: 60 * 60 * 24,
+         databaseSessionTimeoutSeconds: 60 * 60 * 24,
       },
 
       "View": {
@@ -184,6 +187,8 @@ var App = (function () {
       },
 
       "Server": {
+         "Root_GetServerVersion": Unimplemented,
+
          //register a middleware for use
          "Root_Use": Unimplemented, //(path, method, callback(request,response,next))  
          "Root_MakeMiddlewareStack": Unimplemented,
@@ -191,8 +196,21 @@ var App = (function () {
          "Root_SetKeyValue": Unimplemented,
          "Root_GetKeyValue": Unimplemented,
 
-         "Root_SetResponseError": Unimplemented, //request, response, status, error log message
          "Root_MakeUUID": Unimplemented,
+         "Root_MakeETag": Unimplemented,
+
+         "Root_MakeResponseOk": Unimplemented, //request, response, json
+         "Root_MakeResponseCreated": Unimplemented, //request, response, json
+         "Root_MakeErrorResponseNotModified": Unimplemented, //request, response, error log message
+         "Root_MakeErrorResponseBadRequest": Unimplemented, //request, response, error log message
+         "Root_MakeErrorResponseUnauthorized": Unimplemented, //request, response, error log message
+         "Root_MakeErrorResponseForbidden": Unimplemented, //request, response, error log message
+         "Root_MakeErrorResponseNotFound": Unimplemented, //request, response, error log message
+         "Root_MakeErrorResponsePreconditionFailed": Unimplemented, //request, response, error log message
+         "Root_MakeErrorResponseInternalServerError": Unimplemented, //request, response, error log message
+
+         "Root_AddLinkData": Unimplemented, //path, method, name
+         "Root_AppendLinkDataToResponse": Unimplemented, //in_responseJson, in_path, in_method
 
          // request { "url", "headers", "method", "body"}
          // response { "status", "json", "end"}
@@ -243,7 +261,7 @@ var App = (function () {
 
          //...
 
-         //allow preloading data into database
+         //allow mock to preload data into database
          "Root_SetData": Unimplemented,//data
 
          "LogError": function (in_message) {

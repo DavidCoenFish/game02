@@ -4,16 +4,12 @@
 
       var data = {
          "data": {
-            "ServerVersion": "0.0.0.0",
+            "ServerVersion": App.Server.Root_GetServerVersion(),
             "DatabaseVersion": databaseVersion
-         },
-         "links": {
-            "self": ["GET", "/v0/api"]
-            //"actions": "/v0/actions"
          }
       };
-      in_response.status(200);
-      in_response.json(data);
+      App.Server.Root_AppendLinkDataToResponse(data, "/api");
+      App.Server.Root_MakeResponseOk(in_request, in_response, data);
       //follow convention of not calling next once we call response end/json?
       //in_next();
    }
@@ -23,6 +19,6 @@
    //   in_response.end();
    //}
    var route = App.Server.Root_GetKeyValue("Route");
-   route.Use("GET", "/v0/api", Get);
+   route.Use("GET", "/api", Get);
 
 })();

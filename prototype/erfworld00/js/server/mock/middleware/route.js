@@ -5,7 +5,8 @@
       "children": {}
    };
 
-   function Use(in_method, in_path, in_callback) {
+   function Use(in_method, in_path, in_callbackFuncOrArray, in_name) {
+      App.Server.Root_AddLinkData(in_path, in_method, in_name);
       var pathArray = in_path.split("/");
       if ((0 < pathArray.length) && ("" === pathArray[0])) {
          pathArray.shift();
@@ -38,7 +39,7 @@
             trace["calbackMap"] = {};
          }
          var map = {};
-         map[in_method] = in_callback;
+         map[in_method] = in_callbackFuncOrArray;
          trace.calbackMap = Object.assign(trace.calbackMap, map);
       }
    }
@@ -69,7 +70,27 @@
 
       //if we find a route, call it else call next. 
       if (trace && trace.calbackMap && (in_request.method in trace.calbackMap)) {
-         trace.calbackMap[in_request.method](in_request, in_response, in_next);
+         var callback = trace.calbackMap[in_request.method];
+         if (typeof callback === 'function') {
+            callback(in_request, in_response, in_next);
+         } else if (Array.isArray(callback)) {
+            var callbackIndex = 0;
+            var func = undefined;
+            var next = function () {
+               if (callbackIndex <= callback.length) {
+                  if (callbackIndex < callback.length) {
+                     func = callback[callbackIndex];
+                  } else {
+                     func = in_next;
+                  }
+                  callbackIndex += 1;
+                  if (typeof func === 'function') {
+                     func(in_request, in_response, next);
+                  }
+               }
+            }
+            next();
+         }
       } else {
          in_next();
       }

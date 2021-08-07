@@ -1,4 +1,17 @@
 //in memory database emulating redis
+/*
+database... need to search user to login, rather than uuid to identify,
+user name -> base64 or something that could use as key?
+ //users.sort //sorted list, <score, uuid> if you need to paganate the users?
+ users.map.[username] //<username, uuid>
+ users.etag //
+ users.data.[uuid] //{password, pref, games[uid]}
+
+ games.[uuid]
+ games.[uuid].commands.[id] {data}
+
+ */
+
 (function () {
    var m_data = {};
    var m_dataTimeout = {};

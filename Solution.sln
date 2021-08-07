@@ -117,18 +117,38 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mock", "mock", "{6F0AD655-3
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "route", "route", "{7B944584-18FB-4D92-B4BE-7794C3D542CB}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\server\mock\route\api.js = prototype\erfworld00\js\server\mock\route\api.js
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "middleware", "middleware", "{263260A3-4349-40BB-8A28-924F2C8F0483}"
 	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\server\mock\middleware\authorize_user_session.js = prototype\erfworld00\js\server\mock\middleware\authorize_user_session.js
 		prototype\erfworld00\js\server\mock\middleware\deal_url.js = prototype\erfworld00\js\server\mock\middleware\deal_url.js
 		prototype\erfworld00\js\server\mock\middleware\not_found.js = prototype\erfworld00\js\server\mock\middleware\not_found.js
 		prototype\erfworld00\js\server\mock\middleware\route.js = prototype\erfworld00\js\server\mock\middleware\route.js
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v0", "v0", "{7A92E36F-9E2B-4385-89A0-D80B35F3754E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{E6361869-880D-4D47-B67D-1378D0B91C83}"
 	ProjectSection(SolutionItems) = preProject
-		prototype\erfworld00\js\server\mock\route\v0\api.js = prototype\erfworld00\js\server\mock\route\v0\api.js
-		prototype\erfworld00\js\server\mock\route\v0\api_users.js = prototype\erfworld00\js\server\mock\route\v0\api_users.js
+		prototype\erfworld00\js\server\mock\route\api\v0.js = prototype\erfworld00\js\server\mock\route\api\v0.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v0", "v0", "{4389B175-23FC-4F93-9AE2-33276CE453ED}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\server\mock\route\api\v0\actions.js = prototype\erfworld00\js\server\mock\route\api\v0\actions.js
+		prototype\erfworld00\js\server\mock\route\api\v0\games.js = prototype\erfworld00\js\server\mock\route\api\v0\games.js
+		prototype\erfworld00\js\server\mock\route\api\v0\users.js = prototype\erfworld00\js\server\mock\route\api\v0\users.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "actions", "actions", "{9DA9DBDE-0599-433A-AC7A-667A36E1DE6E}"
+	ProjectSection(SolutionItems) = preProject
+		prototype\erfworld00\js\server\mock\route\api\v0\actions\game-endturn.js = prototype\erfworld00\js\server\mock\route\api\v0\actions\game-endturn.js
+		prototype\erfworld00\js\server\mock\route\api\v0\actions\guest.js = prototype\erfworld00\js\server\mock\route\api\v0\actions\guest.js
+		prototype\erfworld00\js\server\mock\route\api\v0\actions\login.js = prototype\erfworld00\js\server\mock\route\api\v0\actions\login.js
+		prototype\erfworld00\js\server\mock\route\api\v0\actions\logout.js = prototype\erfworld00\js\server\mock\route\api\v0\actions\logout.js
+		prototype\erfworld00\js\server\mock\route\api\v0\actions\new-user.js = prototype\erfworld00\js\server\mock\route\api\v0\actions\new-user.js
+		prototype\erfworld00\js\server\mock\route\api\v0\actions\promote-guest.js = prototype\erfworld00\js\server\mock\route\api\v0\actions\promote-guest.js
 	EndProjectSection
 EndProject
 Global
@@ -188,7 +208,9 @@ Global
 		{6F0AD655-3327-4BC4-BDFA-4736C211FFD4} = {2B870DEA-A150-40FE-B89E-E97B0C06B049}
 		{7B944584-18FB-4D92-B4BE-7794C3D542CB} = {6F0AD655-3327-4BC4-BDFA-4736C211FFD4}
 		{263260A3-4349-40BB-8A28-924F2C8F0483} = {6F0AD655-3327-4BC4-BDFA-4736C211FFD4}
-		{7A92E36F-9E2B-4385-89A0-D80B35F3754E} = {7B944584-18FB-4D92-B4BE-7794C3D542CB}
+		{E6361869-880D-4D47-B67D-1378D0B91C83} = {7B944584-18FB-4D92-B4BE-7794C3D542CB}
+		{4389B175-23FC-4F93-9AE2-33276CE453ED} = {E6361869-880D-4D47-B67D-1378D0B91C83}
+		{9DA9DBDE-0599-433A-AC7A-667A36E1DE6E} = {4389B175-23FC-4F93-9AE2-33276CE453ED}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01849243-7DF1-40D0-80A9-36CDCC951EE5}
