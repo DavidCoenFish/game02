@@ -39,12 +39,13 @@
       }
 
       var sessionUuid = Api.Server.Root_MakeUUID();
-      var keyUserSession = "users.sessions." + sessionUuid;
+      var keyUserSession = "sessions.data." + sessionUuid;
       var responseData = {
          "UUID": uuid,
          "Session": sessionUuid
       };
 
+      App.Database.Server_SET("sessions.etag", App.Server.Root_MakeETag());
       App.Database.Server_SET(keyUserSession, uuid, "EX", App.Globals.databaseSessionTimeoutSeconds);
 
       //what is the best was to get the Auth data back to client. short answer, don't roll your own auth, but wanted to mock something

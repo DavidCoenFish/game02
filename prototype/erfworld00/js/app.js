@@ -198,6 +198,7 @@ var App = (function () {
 
          "Root_MakeUUID": Unimplemented,
          "Root_MakeETag": Unimplemented,
+         "Root_GetApiETag": Unimplemented,
 
          "Root_MakeResponseOk": Unimplemented, //request, response, json
          "Root_MakeResponseCreated": Unimplemented, //request, response, json

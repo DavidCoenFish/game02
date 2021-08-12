@@ -1,12 +1,4 @@
 /*
-https://christophermcdowell.dev/post/pagination-with-redis/
-SET post:1 "Super interesting blog post about something."
-SADD posts post:1 post:2 post:3 post:4 post:5 post:6 post:7 post:8 post:9 post:10
-SSCAN posts 0 COUNT 2
-
-App.Server.Root_MakeUUID()
-Math.random()
-
 */
 (function () {
    var GetContainer = function (in_request, in_response, in_next) {

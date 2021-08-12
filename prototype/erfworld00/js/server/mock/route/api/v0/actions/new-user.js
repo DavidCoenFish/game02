@@ -1,10 +1,4 @@
 /*
-
- users.map.[username] //<username, uuid>
- users.etag //
- users.data.[user uuid] //{password, pref, games[uid]}
- users.sessions.[session uuid]
-
 */
 (function () {
    var PostNewUser = function (in_request, in_response, in_next) {
@@ -40,11 +34,12 @@
          "Session": sessionUuid 
       };
       var keyUser = "users.data." + uuid;
-      var keyUserSession = "users.sessions." + sessionUuid;
+      var keyUserSession = "sessions.data." + sessionUuid;
 
       App.Database.Server_SET("users.etag", App.Server.Root_MakeETag());
       App.Database.Server_SET(keyUser, data);
       App.Database.Server_SET(keyUserMap, uuid);
+      App.Database.Server_SET("sessions.etag", App.Server.Root_MakeETag());
       App.Database.Server_SET(keyUserSession, uuid, "EX", App.Globals.databaseSessionTimeoutSeconds);
 
       //what is the best was to get the Auth data back to client. short answer, don't roll your own auth, but wanted to mock something

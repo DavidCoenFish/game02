@@ -9,6 +9,7 @@
          }
       };
       App.Server.Root_AppendLinkDataToResponse(data, "/api");
+      in_response.setHeader("ETag", App.Server.Root_GetApiETag());
       App.Server.Root_MakeResponseOk(in_request, in_response, data);
       //follow convention of not calling next once we call response end/json?
       //in_next();

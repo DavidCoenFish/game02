@@ -1,5 +1,5 @@
 /*
-need to remove the timeout on any resource created with the guest user (minus the session)
+need to remove the timeout on any resource created with the guest user (minus the session) which may include games, units, commands
 
 need to check provided username and password
 

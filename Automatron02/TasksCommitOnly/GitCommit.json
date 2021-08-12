@@ -1,0 +1,6 @@
+{
+   "Factory": "TaskGitCommit",
+   "Skip": false,
+   "Priority": 0,
+   "Git": "G:\\bin\\Git\\cmd\\git.exe"
+}

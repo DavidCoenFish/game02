@@ -1,85 +1,404 @@
-boot
+heroes of might and magic 3 (approx damage)
+   damage to other = your attack * (5% * (your attack - other's deffense)
 
-request /api from server, response, get state hint/view template name? no, server has no awarness of client? get server/database version and links for actions
-{
-   A authorisation required
-   C create, have an enpoint xxx/create_meta to get the metadata for the object input 
-   R read
-   U update, have an enpoint xxx/update_meta to get the metadata for the object input
-   D delete
-}
+erfworld
+   book 1_1
+Titans of Ark, minty mountains, marbits, axemen, spidew
 
-R /api
-C /api/login {username:username, password?salt:password}
-C /api/guest (instread of user, have a guest?
+   book 1_2
+croakamancer
 
-can view map, read bestiary, without authorasiation?
+   book 1_5
+findamancy, predictamancy. 500,000 shmuckers
 
-send in header, {session id, user id}, 
-database has a tempoary key for the session "user.:user_id.session.:session_id,
+   book 1_6
+city falls, attacker seizes treasury
 
-//create a pre_game, allows reroll, editing, before deply to game world
-ACR /api/:user_id/pre_game
-ARUD /api/:user_id/pre_game/:game_id
-AC /api/:user_id/pre_game/:game_id/reroll
-AC /api/:user_id/pre_game/:game_id/seal
+   book 1_8
+lofty elves, shady elves, tardy elves, flight [gwiffons, orlies, doombats]. lookamancy
+doombats 22 move. 
+Jillian's gwiffon has 52 move (special?)
+orlies 44 move
 
-ACR /api/:user_id/game 
-ARUD /api/:user_id/game/:game_id
+   book 1-9
+heavy calvary [sourmanders, tcotchkes, cloth golems]
 
-/api/:user_id/game/:game_id/unit/:unit_id
-/api/:user_id/game/:game_id/building/:building_id
-ACRU /api/:user_id/game/:game_id/turn
-/api/:user_id/game/:game_id/turn/:turn_id/command/:command_id
+   book 1-10
+twoll, x:-1214,y:+455
 
-/api/map/:x/:y
-/api/map/:x_low/:x_high/:y_low/:y_high
+   book 1_13
+crap golems
 
-R /api
-response { 
-  data{ VersionServer : "0.0.0.0", VersionDatabase : "0.0.0.0" }
-  links [ 
-    [ "C", "login", /api/login {username:string, passwordHash:int, }]
-    [ "C", "guest", /api/guest ]
-  ]
-}
-C /api/login  {username, password}
-C /api/guest
-response {
-  data { userid }
-  links [
-    [R user /api/user/:user_id]
-  ]
-}
-R /api/user/:user_id
-response {
-  data{ currency }
-  links [
-    //[C newgame /api/user/:user_id/newgame]
-    [CRUD new_game /api/user/:user_id/game]
-    [R news /api/user/:user_id/news]
-  ]
-}
-R game /api/user/:user_id/game
-response {
-  data{ count, max_count }
-  links [R 
-}
+   book 1_18
+boop
 
-how to know what /api/login wants a input?
-do we have a "C /api/user/:user_id/newgame" or "CR /api/user/:user_id/game" 
-CRUD create, read, update, delete
+   book 1_20
+lord, overlord, master
 
-var endpointApiLoginUpdate = Router.AddEndpoint("login_update", "R", "/api/login/update")
-var endpointApiLoginCreate = Router.AddEndpoint("login_create", "R", "/api/login/create")
-var endpointApiLogin = Router.AddEndpoint("login", "ACRUD", "/api/login", [endpointApiLoginCreate, endpointApiLoginUpdate])
-var endpointApiGuest = Router.AddEndpoint("guest", "C", "/api/Guset")
-var endpointApi = Router.AddEndpoint("root", "R", "/api", [endpointApiGuest, endpointApiLogin])
+   book 1_21
+gobwin, Hobgobwin, Eager Elves, Luckless Elves, Cshlemiel Elvers
 
-var endpointApiLogin = Router.AddEndpoint("ACRUD", "/api/user/:user_id/game", [link endpointObject...])
+   book 1_22
+Heal [Lofty Elves, Altruist Elves], Superfluous elves
 
-endpointObject {
-   //"GetResponseCallback"
-   "GetResponseLinkData" // return array of link metadata eg. ["ACRUD", "new_game", "/api/user/:user_id/game"]
-}
+   book 1_25
+Jetstone
+  
+   book 1_29
+gobwin infantry, big bonus for tunnel fighting
 
+   book 1_34
+Milquetoast clan
+
+   book 1-35
+magic item, Eyemancy [lookamancy, thinkamancy, foolamancy]
+
+   book 1-40
+magic  [life, motion, matter]
+         x                       Hocus Pocus
+               x                 Spookism
+                        x        Stuffamancy
+         x     x                 Eyemancy
+         x              x        Hippiemancy
+               x        x        Naughtymancy
+         x     x        x        Stagemancy
+                                 Clevermancy
+
+axes        [   erf,     fate,    numbers]
+Hocus Pocus    Findamancy     Predictamancy  Mathamancy
+Spookism       Turnamancy     Dollamancy     Weirdomancy
+Stuffamancy    Dirtamancy     Changemancy    Dittomancy
+Eyemancy       Lookamancy     Thinkamancy    Foolamancy
+Hippiemancy    Flower Power   Signamancy     Date-a-mancy
+Naughtymancy   Shockmancy     Croakamancy    Retconjuration
+Stagemancy     Hat Magic      Carnymancy     Rhyme-o-mancy
+Clevermancy    Luckamancy     Healomancy     Moneymancy
+
+   book 1-42
+Lord hamster upkeep over 1000 shmuckers a turn
+flying units over water, mountains or heavy trees, can only be attacked by other fliers
+
+
+   book 1_44 
+warlords and caster can see unit stats
+everything that fights is a unit
+move, hit, attack, defense
+bogroll [0(Garrison),12,5,4, sepcial(fabrication)]
+chief warlord give leadership bonus to all units in the capitol, while in capitol
+specials [flight, fire, regeneration, poison, leadership]
+leadership gives bonus to units under command
+group units get a stack bonus, max 8 units
+stacks without leaders are forced to autoattack on contact with units from non-allied capitals
+with leader, fight directed or avoided
+
+   book 1-46
+charlie sends troups "great western conflict" to x:-1218 y:+467
+
+   book 1-48
+one overlord per side. sets production orders all cities.
+different city types produce different units types. bigger unit, more time.
+big cities can produce warlods in many turns.
+infantry can be promoted to warlord in capital but cost mucho shmucjero.
+
+   book 1-52
+dwagons, 19 with more than 56 move, 27 less than 56 move
+flying units of forest capable units (woodsy Elves, Gumps (trees))
+flying stack with commander may selectively engage non fliers on their own turn, exception enemy archers units may attack you if you are on their space
+
+   book 1-60
+thinkamancers can perform a link-up, joint mind, risky with 3, 4 can't be done
+
+   book 1-70
+need a foolamancer in the stack to veil
+
+   book 1-84
+infantry [Piker-class, stabber class]
+golems [Crap, Soft Rock, Hard Rock, Acid Rock, Metal]
+
+   book 1-88
+royalty/nobles units have slightly stronger stats, level faster
+cities ruled by royals pop nobles/ more royals
+
+   book 1-91
+Kingdom Faq, King Banhammer, A capital and two subordinate citys, mountains on all sides, accessible only by air and tunnel
+
+   book 1-92
+city Orgchart
+
+   book 1-94
+caster are commands that can lead stacks, but no leadership bonus
+exception, golem bonus led by dirtamancer, huge uncroaked units led by croackamancer
+natural thinkamancies: 
+Obedience. units comeplled to obey orders, disobedience may cause unit to disband
+Loyalty. hidden stat, likey to defect of double-deal. spells can modify
+Duty. effects commanders,higher effect on warlords, highest on chief warlord. requires use of initiative in service of overlord, can't withhold info, can't conspire against.
+
+   book 1-96
+Jetstone, Unaroyal, Sofa King, Foxmud, Hobbittm, Transylvito, Charlescomm (15 for 3 archons?)
+
+   book 1-109
+Gobwin knob, 4 defensive zones
+Airspace: only entered by flying units, subject to range attack by garrison units (tower anti air?)
+Tunnels: on entered by light units, some exceptions
+Outer walls: must be breached by siege, more units defending, harder to breach
+Garrison: only attacked with total control over other zone. iff attached from outer walls, garrison walls must also be breached
+city falls when all units in garrison are croaker or captuered.
+can deploy, redepoly units between zones without expending move
+
+   book 1-110
+overloard killed with no heir? city becomes neutral, units freeze an can do nothing until attacked
+turned and captured units have low loyalty. capturing usually reserver for valuable casters
+
+
+   book 1-120
+Jack Snipe [8, 6, 2, 2, special[caster, foolamancy]]
+
+   book 1-125
+[30+ dwagons + leadership and artiact bonus, knights with dance fight bonus] vrs [11 warlords, 4 gwiffons, some orlies and lots of bats]
+
+   book 1-128
+good croakamancer can mass-animate every fallen unit in a hex or city sone, but will be the weakest kind and only last a few turns
+more time and attention to uncroaking, the closer to the original strenfth and abilities, and more turns before degrading.
+
+   book 1-129
+garrison zone [tower, courtyard, dungeon]
+for attack, tower borders airspace, courtyard borders outer walls, dungeon borders tunnels
+once units are in any part of the garrison, they can attack any other part of the garrison.
+tower gives spellcasters a boost
+dungeon bonuses tunnel units
+
+   book 1-138
+additive and multipicative force modifiers
+leadership, terrain, artifacts, specials, spell buffs, dance fighting
+
+   book 1-139
+wiener-rammers
+
+warlord can lead dance?
+
+   book 1-142
+dungeon has portal room
+
+   book 1-145
+tower down, tunnels down. can wreck zones to ruin, reduces level of city
+at level 1 city, units can walk through walls?
+
+   book 1-148
+linkup, thinkamancy-dirtamancy-croakamancy, awaken volcano, multi hex dirtamancy trap
+
+croakamancy, need to know the unit type to uncroak?
+
+   book 1-165
+city can have lava lake zone, only fliers, also halfed the size of the tunnels
+city walls don't have to have gates, but limits heavy units to leave by flight or tunnels. 
+only spiders/ golems? are heavy units that can fit through tunnels
+goblin know a level 5 city, special defense bonuses added to level 8, most defensive city on the world?
+
+   book 1-167
+a stack can be 7 dwagons and three riders (riders don't count for stack size? can fit 2 units on a dwagon)
+
+   book 1-169
+anyone can throw or shoot to be an archery unit, but needs the archery special to have a real chance of hitting target
+
+   book 1-172
+garrison units need to be promoted to have move?
+
+   book 1-173
+transolvanians can shrink coffin to fist size and fit in inventory, also bats
+
+   book 1-174
+city carport, side carpudlians
+need to break stack before breaking alliance
+
+   book 1-175
+Jillian slowest of two gwiffons had 12 move left vrs transolvanian warlords
+T.Warlords 3 full move turns. 
+gwiffons not much penalty flying mountains, none in hills, could do trip in 2 turns
+distance == gs.move * 2 == (gs.move - 12) * 3
+T.Warlord about 24 move, 32? to allow for cost of flying over mountains/hills
+slow giffon has 36 move, 40?, vrs 56 of 'good' gwiffon, 
+
+   book 1-177
+City Aqua Velva, fill saddlebags of two giffons, minimum upkeep for 5 turns
+
+   book 1-178
+2 horned sheep +1 day upkeep for 2 gwiffons and a warlord
+
+   book 1-179
+vinny tamed a feral bat
+
+   book 1-180
+city Duckula, Mount Mofo.
+low move units needing 3 or 4 turns to climb a mountain
+defenders of city [Dolls, Molls, Guard Goyles (flying infintary with some natural casting, mostly female), Skanks (elete knight class Goyles)]
+
+something about high montains taking 4 move? mountains 3? hills 2
+
+city Vitalis?
+
+   book 2-2
+gobwin knob popped a Twoll a turn
+
+   book 2-4
+Twoll, fabrication special, natrual dollamancy, make small nonmagical items, armor and equipment.
+Dirtamancer in your city when you upgrade it reduces the cost a lot
+Two cast link less risky
+
+   book 2-6
+sourmanders (salamanders?)
+
+   book 2-7
+Changemancy, rework and enchant an existing item, or imagine a new one. can not make new units
+
+   book 2-9
+blue dwagons lightning breath.
+
+yellow dwagon could not fly with a "heavy" unit
+
+   book 2-12
+3 hex long column, no unit with less than 18 move. no unit less than 6 base attack
+Ansom (level 10?) leadership (cheif warlord) would add 3 attack to all units on his side, 5 to those in his hex, 10 to those in his own stack
+Wanda add one to all Decrypted troops on her side, four to those in her hex, eight to those in her stack
+Ansom and Wanda in a stack with six decripted heavies and knights, worst unit attack of thirty
+Ansom himself attacked at 33
+
+   book 2-13
+city Unabrow, Unatard, Bohica, Warchalking.
+garrison fall, units shackled which where in the field?
+
+   book 2-14
+warlord manage a city, cost lower for city improements and production extra equipment, reduce upkeep, increase shmuckers city produced
+plated red has 56 move, 1 in 200 chance of feral dwagon in minty mountains
+
+   book 2-15
+city farm. one turn, a pig would pop, grow for a few turns, then various pig related foods pop in larders of nearest city/ capital
+
+   book 2-16
+city Kibo, Otoh. for a few gems, rebuild a capital from ruins to level 4
+60 turns to produce a royal heir
+
+   book 2-19
+city Dhrystone, level 5, 
+in 23 turns could produce 7 gumps
+in 23 turns could produce 12 stacks of 8 pickers, 11 stacks of 6 stabers
+city Haggar, Pantstown, Toughskin, Oshkosh, Sansabelt, Bridestone, Firestone, Rollingstone, Penistone
+Unipegataur
+
+   book 2-20
+megalogwiff, sand witches, Man Witches
+city Orgchart, 
+
+   book 2-22
+city Unavac. heavy hollas (mount)
+
+   book 2-24
+marbits and elves would not ally with a side that used [Gobwins, Hobgobwinds, witches or Daemons]
+
+   book 2-25
+Charlescomm, capital lv 5, pop one archon a turn, or 3 every 2 turns with a hired turnamancer
+normally a city would take severals turns to pop a archon, effect of Arkendish?
+Archon flying knight-class unit with random special from [dance fighting, leadership, limited shockmancy/thinkamancy/dollamancy/foolamancy]
+as they level, gain additional random specials for that set.
+upkeep 200 shmuckers per turn for weakest, closer to 500 strongest
+
+   book 2-25
+city Chocula. air buildup [archers, spell defenses, air heads]
+fire birds, thunder birds, battle bears (golems?) from Blackula
+
+   book 2-28
+city Kona, lv 3. 5 warlords, seven knights, 4 mefologwiff, 21 gwiffon
+sacked the city, almost 20k shmuckers
+city Valdez, lv 2, infantry and 1 warlord. natural allies, Western Giants. 
+
+   book 2-39
+razing a city and rebuilding results in a city that popped the same units as a capital
+gobwin knob. lv 1 infantry & twolls. lv 2 spidews & warlords. lv 3. dwagons
+
+   book 2-43
+natural allies know the will of their tribe's chief by natural thinkamancy
+tribes have  no purse and keep no shmuckers. when in alliance, the allied side pops ration for them from it's treasury
+feral tribes hunt/gather/farm/mine
+if given shmuckers, spend to promotion or equipment
+
+   book 2-44
+doombats, scout range of 20 hex, thinkamancer extend indefinitely, cost of thinkagram
+
+   book 2-56
+linkup (thinkamancer-hat magician-data a mancer) made item to get intiotion about combat match-ups (power?)
+
+   book 2-65
+linkup (thinkamancer-turnamancer-?) spell that can for another side to end it's turn, 2 days juice
+
+   book 2-66
+can have advieser/officiants manage cities instead of warlords?
+
+   book 2-82
+tchotchkes (small doll), G-RAFs and LFNs, tankeroo
+cloth golems get healing and leadership bonus from caster type that created them, dollmancer
+
+   book 2-86
+after end of turn, can't move to other hexes, can't attack across hexes, including spells and archery
+can spend money, can upgrade a city if no enemy units
+casters can spend juice, makes scrolls, items, golems, uncroak, schmuckers to gems, upgrade units
+restack, takeoff, landings, lay traps
+gems to schmuckers doesent cost juice
+city zone, arches and city defense can shoot across hex boundry during turn, 
+but out of turn, they can only shoot enemy units in the same hex/city zone if their side doesn't own the city, or as defense when your city is being attacked
+area effects dont cross hex boundry out of turn
+
+   book 2-87
+yellow dragons can crap from airspace off turn
+fall damage [injury, incapacitated and croak in one turn without healing) or croak]
+
+   book 2-89
+city Spacerock, lv 5, no tunnels but instead a well defended garrison
+
+   book 2-117
+linkup perfect warlord scroll (thinkamancer-lookamancer-hippiemancer?)
+
+   book 2-129
+no caster or commander in city, defense was automatic
+raise level 3 city pogrock, 40k shmuckers
+
+   book 2-131
+hamster promoton to field unit, +140upkeep per turn
+18K to promote a bunch of Hobgobwins to heavy
+
+   book 2-143
+gaea [hamerhawk, spread eagle, Woodsy Owl]
+side [Ad Council] 
+name [Artemis, prince Forthewin, Canidae, Alpo, Eukanuba]
+
+   book 2-147
+dwagon breath, max number of targets? 5?
+
+   book 2-160
+jetstone popped a stack of eight archers
+
+   book 2-189
+fire [controlled, uncontrolled, inferno]
+
+   book 2-209
+can have a heavy warlord
+
+   book 2-225
+transylvito "drinkin' yer blood in place of rations'
+
+   book 3-9
+prisiber, escape rules. 1% [nb guards, nb captor units in hex, lv city, additional precutions, lv and special of prisoner]
+fugitive. free from shackles when they leave hex, for a pseudo side with turn before captor. have move and can engage, casters can cast. steal or forage min upkeep or recatured.
+repaturations. stack with unit of own side.
+fugitive encountering a third side can fight or be catured, and returned/ransomed to anyone.
+rescue. croak/incapacitate any unit guarding the prisoner.
+
+   book 3-37
+the spell (weirdomancer-carnymancer - arkendish?) send parson home
+
+   book 3-74
+erworld had 99 sides originally
+
+   book 3-77
+city Cartoonito, Carphone
+forest capables [greasmonkeys, mansquatch]
+
+3-99

@@ -96,14 +96,8 @@ Netflix: 9 different codes
 /api/v1/users/<uuid> POST, GET, (PUT?), DELETE
 /api/v1/games/
 /api/v1/games/<uuid>
-/api/v1/games/<uuid>/commands
-/api/v1/games/<uuid>/commands/<uuid>
-/api/v1/games/<uuid>
 /api/v1/units
 /api/v1/units/<uuid>
-/api/v1/games/<uuid>
-/api/v1/games/<uuid>/status //resource flag when endturn process has completed?
-?/api/v1/gaea/<uuid> //units/things in the game world that don't belong to user
 ?/api/v1/lore/terrain/<uuid>//static extra data about terrain, flavour text, base stats
 ?/api/v1/lore/bestiary/<uuid> //static extra data about units, flavour text, base stats
 ?/api/v1/lore/ablities/<uuid>
@@ -135,6 +129,13 @@ Netflix: 9 different codes
 /api/v1/actions/new-user //or just POST a user?
 /api/v1/actions/promote-guest //or just PUT a user? difficult to have different allowed PUT for guest or not? removes timmer on user and created games
 /api/v1/actions/game-endturn //given games/<uuid> process ./commands and update game state, 
+
+/api/v1/actions/game-reroll //only for pregame game
+/api/v1/actions/game-start //finish the pre game part of a game, the setting up start characters
+
+was thinking that complicated actions (have a users' game array updated when game created) meant we needed an action, but that doesn't follow
+complicated action could follow from simple rest enpoints. so you could still POST to /games and add a link for the user
+
 
 <!-- how to confirm delete, we usually just call DELETE on resouce, but what abbout importaint stuff? or do confirm in ui?
 /api/v1/actions/delete-user ->response 202 acknoledged with a new location of confirm + ETag
@@ -226,6 +227,13 @@ Netflix: 9 different codes
       //"17b1472d69d"
       var etag = Date.now().toString(16);
       return etag;
+   }
+   var m_serverETag = undefined;
+   App.Server.Root_GetApiETag = function () {
+      if (undefined === m_serverETag) {
+         m_serverETag = App.Server.Root_MakeETag();
+      }
+      return m_serverETag;
    }
 
    function SetResponseOk(in_request, in_response, in_status, in_json) {

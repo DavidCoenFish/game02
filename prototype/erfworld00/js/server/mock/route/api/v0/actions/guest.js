@@ -7,6 +7,9 @@
 */
 (function () {
    var PostGuest = function (in_request, in_response, in_next) {
+
+      //Sanity check. add some magic key to the in_request just to handshake guest resource creation, like etag of api or something?
+
       var uuid = App.Server.Root_MakeUUID();
       var sessionUuid = App.Server.Root_MakeUUID();
       var data = {
@@ -22,10 +25,11 @@
          "Session": sessionUuid
       };
       var keyUser = "users.data." + uuid;
-      var keyUserSession = "users.sessions." + sessionUuid;
+      var keyUserSession = "sessions.data." + sessionUuid;
 
       App.Database.Server_SET("users.etag", App.Server.Root_MakeETag());
       App.Database.Server_SET(keyUser, data, "EX", App.Globals.databaseGuestTimeoutSeconds);
+      App.Database.Server_SET("sessions.etag", App.Server.Root_MakeETag());
       App.Database.Server_SET(keyUserSession, uuid, "EX", App.Globals.databaseSessionTimeoutSeconds);
 
       //what is the best was to get the Auth data back to client. short answer, don't roll your own auth, but wanted to mock something

@@ -4,8 +4,9 @@
    var PostLogout = function (in_request, in_response, in_next) {
       //see middleware authorize_user_session.js to ensure we have a Authorization. sets in_request.userUuid, in_request.sessionUuid
 
-      var keyUserSession = "users.sessions." + in_request.sessionUuid;
+      var keyUserSession = "sessions.data." + in_request.sessionUuid;
 
+      App.Database.Server_SET("sessions.etag", App.Server.Root_MakeETag());
       App.Database.Server_DEL(keyUserSession);
 
       in_response.removeHeader("Authorization");
