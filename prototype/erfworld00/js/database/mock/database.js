@@ -1,25 +1,10 @@
 //in memory database emulating redis
-/*
-database... need to search user to login, rather than uuid to identify,
-user name -> base64 or something that could use as key?
- //users.sort //sorted list, <score, uuid> if you need to paganate?
- users.etag
- users.map.[name]
- users.data.[uuid]
-
- //sessions.sort //sorted list, <score, uuid> if you need to paganate
- sessions.etag
- sessions.data.[uuid]
-
- //games.sort //sorted list, <score, uuid> if you need to paganate
- games.etag
- games.data.[uuid]
-
- */
 
 (function () {
    var m_data = {};
    var m_dataTimeout = {};
+   var m_dataTimeoutDuration = {};
+
    //key value [EX seconds|PX milliseconds|EXAT timestamp|PXAT milliseconds-timestamp|KEEPTTL] [NX|XX] [GET]
    App.Database.Server_SET = function (key, value) {
       var result = "OK";
@@ -80,6 +65,7 @@ user name -> base64 or something that could use as key?
             delete m_data[key];
             delete m_dataTimeout[key];
          }, variableTimeoutMilliseconds);
+         m_dataTimeoutDuration[key] = variableTimeoutMilliseconds;
       }
       return result;
    };
@@ -141,11 +127,97 @@ user name -> base64 or something that could use as key?
       }
    }
    App.Database.Server_DECRBY = function (key, delta) {
-      if (false === key in m_data) {
+      if (false === (key in m_data)) {
          m_data[key] = -delta;
       } else {
          m_data[key] -= delta;
       }
+   }
+   App.Database.Server_EXPIRE = function (key, seconds) {// [NX | XX | GT | LT]
+      if (false === (key in m_data)) {
+         return 0;
+      }
+      var nx = false;
+      var xx = false;
+      var gt = false;
+      var lt = false;
+      for (let index = 1; index < arguments.length; index++) {
+         var argument = arguments[index];
+         switch (argument) {
+            default:
+               break;
+            case "NX":
+               nx = true;
+               break;
+            case "XX":
+               xx = true;
+               break;
+            case "GT":
+               gt = true;
+               break;
+            case "LT":
+               lt = true;
+               break;
+         }
+      }
+      if (nx || xx) {
+         var timeoutExists = (key in m_dataTimeout);
+         if (nx) {
+            if (true === timeoutExists) {
+               return 0;
+            }
+         }
+         if (xx) {
+            if (false === timeoutExists) {
+               return 0;
+            }
+         }
+      }
+      var variableTimeoutMilliseconds = seconds * 1000;
+      if (gt || lt) {
+         var duration = m_dataTimeoutDuration[key];
+         if (((duration < variableTimeoutMilliseconds) && gt) ||
+            ((variableTimeoutMilliseconds < duration) && lt)) {
+            var timeoutID = m_dataTimeout[key];
+            delete m_dataTimeout[key];
+            clearTimeout(timeoutID);
+         } else {
+            return 0;
+         }
+      }
+
+      m_dataTimeout[key] = setTimeout(function () {
+         delete m_data[key];
+         delete m_dataTimeout[key];
+      }, variableTimeoutMilliseconds);
+      m_dataTimeoutDuration[key] = variableTimeoutMilliseconds;
+
+      return result;
+   }
+   App.Database.Server_PERSIST = function (key) {
+      if (key in m_dataTimeout) {
+         var timeoutID = m_dataTimeout[key];
+         delete m_dataTimeout[key];
+         clearTimeout(timeoutID);
+         return 1;
+      }
+      return 0;
+   }
+
+
+   App.Database.Server_HSET = function (key) { //, field, value [field value ...]
+      if (false === (key in m_data)) {
+         m_data[key] = {};
+      }
+      var added = 0;
+      for (let index = 1; index < arguments.length; index++) {
+         var field = arguments[index];
+         index += 1;
+         var value = arguments[index];
+         m_data[key][field] = value;
+         added += 1;
+      }
+      return added;
    }
    App.Database.Server_HGET = function (key, field) {
       if (key in m_data) {
@@ -189,15 +261,16 @@ user name -> base64 or something that could use as key?
       }
       return result;
    }
+
    App.Database.Server_SADD = function (key) {
       var result = 0;
-      if (false === key in m_data) {
+      if (false === (key in m_data)) {
          m_data[key] = new Set();
       }
       var set = m_data[key];
       for (let index = 1; index < arguments.length; index++) {
          var member = arguments[index];
-         if (false === member in set) {
+         if (false === (member in set)) {
             set.add(member)
             result += 1;
          }
@@ -205,7 +278,21 @@ user name -> base64 or something that could use as key?
 
       return result;
    }
-
+   App.Database.Server_SREM = function (key) { //, member [member ...]
+      if (false === (key in m_data)) {
+         return 0;
+      }
+      var set = m_data[key];
+      var removeCount = 0;
+      for (let index = 1; index < arguments.length; index++) {
+         var member = arguments[index];
+         if (member in set) {
+            removeCount += 1;
+            set.delete(member);
+         }
+      }
+      return removeCount;
+   }
    App.Database.Server_SMEMBERS = function (key) {
       var result = [];
       if (key in m_data) {
@@ -281,7 +368,6 @@ user name -> base64 or something that could use as key?
          return 0;
       }
    }
-
    App.Database.Server_ZRANGE = function (in_key, min, max) {
       var linkedList = undefined;
       if (in_key in m_data) {
@@ -306,7 +392,6 @@ user name -> base64 or something that could use as key?
       }
       return result;
    }
-
    App.Database.Server_ZADD = function (in_key) { // [NX|XX] [GT|LT] [CH] [INCR] score member [score member ...]
       ////key value [EX seconds|PX milliseconds|EXAT timestamp|PXAT milliseconds-timestamp|KEEPTTL] [NX|XX] [GET]
       //App.Database.Server_SET = function (key, value) {
@@ -401,7 +486,6 @@ user name -> base64 or something that could use as key?
       }
       return elementAddedCount;
    }
-
    App.Database.Server_ZREM = function (in_key, in_member) { // [member ...]
       var linkedList = undefined;
       if (in_key in m_data) {

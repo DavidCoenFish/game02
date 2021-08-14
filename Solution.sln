@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		CmdHere.cmd = CmdHere.cmd
+		Commit.cmd = Commit.cmd
 		LICENSE = LICENSE
 		README.md = README.md
 		Solution.cmd = Solution.cmd
@@ -40,6 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "erfworld00", "erfworld00", 
 	ProjectSection(SolutionItems) = preProject
 		prototype\erfworld00\index.htm = prototype\erfworld00\index.htm
 		prototype\erfworld00\notes.txt = prototype\erfworld00\notes.txt
+		prototype\erfworld00\todo.txt = prototype\erfworld00\todo.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "css", "css", "{AB504D5A-3CB9-41A3-9CAD-45EB229173C0}"
@@ -138,16 +140,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v0", "v0", "{4389B175-23FC-
 	ProjectSection(SolutionItems) = preProject
 		prototype\erfworld00\js\server\mock\route\api\v0\actions.js = prototype\erfworld00\js\server\mock\route\api\v0\actions.js
 		prototype\erfworld00\js\server\mock\route\api\v0\games.js = prototype\erfworld00\js\server\mock\route\api\v0\games.js
+		prototype\erfworld00\js\server\mock\route\api\v0\sessions.js = prototype\erfworld00\js\server\mock\route\api\v0\sessions.js
 		prototype\erfworld00\js\server\mock\route\api\v0\users.js = prototype\erfworld00\js\server\mock\route\api\v0\users.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "actions", "actions", "{9DA9DBDE-0599-433A-AC7A-667A36E1DE6E}"
 	ProjectSection(SolutionItems) = preProject
-		prototype\erfworld00\js\server\mock\route\api\v0\actions\game-endturn.js = prototype\erfworld00\js\server\mock\route\api\v0\actions\game-endturn.js
-		prototype\erfworld00\js\server\mock\route\api\v0\actions\guest.js = prototype\erfworld00\js\server\mock\route\api\v0\actions\guest.js
-		prototype\erfworld00\js\server\mock\route\api\v0\actions\login.js = prototype\erfworld00\js\server\mock\route\api\v0\actions\login.js
-		prototype\erfworld00\js\server\mock\route\api\v0\actions\logout.js = prototype\erfworld00\js\server\mock\route\api\v0\actions\logout.js
-		prototype\erfworld00\js\server\mock\route\api\v0\actions\new-user.js = prototype\erfworld00\js\server\mock\route\api\v0\actions\new-user.js
+		prototype\erfworld00\js\server\mock\route\api\v0\actions\end-turn.js = prototype\erfworld00\js\server\mock\route\api\v0\actions\end-turn.js
+		prototype\erfworld00\js\server\mock\route\api\v0\actions\pregame-finish.js = prototype\erfworld00\js\server\mock\route\api\v0\actions\pregame-finish.js
+		prototype\erfworld00\js\server\mock\route\api\v0\actions\pregame-reroll.js = prototype\erfworld00\js\server\mock\route\api\v0\actions\pregame-reroll.js
 		prototype\erfworld00\js\server\mock\route\api\v0\actions\promote-guest.js = prototype\erfworld00\js\server\mock\route\api\v0\actions\promote-guest.js
 	EndProjectSection
 EndProject

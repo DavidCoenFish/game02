@@ -1,0 +1,70 @@
+   refactor endpoints.
+move towards endpoints representing resources, even if not one-to-one with data in database
+ie, session resource, rather than a log in/out action. 
+when you create a new user, does that also auto create a new seesion? i think it should
+
+//=====================================================
+//            Endpoints
+
+
+/api/v0/sessions (get, push)
+/api/v0/sessions/<uuid> (get, delete)
+
+/api/v0/guests (push)
+
+/api/v0/users (get, push)
+/api/v0/users/<uuid> (get, put, delete)
+
+/api/v0/games (get, push)
+/api/v0/games/<uuid> (get, put, delete)
+
+/api/v0/units (get)
+/api/v0/units/<uuid> (get, put, delete)
+
+?/api/v0/instances (get)
+?/api/v0/instances/<uuid> (get, put, delete)
+
+?/api/v0/commands (get)
+?/api/v0/commands/<uuid> (get, put, delete)
+
+?/api/v0/dialogtrees (get)
+?/api/v0/dialogtrees/<uuid> (get, put, delete)
+
+?/api/v0/mythos (get)
+?/api/v0/mythos/<uuid> (get, put, delete)
+
+/api/v0/map/terrain?x0=147&y0=-157&x1=157&y1=-147
+/api/v0/map/instances?x0=147&y0=-157&x1=157&y1=-147
+
+/api/v0/actions/promote-guest
+/api/v0/actions/pregame-reroll
+/api/v0/actions/pregame-finish
+/api/v0/actions/end-turn
+
+
+
+//=====================================================
+//            Database
+//database... need to search user to login, rather than uuid to identify,
+//user name -> base64 or something that could use as key?
+
+//users.sort //sorted list, <score, uuid> if you need to paganate?
+users.etag
+users.unique.names //set
+users.data.[uuid] //hash {etag, name, email, password, karma...
+users.data.[uuid].games //list
+
+//sessions.sort //sorted list, <score, uuid> if you need to paganate
+sessions.etag
+sessions.data.[uuid]    value is just the user uuid, or the key uuid is the user uuid with 0 as value, expires after 12 hours or something
+?sessions.data //set of uuid
+
+//games.sort //sorted list, <score, uuid> if you need to paganate
+games.etag
+games.data.[uuid] //hash
+games.data.[uuid].etag
+games.data.[uuid].units //set
+
+locale.etag
+locale.data.[uuid]
+

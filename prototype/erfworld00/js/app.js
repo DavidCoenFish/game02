@@ -240,18 +240,26 @@ var App = (function () {
          "Server_INCRBY": Unimplemented,//key delta 
          "Server_DECR": Unimplemented,//key
          "Server_DECRBY": Unimplemented,//key delta
+         "Server_EXPIRE": Unimplemented,//key seconds [NX | XX | GT | LT]
+         "Server_PERSIST": Unimplemented,//key
 
+         //list =================================
          //LPUSH, RPUSH, LPOP, RPOP, LRANGE, LTRIM
 
+         //hash =================================
+         "Server_HSET": Unimplemented, //key field value [field value ...]
          "Server_HGET": Unimplemented,//key field
          "Server_HGETALL": Unimplemented,//key
          "Server_HDEL": Unimplemented,//key field [field ...]
          "Server_HEXISTS": Unimplemented,//key field
          //HINCRBY
 
-         "Server_SADD": Unimplemented,//key member [member ...]
+         //set ===================================
          "Server_SMEMBERS": Unimplemented,//key
+         "Server_SADD": Unimplemented,//key member [member ...]
+         "Server_SREM": Unimplemented, //key member [member ...]
 
+         //sorted set ============================
          "Server_ZRANGE": Unimplemented,//key min max
          "Server_ZADD": Unimplemented,//key [NX|XX] [GT|LT] [CH] [INCR] score member [score member ...]
          "Server_ZREM": Unimplemented,//key member [member ...]
