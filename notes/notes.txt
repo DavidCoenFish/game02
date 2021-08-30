@@ -6,9 +6,18 @@ dag node and json
    make a struct to optionall reflect values (render target, shader)
    what can be changed run time? render target width height could change, but not format
 
+multithreaded dag node, set value from any thread, get value from any thread?
 
-bugs:
-   there is a crash on shutdown after "alt + return" fullscreen, d3dx12 resource leak
+Log and FifleSystem don't really need runtime change of condumers/overlay... could just pass them in at construnction 
+and the consumer/overlay can activate/deactivate internally
+
+how to deal with mods turning on/off. sau UISystem is watching a file location, and a mod modifies a file under the watch.
+want the ui system to reload, additionally language change.
+is active language a mod/ overlay? may be a kind of overlay (localeOverlay)
+
+
+
+
 
 //unix time of head commit
 git log -1 --pretty=format:%cd HEAD

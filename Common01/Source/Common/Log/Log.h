@@ -4,6 +4,8 @@
    #define DSC_LOG
 #endif
 
+#include "Common/Log/LogEnum.h"
+
 /*
 keep on seeing a chicken and egg for who gets started first between file system and log
 some logs may want to write to file using file system
@@ -14,41 +16,51 @@ some logs may only want to save out file for messages of certain topic
 some logs want to emit to stdout/console/push
 */
 
-enum class LogTopic
-{
-   None = 0,
-   Debug,
-   Warning,
-   Error,
-   Scope,
-   Render
-};
-
 #if defined(DSC_LOG)
-   #define LOG_MESSAGE(format, ...) Log::AddMessage((int)LogTopic::None, format, ##__VA_ARGS__)
-   #define LOG_MESSAGE_DEBUG(format, ...) Log::AddMessage((int)LogTopic::Debug, format, ##__VA_ARGS__)
-   #define LOG_MESSAGE_WARNING(format, ...) Log::AddMessage((int)LogTopic::Warning, format, ##__VA_ARGS__)
-   #define LOG_MESSAGE_ERROR(format, ...) Log::AddMessage((int)LogTopic::Error, format, ##__VA_ARGS__)
-   #define LOG_MESSAGE_SCOPE(format, ...) Log::AddMessage((int)LogTopic::Scope, format, ##__VA_ARGS__)
-   #define LOG_MESSAGE_RENDER(format, ...) Log::AddMessage((int)LogTopic::Render, format, ##__VA_ARGS__)
+   #define LOG_MESSAGE(format, ...) Log::AddMessage(LogTopic::None, format, ##__VA_ARGS__)
+   #define LOG_MESSAGE_DEBUG(format, ...) Log::AddMessage(LogTopic::Debug, format, ##__VA_ARGS__)
+   #define LOG_MESSAGE_WARNING(format, ...) Log::AddMessage(LogTopic::Warning, format, ##__VA_ARGS__)
+   #define LOG_MESSAGE_ERROR(format, ...) Log::AddMessage(LogTopic::Error, format, ##__VA_ARGS__)
+   #define LOG_MESSAGE_SCOPE(format, ...) Log::AddMessage(LogTopic::Scope, format, ##__VA_ARGS__)
+   #define LOG_MESSAGE_FILESYSTEM(format, ...) Log::AddMessage(LogTopic::FileSystem, format, ##__VA_ARGS__)
+   #define LOG_MESSAGE_UISYSTEM(format, ...) Log::AddMessage(LogTopic::UISystem, format, ##__VA_ARGS__)
+   #define LOG_MESSAGE_RENDER(format, ...) Log::AddMessage(LogTopic::Render, format, ##__VA_ARGS__)
 #else
    #define LOG_MESSAGE(format, ...) (void)0
    #define LOG_MESSAGE_DEBUG(format, ...) (void)0
    #define LOG_MESSAGE_WARNING(format, ...) (void)0
    #define LOG_MESSAGE_ERROR(format, ...) (void)0
    #define LOG_MESSAGE_SCOPE(format, ...) (void)0
+   #define LOG_MESSAGE_FILESYSTEM(format, ...) (void)0
+   #define LOG_MESSAGE_UISYSTEM(format, ...) (void)0
    #define LOG_MESSAGE_RENDER(format, ...) (void)0
 #endif
 
 class ILogConsumer;
-namespace Log
+class LogImplimentation;
+class Log
 {
-   void AddMessage(const int topic, const char* const pFormat, ... );
+public:
+   static std::shared_ptr< Log > Factory();
+private:
+   Log();
+public:
+   ~Log();
 
-   void AddLogConsumer(
-      ILogConsumer& logConsumer
+   //any thread, asserts if outside scope of Log object
+   static void AddMessage(const LogTopic topic, const char* const pFormat, ... );
+
+   //any thread, asserts if outside scope of Log object
+   static void AddLogConsumer(
+      const std::shared_ptr< ILogConsumer >& pLogConsumer
       );
-   void RemoveLogConsumer(
-      ILogConsumer& logConsumer
+
+   //any thread, asserts if outside scope of Log object
+   static void RemoveLogConsumer(
+      const std::shared_ptr< ILogConsumer >& pLogConsumer
       );
+
+private:
+   std::unique_ptr< LogImplimentation > m_pImplimentation;
+
 };

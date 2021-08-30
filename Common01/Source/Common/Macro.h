@@ -4,3 +4,9 @@
 
 #define TOKEN_PAIR(TOKEN) TOKEN,#TOKEN
 
+#if defined(_DEBUG)
+   #define DSC_ASSERT(CONDITION) assert(CONDITION)
+#else
+   #define DSC_ASSERT(CONDITION) (void)0
+#endif
+

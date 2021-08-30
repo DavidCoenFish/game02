@@ -16,9 +16,9 @@ namespace CommonLog
          return m_data;
       }
    private:
-      virtual void AddMessage(const int topic, const std::string& message ) override
+      virtual void AddMessage(const LogTopic topic, const std::string& message ) override
       {
-         std::string text = std::to_string(topic) + std::string(":") + message + "\n";
+         std::string text = std::to_string((int)topic) + std::string(":") + message + "\n";
          m_data += text;
       }
    private:
@@ -32,13 +32,13 @@ namespace CommonLog
       {
          {
             LogConsumerTest logConsumerTest;
-            Log::AddMessage(3, "Hello %s", "World");
+            Log::AddMessage(LogTopic(3), "Hello %s", "World");
             Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual("3:Hello World\n", logConsumerTest.GetData().c_str());
          }
          {
             LogConsumerTest logConsumerTest;
-            Log::AddMessage(3, "Hello %s", "World");
-            Log::AddMessage(4, "Goodbye %s", "Pain");
+            Log::AddMessage(LogTopic(3), "Hello %s", "World");
+            Log::AddMessage(LogTopic(4), "Goodbye %s", "Pain");
             Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual("3:Hello World\n4:Goodbye Pain\n", logConsumerTest.GetData().c_str());
          }
       }

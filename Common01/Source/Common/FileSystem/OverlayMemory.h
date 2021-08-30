@@ -1,8 +1,7 @@
 #pragma once
-#include "Common/FileSystem/IReadOverlay.h"
-#include "Common/FileSystem/IWriteOverlay.h"
+#include "Common/FileSystem/IFileSystemOverlay.h"
 
-class OverlayMemory : public IReadOverlay, public IWriteOverlay
+class OverlayMemory : public IFileSystemOverlay
 {
 public:
    OverlayMemory(
@@ -13,13 +12,6 @@ public:
    ~OverlayMemory();
 
 private:
-   virtual const int GetPriority() const override { return m_priority; }
-   virtual std::shared_ptr< std::vector<uint8_t> > ReadFileLoadData(const std::filesystem::path& path) override;
-
-   virtual const int GetMask() const override { return m_mask; }
-   virtual const bool WriteFileSaveData(const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend) override;
-   //return true if delete worked
-   virtual const bool WriteFileDelete(const std::filesystem::path& path) override;
 
 private:
    int m_priority;

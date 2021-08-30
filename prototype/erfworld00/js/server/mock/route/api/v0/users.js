@@ -14,6 +14,7 @@
          (false === "password" in in_request.body) ||
          ("" === in_request.body.username) ||
          ("" === in_request.body.password) ||
+         (in_request.body.username.length < 4) ||
          (64 < in_request.username.length) ||
          (in_request.username.password.length < 8)) {
 

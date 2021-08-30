@@ -2,26 +2,126 @@
 
 #include "Common/Log/Log.h"
 #include "Common/Log/ILogConsumer.h"
+#include "Common/Util/ThreadWrapper.h"
+#include "Common/Macro.h"
 
-//this doesn't gain much in this case, is a patteren to lazy init static vectors
-static std::vector< ILogConsumer* >& GetLogConsumerArray()
+static std::atomic<LogImplimentation*> s_singleton = nullptr;
+
+//didn't want threadwrapper into global scope 
+class LogImplimentation
 {
-   static std::vector< ILogConsumer* > s_logConsumerArray;
-   return s_logConsumerArray;
+public:
+   LogImplimentation();
+   ~LogImplimentation();
+   void AddMessage(const LogTopic topic, const std::string& message);
+   void AddLogConsumer(
+      const std::shared_ptr< ILogConsumer >& pLogConsumer
+      );
+   void RemoveLogConsumer(
+      const std::shared_ptr< ILogConsumer >& pLogConsumer
+      );
+
+private:
+   void DoWork();
+
+private:
+   std::shared_ptr<ThreadWrapper<void()>> m_workerThread;
+
+   std::list< std::pair< LogTopic, std::string > > m_listMessages;
+   std::mutex m_listMessagesMutex;
+
+   std::vector< std::shared_ptr< ILogConsumer > > m_logConsumers;
+   std::mutex m_logConsumersMutex;
+
+};
+
+LogImplimentation::LogImplimentation()
+{
+   DSC_ASSERT(nullptr == s_singleton);
+   s_singleton = this;
+   m_workerThread = ThreadWrapper<void()>::Factory([=](){
+      DoWork();
+   });
 }
 
-static void AddMessageInternal(const int topic, const std::string& message)
+LogImplimentation::~LogImplimentation()
 {
-   const auto& functorArray = GetLogConsumerArray();
-   for (auto pIter : functorArray)
+   m_workerThread = nullptr;
+   DSC_ASSERT(nullptr != s_singleton);
+   s_singleton = nullptr;
+}
+
+void LogImplimentation::AddMessage(const LogTopic topic, const std::string& message)
+{
    {
-      pIter->AddMessage(topic, message);
+      std::lock_guard< std::mutex > lock(m_listMessagesMutex);
+      m_listMessages.push_back(std::pair< LogTopic, std::string >(topic, message));
+   }
+
+   if (nullptr != m_workerThread)
+   {
+      m_workerThread->SignalWorkToDo();
    }
    return;
 }
 
+void LogImplimentation::DoWork()
+{
+   while (true)
+   {
+      std::pair< LogTopic, std::string > messagePair;
+      {
+         std::lock_guard< std::mutex > lock(m_listMessagesMutex);
+         if (true == m_listMessages.empty())
+         {
+            return;
+         }
+         messagePair = m_listMessages.front();
+         m_listMessages.pop_front();
+      }
+
+      {
+         std::lock_guard< std::mutex > lock(m_logConsumersMutex);
+         for (auto pIter : m_logConsumers)
+         {
+            pIter->AddMessage(messagePair.first, messagePair.second);
+         }
+      }
+   }
+
+   return;
+}
+
+void LogImplimentation::AddLogConsumer(
+   const std::shared_ptr< ILogConsumer >& pLogConsumer
+   )
+{
+   m_logConsumers.push_back(pLogConsumer);
+}
+void LogImplimentation::RemoveLogConsumer(
+   const std::shared_ptr< ILogConsumer >& pLogConsumer
+   )
+{
+   m_logConsumers.erase(std::remove(m_logConsumers.begin(), m_logConsumers.end(), pLogConsumer), m_logConsumers.end());
+}
+
+std::shared_ptr< Log > Log::Factory()
+{
+   return std::make_shared< Log >();
+}
+Log::Log()
+{
+   m_pImplimentation = std::make_unique< LogImplimentation >();
+}
+
+Log::~Log()
+{
+   m_pImplimentation = nullptr;
+}
+
+
 //https://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf/8098080
-void Log::AddMessage(const int topic, const char* const format, ... )
+void Log::AddMessage(const LogTopic topic, const char* const format, ... )
 {
    // initialize use of the variable argument array
    va_list vaArgs;
@@ -41,22 +141,35 @@ void Log::AddMessage(const int topic, const char* const format, ... )
    std::vsnprintf(zc.data(), zc.size(), format, vaArgs);
    va_end(vaArgs);
    std::string message(zc.data(), iLen); 
-   AddMessageInternal(topic, message);
+
+   auto pImple = s_singleton.load();
+   DSC_ASSERT(pImple);
+   if (nullptr != pImple)
+   {
+      pImple->AddMessage(topic, message);
+   }
 }
 
 void Log::AddLogConsumer(
-   ILogConsumer& logConsumer
+   const std::shared_ptr< ILogConsumer >& pLogConsumer
    )
 {
-   auto& functorArray = GetLogConsumerArray();
-   functorArray.push_back(&logConsumer);
+   auto pImple = s_singleton.load();
+   DSC_ASSERT(pImple);
+   if (nullptr != pImple)
+   {
+      pImple->AddLogConsumer(pLogConsumer);
+   }
 }
 
 void Log::RemoveLogConsumer(
-   ILogConsumer& logConsumer
+   const std::shared_ptr< ILogConsumer >& pLogConsumer
    )
 {
-   auto& functorArray = GetLogConsumerArray();
-   functorArray.erase(std::remove(functorArray.begin(), functorArray.end(), &logConsumer), functorArray.end());
+   auto pImple = s_singleton.load();
+   DSC_ASSERT(pImple);
+   if (nullptr != pImple)
+   {
+      pImple->RemoveLogConsumer(pLogConsumer);
+   }
 }
-

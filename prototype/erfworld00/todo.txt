@@ -1,3 +1,27 @@
+todo:
+bootstrap that can exists without needing to pull anything from the network. a launch screen with log in options and language selection
+   launch screen [login, new user, guest, options(language)]
+--- launch screen string table
+guest
+unless registered, guest accounts will be deleted after 24 hours
+new user
+create a new user
+user name
+user name must be at between 4 and 64 characters long without spaces at start or end
+password
+password must be between 8 and 64 characters
+email
+user email is for account recovery
+login
+login using the given user name and password
+language
+region
+<name of each language in local script> Foo (Bar)
+<name of each region in current language>
+
+iso-639-1 code (language) aprox 105 of 182 supported by google translate
+iso-3166-2 country codes (region) https://en.wikipedia.org/wiki/ISO_3166-2 aprox 248
+
    refactor endpoints.
 move towards endpoints representing resources, even if not one-to-one with data in database
 ie, session resource, rather than a log in/out action. 

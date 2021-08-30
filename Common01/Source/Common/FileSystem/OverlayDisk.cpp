@@ -1,20 +1,21 @@
 #include "CommonPCH.h"
 
-#include "Common/FileSystem/ReadOverlayDir.h"
+#include "Common/FileSystem/OverlayDisk.h"
 
-ReadOverlayDir::ReadOverlayDir(const int priority, const std::filesystem::path& basePath)
-   : m_priority(priority)
+OverlayDisk::OverlayDisk(const int filter, const std::filesystem::path& basePath)
+   : m_filter(filter)
    , m_basePath(basePath)
+   , m_componentFileMap()
 {
    //nop
 }
 
-ReadOverlayDir::~ReadOverlayDir()
+OverlayDisk::~OverlayDisk()
 {
    //nop
 }
 
-std::shared_ptr< std::vector<uint8_t> > ReadOverlayDir::ReadFileLoadData(const std::filesystem::path& path)
+std::shared_ptr< std::vector<uint8_t> > OverlayDisk::ReadFileLoadData(const std::filesystem::path& path)
 {
    const auto localPath = m_basePath / path;
    std::ifstream stream(localPath.c_str(), std::ios::in | std::ios::binary);

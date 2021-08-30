@@ -1,11 +1,12 @@
 #pragma once
 
+#include "Common/Log/LogEnum.h"
+
 class ILogConsumer
 {
 public:
-   ILogConsumer();
    virtual ~ILogConsumer();
 
-   virtual void AddMessage(const int topic, const std::string& message ) = 0;
+   virtual void AddMessage(const LogTopic topic, const std::string& message ) = 0;
 
 };

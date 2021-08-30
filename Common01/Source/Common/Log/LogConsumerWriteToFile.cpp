@@ -22,11 +22,11 @@ const std::string LogConsumerWriteToFile::GetDefaultPath()
    return "g:\\log.txt";
 }
 
-void LogConsumerWriteToFile::AddMessage(const int topic, const std::string& message )
+void LogConsumerWriteToFile::AddMessage(const LogTopic topic, const std::string& message )
 {
    if (true == m_file.is_open())
    {
-      m_file << topic << message.c_str();
+      m_file << (int)topic << message.c_str();
    }
 }
 

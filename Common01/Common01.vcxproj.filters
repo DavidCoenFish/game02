@@ -46,6 +46,9 @@
     <Filter Include="Source\Common\DAG">
       <UniqueIdentifier>{6ecae4f4-4fef-4a84-9079-3da7e34a447f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Common\UISystem">
+      <UniqueIdentifier>{ce1bbc6f-a396-4fd4-9043-56caa9ac7c3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Common01.props" />
@@ -78,19 +81,13 @@
     <ClCompile Include="Source\Common\Log\ILogConsumer.cpp">
       <Filter>Source\Common\Log</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\FileSystem\ReadOverlayDir.cpp">
+    <ClCompile Include="Source\Common\FileSystem\OverlayDisk.cpp">
       <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\FileSystem\IReadOverlay.cpp">
+    <ClCompile Include="Source\Common\FileSystem\IFileSystemOverlay.cpp">
       <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\FileSystem\FileSystem.cpp">
-      <Filter>Source\Common\FileSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\FileSystem\IWriteOverlay.cpp">
-      <Filter>Source\Common\FileSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\FileSystem\WriteOverlayDir.cpp">
       <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\FileSystem\OverlayMemory.cpp">
@@ -237,6 +234,27 @@
     <ClCompile Include="Source\Common\JSON\JSONGeometry.cpp">
       <Filter>Source\Common\JSON</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Common\UISystem\IUISystem.cpp">
+      <Filter>Source\Common\UISystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\UISystem\IUISystemDataSource.cpp">
+      <Filter>Source\Common\UISystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Util\ThreadWrapper.cpp">
+      <Filter>Source\Common\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Log\LogEnum.cpp">
+      <Filter>Source\Common\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\IFileSystemFoundFile.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\OverlayMods.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\ComponentFileMap.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CommonPCH.h">
@@ -272,16 +290,10 @@
     <ClInclude Include="Source\Common\FileSystem\FileSystem.h">
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\FileSystem\ReadOverlayDir.h">
+    <ClInclude Include="Source\Common\FileSystem\OverlayDisk.h">
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\FileSystem\IReadOverlay.h">
-      <Filter>Source\Common\FileSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\FileSystem\IWriteOverlay.h">
-      <Filter>Source\Common\FileSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\FileSystem\WriteOverlayDir.h">
+    <ClInclude Include="Source\Common\FileSystem\IFileSystemOverlay.h">
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\FileSystem\OverlayMemory.h">
@@ -433,6 +445,27 @@
     </ClInclude>
     <ClInclude Include="Source\Common\JSON\JSONGeometry.h">
       <Filter>Source\Common\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\UISystem\IUISystem.h">
+      <Filter>Source\Common\UISystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\UISystem\IUISystemDataSource.h">
+      <Filter>Source\Common\UISystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Util\ThreadWrapper.h">
+      <Filter>Source\Common\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Log\LogEnum.h">
+      <Filter>Source\Common\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\IFileSystemFoundFile.h">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\OverlayMods.h">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\ComponentFileMap.h">
+      <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

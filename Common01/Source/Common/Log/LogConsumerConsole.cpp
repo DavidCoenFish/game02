@@ -19,9 +19,9 @@ LogConsumerConsole::~LogConsumerConsole()
    //nop
 }
 
-void LogConsumerConsole::AddMessage(const int topic, const std::string& message )
+void LogConsumerConsole::AddMessage(const LogTopic topic, const std::string& message )
 {
-   std::string text = std::to_string(topic) + std::string(":") + message + "\n";
+   std::string text = std::to_string((int)topic) + std::string(":") + message + "\n";
    OutputDebugStringW(Utf8::Utf8ToUtf16(text).c_str());
    printf(text.c_str());
 }

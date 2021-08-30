@@ -1,37 +1,37 @@
-fiawat, 188.438
-laura, 183.319
-palotti, 162.017
-nina, 157.067
-collis, 154.641
-trand, 150.948
-wolfe, 138.372
-miko, 92.098
-lilith,89.697
-mars,69.082
-paradise,61.715
-gaia,55.441
-alba,55.420
-caitlyn,54.309
-betty,51.857
-carol,51.661
-fiadi,45.539
-rin,38.188
-ansell,33.423
-eyma,33.422,
-luna,32.850
-abaddon,17.276
-asmodeus,17.276
-mammon,16.042
-beelzebub,16.042
-sylvia,12.622
-hadina,11.139
-ymir, 6.282
-karasu,6.181
-fiattina,4.924
-gascoigne,3.693
-ebisu,3.693
-bhukkhuni,2.462
-fiates,1.231
+fiawat, 197.861
+laura, 192.486
+collis, 186.013
+palotti, 170.118
+nina, 164.923
+trand, 164.864
+wolfe, 151.128
+lilith,107.736
+miko, 96.703
+mars,72.536
+paradise,64.801
+gaia,58.213
+alba,58.191
+caitlyn,57.025
+betty,54.450
+carol,54.245
+fiadi,47.816
+rin,40.098
+ansell,35.095
+eyma,35.094
+luna,34.493
+abaddon,18.140
+asmodeus,18.140
+mammon,16.844
+beelzebub,16.844
+sylvia,13.254
+hadina,11.697
+ymir, 6.596
+karasu,6.490
+fiattina,5.171
+gascoigne,3.878
+ebisu,3.877
+bhukkhuni,2.585
+fiates,1.292
 
 
 laura*     5,2         2           1        2
