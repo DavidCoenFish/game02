@@ -4,12 +4,19 @@
 is there an easier way or do you have to filter out the cloud overlay from searches?
 (for the load files from disk or mod overlay)
 
+2 cases, 
+   mod turned on and off (avaliable files change)
+   save a game to a dir, want list of files in dir. dont cache the files in "dynamic" dirs?
+      dont notify observer that contents have changes on saving game?
+
 */
 class IFileSystemFoundFile;
 class IFileSystemOverlay
 {
 public:
    virtual ~IFileSystemOverlay();
+
+   virtual void SetCallbackContentChanged(const std::function<void()>& callback) = 0;
 
    virtual const int GetFilter() = 0;
 

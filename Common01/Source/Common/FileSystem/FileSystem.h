@@ -28,6 +28,20 @@ this implies a "NotifyChangeReadOverlay" to let file system know mod changed
 
 so, list of save files. want to read them, want to write them, may want to delete them
 
+distinction between read only locations and writable location
+overlay::
+   CollectLocationsReadOnly
+   CollectLocationsWritable
+
+filesystem //don't load directly, get a IFileSystemFoundFile and load that
+   FindFile(path)
+   SaveFile(path, data)
+
+
+IFileSystemFoundFile::
+   async load
+
+
 */
 
 class FileSystem
@@ -38,14 +52,15 @@ public:
    static const int GetFilterAll();
    static const int GetNewFilter();
 
-   FileSystem();
+   //this does infer that all overlays are avaliable at construction, but they could be placeholder, overlay can tell observer that contents have changed
+   FileSystem(const std::vector<std::shared_ptr< IFileSystemOverlay > >& arrayOverlay);
    ~FileSystem();
 
-   void AddOverlay( const std::shared_ptr< IFileSystemOverlay >& pOverlay );
-   void RemoveOverlay( const std::shared_ptr< IFileSystemOverlay >& pOverlay );
-   //tell the file system that the avaliable files has changed, it, mod being added/ removed
-   // this is to preserve the order of overlays. avoids doing a "remove/add" to indicate change
-   void NotifyChangeOverlay( const std::shared_ptr< IFileSystemOverlay >& pOverlay );
+   //void AddOverlay( const std::shared_ptr< IFileSystemOverlay >& pOverlay );
+   //void RemoveOverlay( const std::shared_ptr< IFileSystemOverlay >& pOverlay );
+
+   //tell the file system that the avaliable files has changed
+   //void NotifyChangeOverlay( const std::shared_ptr< IFileSystemOverlay >& pOverlay );
 
    void LoadData( 
       const std::filesystem::path& path,
