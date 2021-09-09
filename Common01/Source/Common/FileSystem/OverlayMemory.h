@@ -14,8 +14,6 @@ public:
 private:
 
 private:
-   int m_priority;
-   int m_mask;
    std::map< std::filesystem::path, std::shared_ptr< std::vector<uint8_t>>> m_memoryFiles;
 
 };

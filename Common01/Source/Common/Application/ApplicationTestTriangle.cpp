@@ -9,6 +9,8 @@
 #include "Common/DrawSystem/Geometry/GeometryGeneric.h"
 #include "Common/DrawSystem/Shader/Shader.h"
 
+/*
+
 ApplicationTestTriangle::ApplicationTestTriangle(const IApplicationParam& applicationParam, const std::filesystem::path& rootPath)
    : IApplication(applicationParam)
 {
@@ -123,3 +125,4 @@ void ApplicationTestTriangle::OnWindowSizeChanged(const int width, const int hei
 
    return;
 }
+*/

@@ -16,44 +16,48 @@ class IFileSystemOverlay
 public:
    virtual ~IFileSystemOverlay();
 
-   virtual void SetCallbackContentChanged(const std::function<void()>& callback) = 0;
+   virtual const int GetFilter() const = 0;
 
-   virtual const int GetFilter() = 0;
+   //let filesystem know if something has changed?
+   virtual void SetCallbackChangedFile(const std::function<void(const std::filesystem::path&, IFileSystemOverlay* const)>& callback) = 0;
+   virtual void SetCallbackChangedLocation(const std::function<void(const std::filesystem::path&, IFileSystemOverlay* const)>& callback) = 0;
 
-   //does this overlay have files under the following location
-   virtual const bool LocationFound(const std::filesystem::path& path) = 0;
-   //does this overlay have 
-   virtual const bool FileFound(const std::filesystem::path& path) = 0;
+   //work with FoundFile, doesn't this need to be async, when does the overlay get the time? or does a disk overlay have a callback for init make file map finished?
+   virtual const bool ProvidesFile(const std::filesystem::path& path) = 0;
 
-   // have the FileSystem make a path of each of the extentionArrayHighestPriorityFirst can call FileFound
-   //virtual const bool FileFoundPriorityExtention(
-   //   const std::filesystem::path& path,
-   //   const std::vector< std::string >& extentionArrayHighestPriorityFirst,
-   //   std::filesystem::path& foundPath
-   //   ) = 0;
+   //work with FoundLocation
+   virtual const bool ProvidesLocation(const std::filesystem::path& path) = 0;
 
-   virtual void LoadData(
+   //help populate FoundLocation::CollectFiles, async?
+   virtual void AsyncVisitFilesUnderPath(
       const std::filesystem::path& path,
-      const std::function< void(const std::shared_ptr< std::vector<uint8_t> >) >& callback
+      const std::function<void(const std::filesystem::path& path)>& callback
       ) = 0;
 
-   virtual void SaveData(
+   //filestamp?
+   virtual void AsyncLoadData( 
+      const std::filesystem::path& path,
+      const std::function< void(const bool success, const int filter, const std::shared_ptr<std::vector<uint8_t>>& data) >& callback
+      ) = 0;
+
+   //async?
+   //virtual void GetFileChangeID(const std::filesystem::path& path) const= 0;
+   virtual void AsyncGetFileChangeID(
+      const std::filesystem::path& path,
+      const std::function< void(const int changeID) >& callback
+      ) const= 0;
+
+   //ChangeID?
+   virtual void AsyncSaveData(
+      const std::filesystem::path& path,
       const std::shared_ptr< std::vector<uint8_t> >& data, 
-      const std::filesystem::path& path, 
-      const std::function< void() >& callback
+      const std::function< void(const bool success, const int filter) >& callback = nullptr
       ) = 0;
 
-   virtual void DeleteDataFile(
-      const std::filesystem::path& path, 
-      const std::function< void() >& callback
+   //ChangeID? timestamp of when file deleted, or 0 if never existed?
+   virtual void AsyncDeleteFile(
+      const std::filesystem::path& path,
+      const std::function< void(const bool success, const int filter) >& callback = nullptr
       ) = 0;
-
-   virtual void CollectFilesAtLocation(
-      const std::shared_ptr<IFileSystemOverlay>& refSelf,
-      const std::filesystem::path& path, 
-      std::map< std::filesystem::path, std::shared_ptr<IFileSystemFoundFile>>& mapFoundFiles
-      ) = 0;
-
-
 
 };

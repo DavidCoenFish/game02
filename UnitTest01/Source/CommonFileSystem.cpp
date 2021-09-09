@@ -8,6 +8,7 @@
 
 namespace CommonFileSystem
 {
+#if 0
    TEST_CLASS(Sanity)
    {
    public: 
@@ -81,4 +82,5 @@ namespace CommonFileSystem
          FileSystem::ClearWriteOverlay();
       }
    };
+#endif //0
 }

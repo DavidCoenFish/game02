@@ -1,108 +1,154 @@
 #include "CommonPCH.h"
 
 #include "Common/FileSystem/FileSystem.h"
+#include "Common/FileSystem/IFileSystemOverlay.h"
 #include "Common/Util/Utf8.h"
-#include "Common/Util/ThreadWrapper.h"
+#include "Common/Util/ThreadCollection.h"
 
-#define LOCAL_THREAD_COUNT 4
-
-class FileSystemImplimentation
+class FileSystemInternal
 {
-   FileSystemImplimentation();
-   ~FileSystemImplimentation();
+public:
+   FileSystemInternal(const std::vector<std::shared_ptr< IFileSystemOverlay > >& arrayOverlay);
+   ~FileSystemInternal();
 
-   void AddOverlay( const std::shared_ptr< IFileSystemOverlay >& pOverlay );
-   void RemoveOverlay( const std::shared_ptr< IFileSystemOverlay >& pOverlay );
-   void NotifyChangeOverlay( const std::shared_ptr< IFileSystemOverlay >& pOverlay );
-   void LoadData( 
+   void AddJob( const std::function<void(void)>& job);
+
+   void AsyncLoadData( 
       const std::filesystem::path& path,
-      const std::function< void(const std::shared_ptr< std::vector<uint8_t> >) >& callback
+      const std::function<void(const bool success, const int filter, const std::shared_ptr<std::vector<uint8_t>>& data)>& callback,
+      const int filter
       );
 
-   void SaveData(
+   void AsyncSaveData(
       const std::shared_ptr< std::vector<uint8_t> >& data, 
       const std::filesystem::path& path, 
-      const int filter,
-      const std::function< void() >& callback
+      const std::function< void(const bool success, const int filter) >& callback,
+      const int filter
       );
 
-   //DeleteFile is a define
-   void DeleteDataFile(
+   void AsyncDeleteFile(
       const std::filesystem::path& path, 
-      const int filter,
-      const std::function< void() >& callback
+      const std::function< void(const bool success, const int filter) >& callback,
+      const int filter
       );
-
-   void FindFile(
-      const std::filesystem::path& path, 
-      const int filter,
-      const std::function< void(std::shared_ptr<IFileSystemFoundFile>) >& callback
-      );
-   void FindFilePriorityExtention(
-      const std::filesystem::path& path, 
-      const std::vector< std::string >& extentionArrayHighestPriorityFirst,
-      const int filter,
-      const std::function< void(std::shared_ptr<IFileSystemFoundFile>) >& callback
-      );
-   void CollectFilesAtLocation(
-      const std::filesystem::path& path, 
-      const int filter,
-      const std::function< void(std::shared_ptr<IFileSystemFoundFile>) >& callback
-      );
- 
-   void RegisterWatchLocationChange(
-      const std::filesystem::path& path, 
-      const int filter,
-      const std::function< void() >& callback
-      );
-   void ClearWatchLocationChange(
-      const std::filesystem::path& path, 
-      const int filter,
-      const std::function< void() >& callback
-      );
-private:
-   void DoWork();
-   void SignalWorkToDo();
 
 private:
-   std::list< std::function<void()> > m_taskArray;
-   std::mutex m_taskArrayMutex;
+   void OnOverlayChangeFile(const std::filesystem::path& path, IFileSystemOverlay* const pOverlay);
+   void OnOverlayChangeLocation(const std::filesystem::path& path, IFileSystemOverlay* const pOverlay);
 
+private:
+   //ThreadCollection< 4 > m_threadCollection;
    std::vector< std::shared_ptr< IFileSystemOverlay > > m_overlayArray;
-   std::mutex m_overlayArrayMutex;
-
-   std::shared_ptr<ThreadWrapper<void()>> m_workerThread[LOCAL_THREAD_COUNT];
 
 };
 
-void FileSystemImplimentation::DoWork()
+FileSystemInternal::FileSystemInternal(const std::vector<std::shared_ptr< IFileSystemOverlay > >& arrayOverlay)
+   : m_overlayArray(arrayOverlay)
 {
-   std::function<void()> task;
-   while (true)
+   for (auto& iter : m_overlayArray)
    {
-      {
-         std::lock_guard< std::mutex > lock(m_taskArrayMutex);
-         if (true == m_taskArray.empty())
-         {
-            return;
-         }
-         task = m_taskArray.front();
-         m_taskArray.pop_front();
-      }
-
-      task();
+      iter->SetCallbackChangedFile([=](const std::filesystem::path& path, IFileSystemOverlay* const pOverlay){
+            OnOverlayChangeFile(path, pOverlay);
+         });
+      iter->SetCallbackChangedLocation([=](const std::filesystem::path& path, IFileSystemOverlay* const pOverlay){
+            OnOverlayChangeLocation(path, pOverlay);
+         });
    }
-   //if there is any more on the array...? otherwise there is a risk of items never removed from list? use while loop instead
-   //SignalWorkToDo();
+}
+
+FileSystemInternal::~FileSystemInternal()
+{
+}
+
+void FileSystemInternal::AddJob( const std::function<void(void)>& job)
+{
+   job;
+   //m_threadCollection.AddWork(job);
+}
+
+static IFileSystemOverlay* const FindOverlayFile(
+   const std::vector<std::shared_ptr< IFileSystemOverlay > >& arrayOverlay,
+   const std::filesystem::path& path,
+   const int filter
+   )
+{
+   IFileSystemOverlay* pOverlayFound = nullptr;
+   for (auto& iter : arrayOverlay)
+   {
+      IFileSystemOverlay* pOverlay = iter.get();
+      if (0 == (filter & pOverlay->GetFilter()))
+      {
+         continue;
+      }
+      if (false == pOverlay->ProvidesFile(path))
+      {
+         continue;
+      }
+      pOverlayFound = pOverlay;
+   }
+
+   return pOverlayFound;
+}
+
+void FileSystemInternal::AsyncLoadData( 
+   const std::filesystem::path& path,
+   const std::function<void(const bool success, const int filter, const std::shared_ptr<std::vector<uint8_t>>& data)>& callback,
+   const int filter
+   )
+{
+   IFileSystemOverlay* pOverlayFound = FindOverlayFile(m_overlayArray, path, filter);
+   if (nullptr != pOverlayFound)
+   {
+      pOverlayFound->AsyncLoadData(
+         path,
+         callback
+         );
+   }
+}
+
+void FileSystemInternal::AsyncSaveData(
+   const std::shared_ptr< std::vector<uint8_t> >& data, 
+   const std::filesystem::path& path, 
+   const std::function< void(const bool success, const int filter) >& callback,
+   const int filter
+   )
+{
+   IFileSystemOverlay* pOverlayFound = FindOverlayFile(m_overlayArray, path, filter);
+   if (nullptr != pOverlayFound)
+   {
+      pOverlayFound->AsyncSaveData(
+         path,
+         data,
+         callback
+         );
+   }
+}
+
+void FileSystemInternal::AsyncDeleteFile(
+   const std::filesystem::path& path, 
+   const std::function< void(const bool success, const int filter) >& callback,
+   const int filter
+   )
+{
+   IFileSystemOverlay* pOverlayFound = FindOverlayFile(m_overlayArray, path, filter);
+   if (nullptr != pOverlayFound)
+   {
+      pOverlayFound->AsyncDeleteFile(
+         path,
+         callback
+         );
+   }
 }
 
 
-void FileSystemImplimentation::SignalWorkToDo()
+void FileSystemInternal::OnOverlayChangeFile(const std::filesystem::path& path, IFileSystemOverlay* const pOverlay)
 {
-   for (int index = 0; index < LOCAL_THREAD_COUNT; ++index)
-   {
-      m_workerThread[index]->SignalWorkToDo();
-   }
+   path;pOverlay;
+}
+
+void FileSystemInternal::OnOverlayChangeLocation(const std::filesystem::path& path, IFileSystemOverlay* const pOverlay)
+{
+   path;pOverlay;
 }
 
 #define MAX_PATH_LENGTH 1024 
@@ -138,9 +184,14 @@ const int FileSystem::GetNewFilter()
    return value;
 }
 
-FileSystem::FileSystem()
+std::shared_ptr< FileSystem > FileSystem::Factory(const std::vector<std::shared_ptr< IFileSystemOverlay > >& arrayOverlay)
 {
-   m_pImplimentation = std::make_unique<FileSystemImplimentation>();
+   return std::make_shared< FileSystem >(arrayOverlay);
+}
+
+FileSystem::FileSystem(const std::vector<std::shared_ptr< IFileSystemOverlay > >& arrayOverlay)
+{
+   m_pInternal = std::make_unique<FileSystemInternal>(arrayOverlay);
 }
 
 FileSystem::~FileSystem()
@@ -148,327 +199,86 @@ FileSystem::~FileSystem()
    return;
 }
 
-void FileSystem::AddOverlay( const std::shared_ptr< IFileSystemOverlay >& pOverlay )
-{
-   if (nullptr != m_pImplimentation)
-   {
-      m_pImplimentation->AddOverlay(pOverlay);
-   }
-   return;
-}
-
-void FileSystem::RemoveOverlay( const std::shared_ptr< IFileSystemOverlay >& pOverlay )
-{
-   if (nullptr != m_pImplimentation)
-   {
-      m_pImplimentation->RemoveOverlay(pOverlay);
-   }
-   return;
-}
-
-void FileSystem::NotifyChangeOverlay( const std::shared_ptr< IFileSystemOverlay >& pOverlay )
-{
-   if (nullptr != m_pImplimentation)
-   {
-      m_pImplimentation->NotifyChangeOverlay(pOverlay);
-   }
-   return;
-}
-
-void FileSystem::LoadData( 
+//shortcut for FindFile -> AsyncLoadData, highest priority file that passes overlay filter
+void FileSystem::AsyncLoadData( 
    const std::filesystem::path& path,
-   const std::function< void(const std::shared_ptr< std::vector<uint8_t> >) >& callback
+   const std::function<void(const bool success, const int filter, const std::shared_ptr<std::vector<uint8_t>>& data)>& callback,
+   const int filter
    )
 {
-   if (nullptr != m_pImplimentation)
-   {
-      m_pImplimentation->LoadData(path, callback);
-   }
-   return;
+   auto pInternal = m_pInternal.get();
+   pInternal->AddJob([=](){
+      pInternal->AsyncLoadData( 
+         path,
+         callback,
+         filter
+         );
+   });
 }
 
-void FileSystem::SaveData(
+//shortcut for FindFile -> AsyncSaveData, save the data on filtered overlays
+void FileSystem::AsyncSaveData(
    const std::shared_ptr< std::vector<uint8_t> >& data, 
    const std::filesystem::path& path, 
-   const int filter,
-   const std::function< void() >& callback
+   const std::function< void(const bool success, const int filter) >& callback,
+   const int filter
    )
 {
-   if (nullptr != m_pImplimentation)
-   {
-      m_pImplimentation->SaveData(data, path, filter, callback);
-   }
-   return;
+   auto pInternal = m_pInternal.get();
+   pInternal->AddJob([=](){
+      m_pInternal->AsyncSaveData(
+         data,
+         path,
+         callback,
+         filter
+         );
+   });
 }
 
-void FileSystem::DeleteDataFile(
+//delete the file on the filtered overlays
+void FileSystem::AsyncDeleteFile(
    const std::filesystem::path& path, 
-   const int filter,
-   const std::function< void() >& callback
+   const std::function< void(const bool success, const int filter) >& callback,
+   const int filter
    )
 {
-   if (nullptr != m_pImplimentation)
-   {
-      m_pImplimentation->DeleteDataFile(path, filter, callback);
-   }
-   return;
+   auto pInternal = m_pInternal.get();
+   pInternal->AddJob([=](){
+      m_pInternal->AsyncDeleteFile(
+         path,
+         callback,
+         filter
+         );
+   });
 }
 
-void FileSystem::FindFile(
+//find the highest priority file that passes overlay filter, can then load, delete? the file
+// to accomidate save, file may not exists?
+const std::shared_ptr<FoundFile> FileSystem::FindFile(
    const std::filesystem::path& path, 
-   const int filter,
-   const std::function< void(std::shared_ptr<IFileSystemFoundFile>) >& callback
+   const int filter
    )
 {
-   if (nullptr != m_pImplimentation)
-   {
-      m_pImplimentation->FindFile(path, filter, callback);
-   }
-   return;
+   path;filter;
+   return std::shared_ptr<FoundFile>();
 }
 
-void FileSystem::FindFilePriorityExtention(
+const std::shared_ptr<FoundFile> FileSystem::FindFilePriorityExtention(
    const std::filesystem::path& path, 
    const std::vector< std::string >& extentionArrayHighestPriorityFirst,
-   const int filter,
-   const std::function< void(std::shared_ptr<IFileSystemFoundFile>) >& callback
+   const int filter
    )
 {
-   if (nullptr != m_pImplimentation)
-   {
-      m_pImplimentation->FindFilePriorityExtention(path, extentionArrayHighestPriorityFirst, filter, callback);
-   }
-   return;
+   path;extentionArrayHighestPriorityFirst;filter;
+   return std::shared_ptr<FoundFile>();
 }
 
-void FileSystem::CollectFilesAtLocation(
+const std::shared_ptr<FoundLocation> FileSystem::FindLocation(
    const std::filesystem::path& path, 
-   const int filter,
-   const std::function< void(std::shared_ptr<IFileSystemFoundFile>) >& callback
+   const int filter
    )
 {
-   if (nullptr != m_pImplimentation)
-   {
-      m_pImplimentation->CollectFilesAtLocation(path, filter, callback);
-   }
-   return;
+   path;filter;
+   return std::shared_ptr<FoundLocation>();
 }
 
-void FileSystem::RegisterWatchLocationChange(
-   const std::filesystem::path& path, 
-   const int filter,
-   const std::function< void() >& callback
-   )
-{
-   if (nullptr != m_pImplimentation)
-   {
-      m_pImplimentation->RegisterWatchLocationChange(path, filter, callback);
-   }
-   return;
-}
-
-void FileSystem::ClearWatchLocationChange(
-   const std::filesystem::path& path, 
-   const int filter,
-   const std::function< void() >& callback
-   )
-{
-   if (nullptr != m_pImplimentation)
-   {
-      m_pImplimentation->ClearWatchLocationChange(path, filter, callback);
-   }
-   return;
-}
-
-
-
-
-/*
-#include "Common/FileSystem/FileSystem.h"
-#include "Common/FileSystem/IReadOverlay.h"
-#include "Common/FileSystem/IWriteOverlay.h"
-#include "Common/Util/Utf8.h"
-
-static std::vector< std::shared_ptr< IReadOverlay > >& GetArrayOverlayRead()
-{
-   static std::vector< std::shared_ptr< IReadOverlay > > sArrayOverlayRead;
-   std::sort(sArrayOverlayRead.begin(), sArrayOverlayRead.end(), [](const std::shared_ptr< IReadOverlay >& lhs, const std::shared_ptr< IReadOverlay >& rhs)
-      {
-         return (rhs->GetPriority() < lhs->GetPriority());
-      }
-   );
-   return sArrayOverlayRead;
-}
-
-static std::vector< std::shared_ptr< IWriteOverlay > >& GetArrayOverlayWrite()
-{
-   static std::vector< std::shared_ptr< IWriteOverlay > > sArrayOverlayWrite;
-   return sArrayOverlayWrite;
-}
-
-std::mutex s_fileCacheMutex;
-static std::map< std::filesystem::path, std::shared_ptr< std::vector<uint8_t> > >& GetFileCache()
-{
-   static std::map< std::filesystem::path, std::shared_ptr< std::vector<uint8_t> > > sFileCache;
-   return sFileCache;
-}
-
-const std::string FileSystem::DataToString(const std::shared_ptr< std::vector<uint8_t> >& pData)
-{
-   if (nullptr != pData)
-   {
-      return DataToString(*pData);
-   }
-   return std::string();
-}
-
-const std::string FileSystem::DataToString(const std::vector<uint8_t>& data)
-{
-#if 0
-   data.push_back(0);
-   return std::string((const char* const)data.data());
-#else
-   static_assert(sizeof(char) == sizeof(uint8_t));
-   const std::string result((char*)(data.data()), data.size()); 
-   return result;
-#endif
-}
-
-const std::vector<uint8_t> FileSystem::StringToData(const std::string& string)
-{
-   static_assert(sizeof(char) == sizeof(uint8_t));
-   //const std::vector<uint8_t> result((uint8_t*)string.data(), string.size());
-   const std::vector<uint8_t> result(string.begin(), string.end());
-
-   return result;
-}
-
-#define MAX_PATH_LENGTH 1024 
-const std::filesystem::path FileSystem::GetModualDir(HINSTANCE hInstance)
-{
-   wchar_t data[MAX_PATH_LENGTH];
-   const auto length = GetModuleFileNameW(hInstance, &data[0], MAX_PATH_LENGTH);
-   if (length == MAX_PATH_LENGTH)
-   {
-      return std::string();
-   }
-   std::string exePath = Utf8::Utf16ToUtf8(data);
-   std::filesystem::path path(exePath);
-   path.remove_filename();
-   return path;
-}
-
-const std::filesystem::path FileSystem::GetTempDir()
-{
-   return std::filesystem::temp_directory_path();
-}
-
-void FileSystem::AddReadOverlay( const std::shared_ptr< IReadOverlay >& pOverlay )
-{
-   GetArrayOverlayRead().push_back(pOverlay);
-}
-
-void FileSystem::RemoveReadOverlay( const std::shared_ptr< IReadOverlay >& pOverlay )
-{
-   auto& arrayOverlayRead = GetArrayOverlayRead();
-   arrayOverlayRead.erase(std::remove(arrayOverlayRead.begin(), arrayOverlayRead.end(), pOverlay), arrayOverlayRead.end());
-}
-void FileSystem::ClearReadOverlay()
-{
-   GetArrayOverlayRead().clear();
-}
-
-void FileSystem::AddWriteOverlay( const std::shared_ptr< IWriteOverlay >& pOverlay )
-{
-   GetArrayOverlayWrite().push_back(pOverlay);
-}
-
-void FileSystem::RemoveWriteOverlay( const std::shared_ptr< IWriteOverlay >& pOverlay )
-{
-   auto& arrayOverlayWrite = GetArrayOverlayWrite();
-   arrayOverlayWrite.erase(std::remove(arrayOverlayWrite.begin(), arrayOverlayWrite.end(), pOverlay), arrayOverlayWrite.end());
-}
-void FileSystem::ClearWriteOverlay()
-{
-   GetArrayOverlayWrite().clear();
-}
-
-std::shared_ptr< std::vector<uint8_t> > FileSystem::ReadFileLoadData(const std::filesystem::path& path, const bool bCacheFile)
-{
-   if (true == path.empty())
-   {
-      return nullptr;
-   }
-
-   if (true == bCacheFile)
-   {
-      std::lock_guard< std::mutex > lock(s_fileCacheMutex);
-      auto &map = GetFileCache();
-      auto found = map.find(path);
-      if (found != map.end())
-      {
-         return found->second;
-      }
-   }
-
-   auto& arrayOverlayRead = GetArrayOverlayRead();
-   for( const auto& item : arrayOverlayRead)
-   {
-      auto pResult = item->ReadFileLoadData(path);
-      if (nullptr != pResult)
-      {
-         if (true == bCacheFile)
-         {
-            std::lock_guard< std::mutex > lock(s_fileCacheMutex);
-            auto &map = GetFileCache();
-            map[path] = pResult;
-         }
-
-         return pResult;
-      }
-   }
-   return std::shared_ptr< std::vector<uint8_t> >();
-}
-
-const int FileSystem::WriteFileSaveData(const int filter, const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend)
-{
-   int result = 0;
-   auto& arrayOverlayWrite = GetArrayOverlayWrite();
-   for( const auto& item : arrayOverlayWrite)
-   {
-      if (0 == (filter & item->GetMask()))
-      {
-         continue;
-      }
-      if (true == item->WriteFileSaveData(path, data, bAppend))
-      {
-         result |= item->GetMask();
-      }
-   }
-   return result;
-}
-
-const int FileSystem::WriteFileDelete(const int filter, const std::filesystem::path& path)
-{
-   int result = 0;
-   auto& arrayOverlayWrite = GetArrayOverlayWrite();
-   for( const auto& item : arrayOverlayWrite)
-   {
-      if (0 == (filter & item->GetMask()))
-      {
-         continue;
-      }
-      if (true == item->WriteFileDelete(path))
-      {
-         result |= item->GetMask();
-      }
-   }
-   return result;
-}
-
-void FileSystem::ReadClearFileCache()
-{
-   std::lock_guard< std::mutex > lock(s_fileCacheMutex);
-   GetFileCache().clear();
-}
-*/

@@ -11,35 +11,29 @@ static std::atomic<LogImplimentation*> s_singleton = nullptr;
 class LogImplimentation
 {
 public:
-   LogImplimentation();
+   LogImplimentation(const std::vector< std::shared_ptr< ILogConsumer > >& logConsumers);
    ~LogImplimentation();
    void AddMessage(const LogTopic topic, const std::string& message);
-   void AddLogConsumer(
-      const std::shared_ptr< ILogConsumer >& pLogConsumer
-      );
-   void RemoveLogConsumer(
-      const std::shared_ptr< ILogConsumer >& pLogConsumer
-      );
 
 private:
    void DoWork();
 
 private:
-   std::shared_ptr<ThreadWrapper<void()>> m_workerThread;
+   std::shared_ptr<ThreadWrapper<void(),void>> m_workerThread;
 
    std::list< std::pair< LogTopic, std::string > > m_listMessages;
    std::mutex m_listMessagesMutex;
 
    std::vector< std::shared_ptr< ILogConsumer > > m_logConsumers;
-   std::mutex m_logConsumersMutex;
 
 };
 
-LogImplimentation::LogImplimentation()
+LogImplimentation::LogImplimentation(const std::vector< std::shared_ptr< ILogConsumer > >& logConsumers)
+   : m_logConsumers(logConsumers)
 {
    DSC_ASSERT(nullptr == s_singleton);
    s_singleton = this;
-   m_workerThread = ThreadWrapper<void()>::Factory([=](){
+   m_workerThread = ThreadWrapper<void(),void>::Factory([=](){
       DoWork();
    });
 }
@@ -80,38 +74,22 @@ void LogImplimentation::DoWork()
          m_listMessages.pop_front();
       }
 
+      for (auto pIter : m_logConsumers)
       {
-         std::lock_guard< std::mutex > lock(m_logConsumersMutex);
-         for (auto pIter : m_logConsumers)
-         {
-            pIter->AddMessage(messagePair.first, messagePair.second);
-         }
+         pIter->AddMessage(messagePair.first, messagePair.second);
       }
    }
 
    return;
 }
 
-void LogImplimentation::AddLogConsumer(
-   const std::shared_ptr< ILogConsumer >& pLogConsumer
-   )
+std::shared_ptr< Log > Log::Factory(const std::vector< std::shared_ptr< ILogConsumer >>& arrayConsumer)
 {
-   m_logConsumers.push_back(pLogConsumer);
+   return std::make_shared< Log >(arrayConsumer);
 }
-void LogImplimentation::RemoveLogConsumer(
-   const std::shared_ptr< ILogConsumer >& pLogConsumer
-   )
+Log::Log(const std::vector< std::shared_ptr< ILogConsumer >>& arrayConsumer)
 {
-   m_logConsumers.erase(std::remove(m_logConsumers.begin(), m_logConsumers.end(), pLogConsumer), m_logConsumers.end());
-}
-
-std::shared_ptr< Log > Log::Factory()
-{
-   return std::make_shared< Log >();
-}
-Log::Log()
-{
-   m_pImplimentation = std::make_unique< LogImplimentation >();
+   m_pImplimentation = std::make_unique< LogImplimentation >(arrayConsumer);
 }
 
 Log::~Log()
@@ -147,29 +125,5 @@ void Log::AddMessage(const LogTopic topic, const char* const format, ... )
    if (nullptr != pImple)
    {
       pImple->AddMessage(topic, message);
-   }
-}
-
-void Log::AddLogConsumer(
-   const std::shared_ptr< ILogConsumer >& pLogConsumer
-   )
-{
-   auto pImple = s_singleton.load();
-   DSC_ASSERT(pImple);
-   if (nullptr != pImple)
-   {
-      pImple->AddLogConsumer(pLogConsumer);
-   }
-}
-
-void Log::RemoveLogConsumer(
-   const std::shared_ptr< ILogConsumer >& pLogConsumer
-   )
-{
-   auto pImple = s_singleton.load();
-   DSC_ASSERT(pImple);
-   if (nullptr != pImple)
-   {
-      pImple->RemoveLogConsumer(pLogConsumer);
    }
 }

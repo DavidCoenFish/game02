@@ -2,19 +2,22 @@
 /*
 wanted a helper to manage getting a lambda into a thread, 
    then waiting for it if you wanted to destroy it,
-   and handle telling it that there is work to be done.
+   and handle telling it that there is work to be done. SignalWorkToDo()
 */
 
-template <class _Ty>
+template <class _Ty, class _Return>
 class ThreadWrapper
 {
 private:
    enum class EventType : unsigned int
    {
       ObjectDtor = 0,
-      WorkTodo,
+      SignalWorkTodo,
       Count
    };
+private:
+   ThreadWrapper(const ThreadWrapper&);
+
 public:
    static std::shared_ptr<ThreadWrapper> Factory(const std::function<_Ty>& task)
    {
@@ -32,31 +35,35 @@ public:
       return std::make_shared<ThreadWrapper>(eventObjectDtor, eventWorkTodo, task);
    }
 
-private:
    ThreadWrapper(HANDLE eventObjectDtor, HANDLE eventWorkTodo, const std::function<_Ty>& task) //const std::future<_Ty>& future)
       : m_task(task)
    {
       m_event[(unsigned int)EventType::ObjectDtor] = eventObjectDtor;
-      m_event[(unsigned int)EventType::WorkTodo] = eventWorkTodo;
+      m_event[(unsigned int)EventType::SignalWorkTodo] = eventWorkTodo;
       m_future = std::async(std::launch::async, [=](){
          DoWork();
       });
       return;
    }
-public:
+
+   ThreadWrapper()
+   {
+      return;
+   }
+
    ~ThreadWrapper()
    {
       SetEvent(m_event[(unsigned int)EventType::ObjectDtor]);
       m_future.wait();
       CloseHandle(m_event[(unsigned int)EventType::ObjectDtor]);
       m_event[(unsigned int)EventType::ObjectDtor] = 0;
-      CloseHandle(m_event[(unsigned int)EventType::SignalTodo]);
-      m_event[(unsigned int)EventType::SignalTodo] = 0;
+      CloseHandle(m_event[(unsigned int)EventType::SignalWorkTodo]);
+      m_event[(unsigned int)EventType::SignalWorkTodo] = 0;
       return;
    }
    void SignalWorkToDo()
    {
-      SetEvent(m_event[(unsigned int)EventType::SignalTodo]);
+      SetEvent(m_event[(unsigned int)EventType::SignalWorkTodo]);
       return;
    }
 
@@ -77,7 +84,7 @@ private:
             return;
          case WAIT_OBJECT_0 + (unsigned int)EventType::ObjectDtor:
             return;
-         case WAIT_OBJECT_0 + (unsigned int)EventType::WorkTodo:
+         case WAIT_OBJECT_0 + (unsigned int)EventType::SignalWorkTodo:
             break;
          }
          m_task();
@@ -87,7 +94,8 @@ private:
 
 private:
    HANDLE m_event[2];
-   std::future<_Ty> m_future;
+   //std::future<_Ty> m_future;
+   std::future<_Return> m_future;
    std::function<_Ty> m_task;
 
 };

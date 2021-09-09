@@ -5,11 +5,13 @@
 
 LogConsumerWriteToFile::LogConsumerWriteToFile(const std::string& logFilePath)
 {
+   std::lock_guard< std::mutex > lock(m_fileLock);
    m_file.open(logFilePath.c_str(), std::ofstream::out);
 }
 
 LogConsumerWriteToFile::~LogConsumerWriteToFile()
 {
+   std::lock_guard< std::mutex > lock(m_fileLock);
    if (true == m_file.is_open())
    {
       m_file.flush();
@@ -24,6 +26,7 @@ const std::string LogConsumerWriteToFile::GetDefaultPath()
 
 void LogConsumerWriteToFile::AddMessage(const LogTopic topic, const std::string& message )
 {
+   std::lock_guard< std::mutex > lock(m_fileLock);
    if (true == m_file.is_open())
    {
       m_file << (int)topic << message.c_str();

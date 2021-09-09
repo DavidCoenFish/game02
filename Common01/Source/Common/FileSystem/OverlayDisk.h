@@ -11,7 +11,6 @@ public:
 private:
 
 private:
-   int m_filter;
    std::filesystem::path m_basePath;
    std::unique_ptr< ComponentFileMap > m_componentFileMap;
 

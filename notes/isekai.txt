@@ -33,7 +33,7 @@ ebisu,3.877
 bhukkhuni,2.585
 fiates,1.292
 
-
+         millitary   trade   negotiation  leader
 laura*     5,2         2           1        2
 collis,    4,1         3           5,1      3
 fiawat*    6           5,1         5,1      5,1

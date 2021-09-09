@@ -65,7 +65,8 @@
     <ClCompile Include="Source\Common\DrawSystem\Shader\ShaderTexture.cpp" />
     <ClCompile Include="Source\Common\FileSystem\ComponentFileMap.cpp" />
     <ClCompile Include="Source\Common\FileSystem\FileSystem.cpp" />
-    <ClCompile Include="Source\Common\FileSystem\IFileSystemFoundFile.cpp" />
+    <ClCompile Include="Source\Common\FileSystem\FoundFile.cpp" />
+    <ClCompile Include="Source\Common\FileSystem\FoundLocation.cpp" />
     <ClCompile Include="Source\Common\FileSystem\OverlayMemory.cpp" />
     <ClCompile Include="Source\Common\FileSystem\OverlayDisk.cpp" />
     <ClCompile Include="Source\Common\FileSystem\IFileSystemOverlay.cpp" />
@@ -87,6 +88,7 @@
     <ClCompile Include="Source\Common\Math\VectorFloat4.cpp" />
     <ClCompile Include="Source\Common\UISystem\IUISystem.cpp" />
     <ClCompile Include="Source\Common\UISystem\IUISystemDataSource.cpp" />
+    <ClCompile Include="Source\Common\Util\ThreadCollection.cpp" />
     <ClCompile Include="Source\Common\Util\ThreadWrapper.cpp" />
     <ClCompile Include="Source\Common\Util\Utf8.cpp" />
   </ItemGroup>
@@ -136,7 +138,8 @@
     <ClInclude Include="Source\Common\DrawSystem\Shader\ShaderTexture.h" />
     <ClInclude Include="Source\Common\FileSystem\ComponentFileMap.h" />
     <ClInclude Include="Source\Common\FileSystem\FileSystem.h" />
-    <ClInclude Include="Source\Common\FileSystem\IFileSystemFoundFile.h" />
+    <ClInclude Include="Source\Common\FileSystem\FoundFile.h" />
+    <ClInclude Include="Source\Common\FileSystem\FoundLocation.h" />
     <ClInclude Include="Source\Common\FileSystem\OverlayMemory.h" />
     <ClInclude Include="Source\Common\FileSystem\OverlayDisk.h" />
     <ClInclude Include="Source\Common\FileSystem\IFileSystemOverlay.h" />
@@ -159,6 +162,7 @@
     <ClInclude Include="Source\Common\Math\VectorFloat4.h" />
     <ClInclude Include="Source\Common\UISystem\IUISystem.h" />
     <ClInclude Include="Source\Common\UISystem\IUISystemDataSource.h" />
+    <ClInclude Include="Source\Common\Util\ThreadCollection.h" />
     <ClInclude Include="Source\Common\Util\ThreadWrapper.h" />
     <ClInclude Include="Source\Common\Util\Utf8.h" />
   </ItemGroup>

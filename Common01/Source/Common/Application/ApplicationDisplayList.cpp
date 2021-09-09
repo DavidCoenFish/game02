@@ -20,7 +20,7 @@
 #include "Common/DAG/iDagNode.h"
 #include "json/json.hpp"
 
-
+/*
 class JSONData
 {
 public:
@@ -294,3 +294,4 @@ void ApplicationDisplayList::OnWindowSizeChanged(const int width, const int heig
 
    return;
 }
+*/

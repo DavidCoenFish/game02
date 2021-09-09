@@ -4,6 +4,7 @@ class ComponentFileMap
 {
 public:
    static std::unique_ptr< ComponentFileMap > Factory();
+   ComponentFileMap(const ComponentFileMap& src);
    ComponentFileMap();
    ~ComponentFileMap();
 
@@ -15,6 +16,10 @@ public:
       const std::filesystem::path& dir,
       const std::function< void(const std::filesystem::path&) >& visitor
       );
+
+   const ComponentFileMap& operator=(const ComponentFileMap& src);
+   //overlay one file map on another 
+   void Overlay(const ComponentFileMap& src);
 
 private:
    std::set< std::filesystem::path > m_mapFiles;

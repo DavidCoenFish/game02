@@ -2,6 +2,7 @@
 
 #include "Common/FileSystem/OverlayDisk.h"
 
+#if 0
 OverlayDisk::OverlayDisk(const int filter, const std::filesystem::path& basePath)
    : m_filter(filter)
    , m_basePath(basePath)
@@ -26,3 +27,4 @@ std::shared_ptr< std::vector<uint8_t> > OverlayDisk::ReadFileLoadData(const std:
    auto pResult = std::make_shared<std::vector<uint8_t>>((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
    return pResult;
 }
+#endif// 0

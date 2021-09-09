@@ -14,6 +14,10 @@ some logs may only want to write at application end of life?
 some logs may want to append a log file
 some logs may only want to save out file for messages of certain topic
 some logs want to emit to stdout/console/push
+
+move to run time constant set of consumers, and Lob having scope. 
+the consumers may need to queue messages till they are ready, but may not need runtime flexibility
+advantage of not needing to lock the thread of consumers on every message sent
 */
 
 #if defined(DSC_LOG)
@@ -41,24 +45,12 @@ class LogImplimentation;
 class Log
 {
 public:
-   static std::shared_ptr< Log > Factory();
-private:
-   Log();
-public:
+   static std::shared_ptr< Log > Factory(const std::vector< std::shared_ptr< ILogConsumer >>& arrayConsumer);
+   Log(const std::vector< std::shared_ptr< ILogConsumer >>& arrayConsumer);
    ~Log();
 
    //any thread, asserts if outside scope of Log object
    static void AddMessage(const LogTopic topic, const char* const pFormat, ... );
-
-   //any thread, asserts if outside scope of Log object
-   static void AddLogConsumer(
-      const std::shared_ptr< ILogConsumer >& pLogConsumer
-      );
-
-   //any thread, asserts if outside scope of Log object
-   static void RemoveLogConsumer(
-      const std::shared_ptr< ILogConsumer >& pLogConsumer
-      );
 
 private:
    std::unique_ptr< LogImplimentation > m_pImplimentation;

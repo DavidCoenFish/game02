@@ -1,7 +1,7 @@
 #include "CommonPCH.h"
 
 #include "Common/FileSystem/OverlayMemory.h"
-
+#if 0
 OverlayMemory::OverlayMemory(
    const int priority, 
    const int mask, 
@@ -56,3 +56,4 @@ const bool OverlayMemory::WriteFileDelete(const std::filesystem::path& path)
    }
    return false;
 }
+#endif// 0
