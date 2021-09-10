@@ -4,7 +4,7 @@
 wanted a collection of worker threads that i could give a set of tasks to
 for adding a callback for when all the tasks are done, see ThreadCollectionObserved
 */
-#include "Common/Util/WorkerTask.h"
+#include "Common/Worker/WorkerTask.h"
 
 template <int _ThreadCount>
 class ThreadCollection

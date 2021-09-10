@@ -10,5 +10,7 @@ enum class LogTopic : int
    FileSystem,
    UISystem,
    Render,
+
+   Count
 };
 

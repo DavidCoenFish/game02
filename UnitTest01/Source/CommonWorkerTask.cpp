@@ -1,5 +1,5 @@
 #include "UnitTestPCH.h"
-#include "Common/Util/WorkerTask.h"
+#include "Common/Worker/WorkerTask.h"
 
 //Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsNotNull( pResultType );
 //Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(9, pResultType->Get<int>() );

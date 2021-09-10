@@ -24,10 +24,10 @@
     <ClCompile Include="Source\CommonDag.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\CommonUtilWorkerCollection.cpp">
+    <ClCompile Include="Source\CommonWorkerCollection.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\CommonUtilWorkerTask.cpp">
+    <ClCompile Include="Source\CommonWorkerTask.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\UnitTestGeneral.cpp">

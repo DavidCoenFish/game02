@@ -15,8 +15,8 @@
     <ClCompile Include="Source\CommonDag.cpp" />
     <ClCompile Include="Source\CommonFileSystem.cpp" />
     <ClCompile Include="Source\CommonLog.cpp" />
-    <ClCompile Include="Source\CommonUtilWorkerCollection.cpp" />
-    <ClCompile Include="Source\CommonUtilWorkerTask.cpp" />
+    <ClCompile Include="Source\CommonWorkerCollection.cpp" />
+    <ClCompile Include="Source\CommonWorkerTask.cpp" />
     <ClCompile Include="Source\UnitTestGeneral.cpp" />
     <ClCompile Include="Source\UnitTestPCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

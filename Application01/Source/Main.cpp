@@ -92,7 +92,8 @@ static const std::function< IApplication*(const IApplicationParam&) > GetFactory
 
 static const int RunTask(HINSTANCE hInstance, int nCmdShow)
 {
-   nCmdShow;
+   nCmdShow;hInstance;
+#if 0
 #if defined(DSC_LOG)
    std::vector< std::shared_ptr< ILogConsumer > > arrayLogs;
    arrayLogs.push_back(std::make_shared<LogConsumerConsole>());
@@ -105,7 +106,6 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
    }
 
    const auto basePath = FileSystem::GetModualDir(hInstance);
-#if 0
    FileSystem::AddReadOverlay( std::make_shared< ReadOverlayDir >( 0, basePath ) );
    FileSystem::AddReadOverlay( std::make_shared< ReadOverlayDir >( 1, FileSystem::GetTempDir() ) );
    FileSystem::AddWriteOverlay( std::make_shared< WriteOverlayDir >( 1, FileSystem::GetTempDir() ) );

@@ -49,6 +49,9 @@
     <Filter Include="Source\Common\UISystem">
       <UniqueIdentifier>{ce1bbc6f-a396-4fd4-9043-56caa9ac7c3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Common\Worker">
+      <UniqueIdentifier>{502c2fa6-ef43-4725-a29a-745cb5db607e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Common01.props" />
@@ -240,9 +243,6 @@
     <ClCompile Include="Source\Common\UISystem\IUISystemDataSource.cpp">
       <Filter>Source\Common\UISystem</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\Util\WorkerTask.cpp">
-      <Filter>Source\Common\Util</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Common\Log\LogEnum.cpp">
       <Filter>Source\Common\Log</Filter>
     </ClCompile>
@@ -258,8 +258,11 @@
     <ClCompile Include="Source\Common\FileSystem\FoundFile.cpp">
       <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\Util\WorkerCollection.cpp">
-      <Filter>Source\Common\Util</Filter>
+    <ClCompile Include="Source\Common\Worker\WorkerTask.cpp">
+      <Filter>Source\Common\Worker</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Worker\WorkerCollection.cpp">
+      <Filter>Source\Common\Worker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -458,9 +461,6 @@
     <ClInclude Include="Source\Common\UISystem\IUISystemDataSource.h">
       <Filter>Source\Common\UISystem</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\Util\WorkerTask.h">
-      <Filter>Source\Common\Util</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\Log\LogEnum.h">
       <Filter>Source\Common\Log</Filter>
     </ClInclude>
@@ -476,8 +476,11 @@
     <ClInclude Include="Source\Common\FileSystem\FoundLocation.h">
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\Util\WorkerCollection.h">
-      <Filter>Source\Common\Util</Filter>
+    <ClInclude Include="Source\Common\Worker\WorkerCollection.h">
+      <Filter>Source\Common\Worker</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Worker\WorkerTask.h">
+      <Filter>Source\Common\Worker</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

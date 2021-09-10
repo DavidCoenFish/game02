@@ -2,17 +2,17 @@
 
 #include "Common/Log/Log.h"
 #include "Common/Log/ILogConsumer.h"
-#include "Common/Util/WorkerTask.h"
+#include "Common/Worker/WorkerTask.h"
 #include "Common/Macro.h"
 
 static std::atomic<LogImplimentation*> s_singleton = nullptr;
 
-//didn't want threadwrapper into global scope 
 class LogImplimentation
 {
 public:
    LogImplimentation(const std::vector< std::shared_ptr< ILogConsumer > >& logConsumers);
    ~LogImplimentation();
+   const bool AcceptsTopic(const LogTopic topic);
    void AddMessage(const LogTopic topic, const std::string& message);
 
 private:
@@ -24,8 +24,11 @@ private:
    std::list< std::pair< LogTopic, std::string > > m_listMessages;
    std::mutex m_listMessagesMutex;
 
+   //ownership
    std::vector< std::shared_ptr< ILogConsumer > > m_logConsumers;
 
+   //cache the consumers for each topic so we don't have to keep on filtering
+   std::vector< ILogConsumer*> m_topicLogConsumers[(unsigned int)LogTopic::Count];
 };
 
 LogImplimentation::LogImplimentation(const std::vector< std::shared_ptr< ILogConsumer > >& logConsumers)
@@ -36,6 +39,17 @@ LogImplimentation::LogImplimentation(const std::vector< std::shared_ptr< ILogCon
    m_workerThread = WorkerTask::Factory([=](){
       DoWork();
    });
+   //UpdateTopicLogConsumers();
+   for (int index = 0; index < (int)LogTopic::Count; ++index)
+   {
+      for (auto iter : logConsumers)
+      {
+         if (true == iter->AcceptsTopic((LogTopic)index))
+         {
+            m_topicLogConsumers[index].push_back(iter.get());
+         }
+      }
+   }
 }
 
 LogImplimentation::~LogImplimentation()
@@ -43,6 +57,11 @@ LogImplimentation::~LogImplimentation()
    m_workerThread = nullptr;
    DSC_ASSERT(nullptr != s_singleton);
    s_singleton = nullptr;
+}
+
+const bool LogImplimentation::AcceptsTopic(const LogTopic topic)
+{
+   return (0 != m_topicLogConsumers[(unsigned int)topic].size());
 }
 
 void LogImplimentation::AddMessage(const LogTopic topic, const std::string& message)
@@ -74,7 +93,7 @@ void LogImplimentation::DoWork()
          m_listMessages.pop_front();
       }
 
-      for (auto pIter : m_logConsumers)
+      for (auto pIter : m_topicLogConsumers[(unsigned int)messagePair.first])
       {
          pIter->AddMessage(messagePair.first, messagePair.second);
       }
@@ -87,6 +106,7 @@ std::shared_ptr< Log > Log::Factory(const std::vector< std::shared_ptr< ILogCons
 {
    return std::make_shared< Log >(arrayConsumer);
 }
+
 Log::Log(const std::vector< std::shared_ptr< ILogConsumer >>& arrayConsumer)
 {
    m_pImplimentation = std::make_unique< LogImplimentation >(arrayConsumer);
@@ -97,10 +117,23 @@ Log::~Log()
    m_pImplimentation = nullptr;
 }
 
-
 //https://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf/8098080
 void Log::AddMessage(const LogTopic topic, const char* const format, ... )
 {
+   auto pImple = s_singleton.load();
+   // you know what, if the log doesn't exist, that may be intentional
+   //DSC_ASSERT(pImple);
+   bool bDumpToMemory = false;
+   if (nullptr == pImple)
+   {
+      bDumpToMemory = true;
+   }
+
+   if ((nullptr != pImple) && (false == pImple->AcceptsTopic(topic)))
+   {
+      return;
+   }
+
    // initialize use of the variable argument array
    va_list vaArgs;
    va_start(vaArgs, format);
@@ -120,10 +153,19 @@ void Log::AddMessage(const LogTopic topic, const char* const format, ... )
    va_end(vaArgs);
    std::string message(zc.data(), iLen); 
 
-   auto pImple = s_singleton.load();
-   DSC_ASSERT(pImple);
-   if (nullptr != pImple)
+   if (false == bDumpToMemory)
    {
       pImple->AddMessage(topic, message);
+   }
+   else
+   {
+      //save log messages to memory if there is not Log class?
+      //todo: assert on shutdown if never consumed?
+
+      static std::list< std::pair< LogTopic, std::string > > s_listMessages;
+      static std::mutex s_listMessagesMutex;
+
+      std::lock_guard< std::mutex > lock(s_listMessagesMutex);
+      s_listMessages.push_back(std::pair< LogTopic, std::string >(topic, message));
    }
 }
