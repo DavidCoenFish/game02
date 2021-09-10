@@ -3,7 +3,7 @@
 #include "Common/FileSystem/FileSystem.h"
 #include "Common/FileSystem/IFileSystemOverlay.h"
 #include "Common/Util/Utf8.h"
-#include "Common/Util/ThreadCollection.h"
+#include "Common/Util/WorkerCollection.h"
 
 class FileSystemInternal
 {
@@ -37,7 +37,7 @@ private:
    void OnOverlayChangeLocation(const std::filesystem::path& path, IFileSystemOverlay* const pOverlay);
 
 private:
-   //ThreadCollection< 4 > m_threadCollection;
+   //WorkerCollection< 4 > m_workerCollection;
    std::vector< std::shared_ptr< IFileSystemOverlay > > m_overlayArray;
 
 };

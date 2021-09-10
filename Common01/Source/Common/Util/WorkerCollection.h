@@ -1,12 +1,10 @@
 #pragma once
 
-#if 0
-
 /*
 wanted a collection of worker threads that i could give a set of tasks to
 for adding a callback for when all the tasks are done, see ThreadCollectionObserved
 */
-#include "Common/Util/ThreadWrapper.h"
+#include "Common/Util/WorkerTask.h"
 
 template <int _ThreadCount>
 class ThreadCollection
@@ -22,7 +20,7 @@ public:
    {
       for (int index = 0; index < _ThreadCount; ++index)
       {
-         m_workerThread[index] = std::make_shared<ThreadWrapper<void(),void>>([=](){DoWork();});
+         m_workerThread[index] = std::make_shared<WorkerTask>([=](){DoWork();});
       }
       return;
    }
@@ -59,7 +57,7 @@ public:
 
    void SetActiveWorkFinishedCallback(const std::function<void()>& callbackActiveWorkFinished)
    {
-      //std::lock_guard< std::mutex > lock(m_workArrayMutex);
+      std::lock_guard< std::mutex > lock(m_workArrayMutex);
       //if (0 == m_activeThreadCount)
       //{
       //   callbackActiveWorkFinished();
@@ -145,17 +143,13 @@ private:
    }
 
 private:
-   std::list< std::function<void()> > m_workArray;
+   std::list< std::function<void(void)> > m_workArray;
    std::mutex m_workArrayMutex;
 
    int m_activeThreadCount;
    std::mutex m_activeThreadCountMutex;
 
-
-   std::shared_ptr<ThreadWrapper<void(), void>> m_workerThread[_ThreadCount];
-   //ThreadWrapper<void(), void> m_workerThread[_ThreadCount];
+   std::shared_ptr<WorkerTask> m_workerThread[_ThreadCount];
 
    std::vector< std::function<void()> > m_callbackActiveWorkFinished;
 };
-
-#endif //0

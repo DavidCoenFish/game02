@@ -1,11 +1,11 @@
 #include "UnitTestPCH.h"
 
-#include "Common/Util/ThreadCollection.h"
+#include "Common/Util/WorkerCollection.h"
 
 //Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsNotNull( pResultType );
 //Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(9, pResultType->Get<int>() );
 
-namespace CommonUtilThreadCollection
+namespace CommonUtilWorkerCollection
 {
 #if 0
    TEST_CLASS(Basic)

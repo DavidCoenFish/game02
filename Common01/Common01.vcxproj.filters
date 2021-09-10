@@ -240,7 +240,7 @@
     <ClCompile Include="Source\Common\UISystem\IUISystemDataSource.cpp">
       <Filter>Source\Common\UISystem</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\Util\ThreadWrapper.cpp">
+    <ClCompile Include="Source\Common\Util\WorkerTask.cpp">
       <Filter>Source\Common\Util</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\Log\LogEnum.cpp">
@@ -258,7 +258,7 @@
     <ClCompile Include="Source\Common\FileSystem\FoundFile.cpp">
       <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\Util\ThreadCollection.cpp">
+    <ClCompile Include="Source\Common\Util\WorkerCollection.cpp">
       <Filter>Source\Common\Util</Filter>
     </ClCompile>
   </ItemGroup>
@@ -458,7 +458,7 @@
     <ClInclude Include="Source\Common\UISystem\IUISystemDataSource.h">
       <Filter>Source\Common\UISystem</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\Util\ThreadWrapper.h">
+    <ClInclude Include="Source\Common\Util\WorkerTask.h">
       <Filter>Source\Common\Util</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Log\LogEnum.h">
@@ -476,7 +476,7 @@
     <ClInclude Include="Source\Common\FileSystem\FoundLocation.h">
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\Util\ThreadCollection.h">
+    <ClInclude Include="Source\Common\Util\WorkerCollection.h">
       <Filter>Source\Common\Util</Filter>
     </ClInclude>
   </ItemGroup>

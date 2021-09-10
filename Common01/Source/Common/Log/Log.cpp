@@ -2,7 +2,7 @@
 
 #include "Common/Log/Log.h"
 #include "Common/Log/ILogConsumer.h"
-#include "Common/Util/ThreadWrapper.h"
+#include "Common/Util/WorkerTask.h"
 #include "Common/Macro.h"
 
 static std::atomic<LogImplimentation*> s_singleton = nullptr;
@@ -19,7 +19,7 @@ private:
    void DoWork();
 
 private:
-   std::shared_ptr<ThreadWrapper<void(),void>> m_workerThread;
+   std::shared_ptr<WorkerTask> m_workerThread;
 
    std::list< std::pair< LogTopic, std::string > > m_listMessages;
    std::mutex m_listMessagesMutex;
@@ -33,7 +33,7 @@ LogImplimentation::LogImplimentation(const std::vector< std::shared_ptr< ILogCon
 {
    DSC_ASSERT(nullptr == s_singleton);
    s_singleton = this;
-   m_workerThread = ThreadWrapper<void(),void>::Factory([=](){
+   m_workerThread = WorkerTask::Factory([=](){
       DoWork();
    });
 }
