@@ -1,9 +1,11 @@
 #include "CommonPCH.h"
 
 #include "Common/FileSystem/FileSystem.h"
-#include "Common/FileSystem/IFileSystemOverlay.h"
+#include "Common/FileSystem/IFileSystemProvider.h"
 #include "Common/Util/Utf8.h"
 #include "Common/Worker/WorkerCollection.h"
+
+#if 0
 
 class FileSystemInternal
 {
@@ -282,3 +284,4 @@ const std::shared_ptr<FoundLocation> FileSystem::FindLocation(
    return std::shared_ptr<FoundLocation>();
 }
 
+#endif //0

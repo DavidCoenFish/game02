@@ -16,6 +16,7 @@ public:
    }
 
    WorkerCollection()
+      : m_workingThreadCount(0)
    {
       for (int index = 0; index < _ThreadCount; ++index)
       {
@@ -81,6 +82,7 @@ private:
             {
                work = m_workArray.front();
                m_workArray.pop_front();
+               m_workingThreadCount += 1;
             }
          }
 
@@ -90,16 +92,21 @@ private:
          }
 
          work();
-         work = nullptr;
 
+         //if we finished work, and we are the last active worker, consume the ActiveWorkFinished
          {
             std::lock_guard< std::mutex > lock(m_workArrayMutex);
-            if (true == m_workArray.empty())
+            if (nullptr != work)
             {
-               DoActiveWorkFinishedCallback();
+               m_workingThreadCount -= 1;
+
+               if ((true == m_workArray.empty()) && (m_workingThreadCount == 0))
+               {
+                  DoActiveWorkFinishedCallback();
+               }
             }
          }
-
+         work = nullptr;
       }
       //if there is any more on the array...? otherwise there is a risk of items never removed from list? use while loop instead
       //SignalWorkToDo();
@@ -121,6 +128,7 @@ private:
 
 private:
    std::list< std::function<void(void)> > m_workArray;
+   int m_workingThreadCount;
    std::mutex m_workArrayMutex;
 
    std::shared_ptr<WorkerTask> m_workerThread[_ThreadCount];

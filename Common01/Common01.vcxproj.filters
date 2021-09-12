@@ -84,16 +84,10 @@
     <ClCompile Include="Source\Common\Log\ILogConsumer.cpp">
       <Filter>Source\Common\Log</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\FileSystem\OverlayDisk.cpp">
-      <Filter>Source\Common\FileSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\FileSystem\IFileSystemOverlay.cpp">
+    <ClCompile Include="Source\Common\FileSystem\IFileSystemProvider.cpp">
       <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\FileSystem\FileSystem.cpp">
-      <Filter>Source\Common\FileSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\FileSystem\OverlayMemory.cpp">
       <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\Application\ApplicationHolder.cpp">
@@ -246,16 +240,13 @@
     <ClCompile Include="Source\Common\Log\LogEnum.cpp">
       <Filter>Source\Common\Log</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\FileSystem\OverlayMods.cpp">
-      <Filter>Source\Common\FileSystem</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Common\FileSystem\ComponentFileMap.cpp">
       <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\FileSystem\FoundLocation.cpp">
+    <ClCompile Include="Source\Common\FileSystem\FoundStaticFolder.cpp">
       <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\FileSystem\FoundFile.cpp">
+    <ClCompile Include="Source\Common\FileSystem\FoundStaticFile.cpp">
       <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\Worker\WorkerTask.cpp">
@@ -263,6 +254,12 @@
     </ClCompile>
     <ClCompile Include="Source\Common\Worker\WorkerCollection.cpp">
       <Filter>Source\Common\Worker</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\FoundDynamicFile.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\FoundDynamicFolder.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -299,13 +296,7 @@
     <ClInclude Include="Source\Common\FileSystem\FileSystem.h">
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\FileSystem\OverlayDisk.h">
-      <Filter>Source\Common\FileSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\FileSystem\IFileSystemOverlay.h">
-      <Filter>Source\Common\FileSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\FileSystem\OverlayMemory.h">
+    <ClInclude Include="Source\Common\FileSystem\IFileSystemProvider.h">
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Application\ApplicationHolder.h">
@@ -464,16 +455,13 @@
     <ClInclude Include="Source\Common\Log\LogEnum.h">
       <Filter>Source\Common\Log</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\FileSystem\OverlayMods.h">
-      <Filter>Source\Common\FileSystem</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\FileSystem\ComponentFileMap.h">
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\FileSystem\FoundFile.h">
+    <ClInclude Include="Source\Common\FileSystem\FoundStaticFile.h">
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\FileSystem\FoundLocation.h">
+    <ClInclude Include="Source\Common\FileSystem\FoundStaticFolder.h">
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Worker\WorkerCollection.h">
@@ -481,6 +469,12 @@
     </ClInclude>
     <ClInclude Include="Source\Common\Worker\WorkerTask.h">
       <Filter>Source\Common\Worker</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\FoundDynamicFile.h">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\FoundDynamicFolder.h">
+      <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
