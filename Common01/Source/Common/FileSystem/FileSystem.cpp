@@ -3,7 +3,7 @@
 #include "Common/FileSystem/FileSystem.h"
 #include "Common/FileSystem/IFileSystemOverlay.h"
 #include "Common/Util/Utf8.h"
-#include "Common/Util/WorkerCollection.h"
+#include "Common/Worker/WorkerCollection.h"
 
 class FileSystemInternal
 {

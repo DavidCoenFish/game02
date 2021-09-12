@@ -21,6 +21,10 @@ advantage of not needing to lock the thread of consumers on every message sent
 */
 
 #if defined(DSC_LOG)
+   //print a message to the visual studio debug console imediatlly
+   #define LOG_CONSOLE(format, ...) Log::AddConsole(format, ##__VA_ARGS__)
+
+   //add message to log
    #define LOG_MESSAGE(format, ...) Log::AddMessage(LogTopic::None, format, ##__VA_ARGS__)
    #define LOG_MESSAGE_DEBUG(format, ...) Log::AddMessage(LogTopic::Debug, format, ##__VA_ARGS__)
    #define LOG_MESSAGE_WARNING(format, ...) Log::AddMessage(LogTopic::Warning, format, ##__VA_ARGS__)
@@ -30,6 +34,8 @@ advantage of not needing to lock the thread of consumers on every message sent
    #define LOG_MESSAGE_UISYSTEM(format, ...) Log::AddMessage(LogTopic::UISystem, format, ##__VA_ARGS__)
    #define LOG_MESSAGE_RENDER(format, ...) Log::AddMessage(LogTopic::Render, format, ##__VA_ARGS__)
 #else
+   #define LOG_CONSOLE(format, ...) (void)0
+
    #define LOG_MESSAGE(format, ...) (void)0
    #define LOG_MESSAGE_DEBUG(format, ...) (void)0
    #define LOG_MESSAGE_WARNING(format, ...) (void)0
@@ -45,12 +51,15 @@ class LogImplimentation;
 class Log
 {
 public:
-   static std::shared_ptr< Log > Factory(const std::vector< std::shared_ptr< ILogConsumer >>& arrayConsumer);
+   typedef std::vector< std::shared_ptr< ILogConsumer >> LogContainer;
+
+   static std::shared_ptr< Log > Factory(const LogContainer& arrayConsumer);
    Log(const std::vector< std::shared_ptr< ILogConsumer >>& arrayConsumer);
    ~Log();
 
    //any thread, asserts if outside scope of Log object
    static void AddMessage(const LogTopic topic, const char* const pFormat, ... );
+   static void AddConsole(const char* const pFormat, ... );
 
 private:
    std::unique_ptr< LogImplimentation > m_pImplimentation;

@@ -2,21 +2,20 @@
 
 /*
 wanted a collection of worker threads that i could give a set of tasks to
-for adding a callback for when all the tasks are done, see ThreadCollectionObserved
+for adding a callback for when all the tasks are done, see WorkerCollectionObserved
 */
 #include "Common/Worker/WorkerTask.h"
 
 template <int _ThreadCount>
-class ThreadCollection
+class WorkerCollection
 {
 public:
-   static std::shared_ptr<ThreadCollection> Factory()
+   static std::shared_ptr<WorkerCollection> Factory()
    {
-      return std::make_shared<ThreadCollection>();
+      return std::make_shared<WorkerCollection>();
    }
 
-   ThreadCollection()
-      : m_activeThreadCount(0)
+   WorkerCollection()
    {
       for (int index = 0; index < _ThreadCount; ++index)
       {
@@ -25,7 +24,7 @@ public:
       return;
    }
 
-   ~ThreadCollection()
+   ~WorkerCollection()
    {
       for (int index = 0; index < _ThreadCount; ++index)
       {
@@ -57,12 +56,7 @@ public:
 
    void SetActiveWorkFinishedCallback(const std::function<void()>& callbackActiveWorkFinished)
    {
-      std::lock_guard< std::mutex > lock(m_workArrayMutex);
-      //if (0 == m_activeThreadCount)
-      //{
-      //   callbackActiveWorkFinished();
-      //   return;
-      //}
+      std::lock_guard< std::mutex > lock(m_callbackActiveWorkFinishedMutex);
       m_callbackActiveWorkFinished.push_back(callbackActiveWorkFinished);
       return;
    }
@@ -78,51 +72,34 @@ private:
 
    void DoWork()
    {
-      bool first = true;
       std::function<void()> work;
       while (true)
       {
-         bool isEmpty = false;
          {
             std::lock_guard< std::mutex > lock(m_workArrayMutex);
-            if (true == m_workArray.empty())
-            {
-               isEmpty = true;
-            }
-            else
+            if (false == m_workArray.empty())
             {
                work = m_workArray.front();
                m_workArray.pop_front();
             }
          }
 
-         if (true == isEmpty)
+         if (nullptr == work)
          {
-            if (false == first)
-            {
-               bool doCallbacks = false;
-               {
-                  std::lock_guard< std::mutex > lock(m_activeThreadCountMutex);
-                  m_activeThreadCount -= 1;
-                  doCallbacks = (0 == m_activeThreadCount);
-               }
-               if (0 == doCallbacks)
-               {
-                  DoActiveWorkFinishedCallback();
-               }
-            }
-
             return;
          }
 
-         if (true == first)
+         work();
+         work = nullptr;
+
          {
-            first = false;
-            std::lock_guard< std::mutex > lock(m_activeThreadCountMutex);
-            m_activeThreadCount += 1;
+            std::lock_guard< std::mutex > lock(m_workArrayMutex);
+            if (true == m_workArray.empty())
+            {
+               DoActiveWorkFinishedCallback();
+            }
          }
 
-         work();
       }
       //if there is any more on the array...? otherwise there is a risk of items never removed from list? use while loop instead
       //SignalWorkToDo();
@@ -130,13 +107,13 @@ private:
 
    void DoActiveWorkFinishedCallback()
    {
-      std::vector< std::function<void()> > copy;
+      std::vector< std::function<void()> > localCopy;
       {
-         std::lock_guard< std::mutex > lock(m_workArrayMutex);
-         copy = m_callbackActiveWorkFinished;
+         std::lock_guard< std::mutex > lock(m_callbackActiveWorkFinishedMutex);
+         localCopy = m_callbackActiveWorkFinished;
          m_callbackActiveWorkFinished.clear();
       }
-      for (auto iter: copy)
+      for (auto iter: localCopy)
       {
          iter();
       }
@@ -146,10 +123,8 @@ private:
    std::list< std::function<void(void)> > m_workArray;
    std::mutex m_workArrayMutex;
 
-   int m_activeThreadCount;
-   std::mutex m_activeThreadCountMutex;
-
    std::shared_ptr<WorkerTask> m_workerThread[_ThreadCount];
 
    std::vector< std::function<void()> > m_callbackActiveWorkFinished;
+   std::mutex m_callbackActiveWorkFinishedMutex;
 };

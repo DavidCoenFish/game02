@@ -23,8 +23,12 @@ namespace CommonLog
          std::lock_guard lock(m_dataMutex);
          m_data += text;
       }
-      virtual const bool AcceptsTopic(const LogTopic) override
+      virtual const bool AcceptsTopic(const LogTopic topic) override
       {
+         if ((int)topic == 5)
+         {
+            return false;
+         }
          return true;
       }
 
@@ -52,6 +56,7 @@ namespace CommonLog
                auto pLog = Log::Factory(std::vector< std::shared_ptr< ILogConsumer >>({ pConsumer }));
                Log::AddMessage(LogTopic(3), "Hello %s", "World");
                Log::AddMessage(LogTopic(4), "Goodbye %s", "Pain");
+               Log::AddMessage(LogTopic(5), "should be filtered");
             }
             Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual("3:Hello World\n4:Goodbye Pain\n", pConsumer->GetData().c_str());
          }

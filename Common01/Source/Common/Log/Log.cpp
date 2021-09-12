@@ -4,8 +4,11 @@
 #include "Common/Log/ILogConsumer.h"
 #include "Common/Worker/WorkerTask.h"
 #include "Common/Macro.h"
+#include "Common/Util/Utf8.h"
 
 static std::atomic<LogImplimentation*> s_singleton = nullptr;
+static std::list< std::pair< LogTopic, std::string > > s_listMessages;
+static std::mutex s_listMessagesMutex;
 
 class LogImplimentation
 {
@@ -117,8 +120,28 @@ Log::~Log()
    m_pImplimentation = nullptr;
 }
 
+static const std::string FormatString(const char* const pFormat, va_list vaArgs)
+{
+   // reliably acquire the size
+   // from a copy of the variable argument array
+   // and a functionally reliable call to mock the formatting
+   va_list vaArgsCopy;
+   va_copy(vaArgsCopy, vaArgs);
+   const int iLen = std::vsnprintf(NULL, 0, pFormat, vaArgsCopy);
+   va_end(vaArgsCopy);
+
+   // return a formatted string without risking memory mismanagement
+   // and without assuming any compiler or platform specific behavior
+   std::vector<char> zc(iLen + 1);
+   std::vsnprintf(zc.data(), zc.size(), pFormat, vaArgs);
+
+   std::string message(zc.data(), iLen); 
+
+   return message;
+}
+
 //https://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf/8098080
-void Log::AddMessage(const LogTopic topic, const char* const format, ... )
+void Log::AddMessage(const LogTopic topic, const char* const pFormat, ... )
 {
    auto pImple = s_singleton.load();
    // you know what, if the log doesn't exist, that may be intentional
@@ -134,24 +157,10 @@ void Log::AddMessage(const LogTopic topic, const char* const format, ... )
       return;
    }
 
-   // initialize use of the variable argument array
    va_list vaArgs;
-   va_start(vaArgs, format);
-
-   // reliably acquire the size
-   // from a copy of the variable argument array
-   // and a functionally reliable call to mock the formatting
-   va_list vaArgsCopy;
-   va_copy(vaArgsCopy, vaArgs);
-   const int iLen = std::vsnprintf(NULL, 0, format, vaArgsCopy);
-   va_end(vaArgsCopy);
-
-   // return a formatted string without risking memory mismanagement
-   // and without assuming any compiler or platform specific behavior
-   std::vector<char> zc(iLen + 1);
-   std::vsnprintf(zc.data(), zc.size(), format, vaArgs);
+   va_start(vaArgs, pFormat);
+   const std::string message = FormatString(pFormat, vaArgs);
    va_end(vaArgs);
-   std::string message(zc.data(), iLen); 
 
    if (false == bDumpToMemory)
    {
@@ -161,11 +170,27 @@ void Log::AddMessage(const LogTopic topic, const char* const format, ... )
    {
       //save log messages to memory if there is not Log class?
       //todo: assert on shutdown if never consumed?
-
-      static std::list< std::pair< LogTopic, std::string > > s_listMessages;
-      static std::mutex s_listMessagesMutex;
-
-      std::lock_guard< std::mutex > lock(s_listMessagesMutex);
-      s_listMessages.push_back(std::pair< LogTopic, std::string >(topic, message));
+      {
+         std::lock_guard< std::mutex > lock(s_listMessagesMutex);
+         s_listMessages.push_back(std::pair< LogTopic, std::string >(topic, message));
+      }
+      // we could log the fact that we are logging outside log scope? seems redundant though
+      //if (topic != LogTopic::Log)
+      //{
+      //   AddMessage(LogTopic::Log, "Warning: topic:[%d] is trying to add messages to log outside log scope");
+      //}
    }
 }
+
+void Log::AddConsole(const char* const pFormat, ... )
+{
+   va_list vaArgs;
+   va_start(vaArgs, pFormat);
+   std::string message = FormatString(pFormat, vaArgs);
+   va_end(vaArgs);
+
+   message += "\n";
+   OutputDebugStringW(Utf8::Utf8ToUtf16(message).c_str());
+   //OutputDebugStringW(L"\n");
+}
+

@@ -4,7 +4,8 @@
 #include "Common/Log/Log.h"
 #include "Common/Util/Utf8.h"
 
-LogConsumerConsole::LogConsumerConsole()
+LogConsumerConsole::LogConsumerConsole(const std::vector<bool>& topicFilterArrayOrEmpty)
+   : m_topicFilterArrayOrEmpty(topicFilterArrayOrEmpty)
 {
    if (TRUE == AttachConsole(ATTACH_PARENT_PROCESS))
    {
@@ -25,3 +26,14 @@ void LogConsumerConsole::AddMessage(const LogTopic topic, const std::string& mes
    OutputDebugStringW(Utf8::Utf8ToUtf16(text).c_str());
    printf(text.c_str());
 }
+
+const bool LogConsumerConsole::AcceptsTopic(const LogTopic topic)
+{
+   if ((0 <= (int)topic) && ((int)topic < m_topicFilterArrayOrEmpty.size()))
+   {
+      return m_topicFilterArrayOrEmpty[(int)topic];
+   }
+
+   return true;
+}
+
