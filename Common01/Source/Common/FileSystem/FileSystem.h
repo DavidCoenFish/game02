@@ -89,16 +89,16 @@ public:
 
    //we can find files/ folders that don't exist (yet) instead of FoundFile -> HandelFile?
 
-   std::shared_ptr< FoundStaticFile > FindStaticFile(const std::filesystem::path& path, const int filter);
-   std::shared_ptr< FoundStaticFile > FindStaticFilePriorityExtention(const std::filesystem::path& path, const std::vector<std::string>& priorityExtention, const int filter);
-   std::shared_ptr< FoundStaticFolder > FindStaticFolder(const std::filesystem::path& path, const int filter);
+   std::shared_ptr< FoundStaticFile > FindStaticFile(const std::filesystem::path& path, const int filter = GetFilterAll());
+   std::shared_ptr< FoundStaticFile > FindStaticFilePriorityExtention(const std::filesystem::path& path, const std::vector<std::string>& priorityExtention, const int filter = GetFilterAll());
+   std::shared_ptr< FoundStaticFolder > FindStaticFolder(const std::filesystem::path& path, const int filter = GetFilterAll());
 
-   std::shared_ptr< FoundDynamicFile > FindDynamicFile(const std::filesystem::path& path, const int filter);
-   std::shared_ptr< FoundDynamicFolder > FindDynamicFolder(const std::filesystem::path& path, const int filter);
+   std::shared_ptr< FoundDynamicFile > FindDynamicFile(const std::filesystem::path& path, const int filter = GetFilterAll());
+   std::shared_ptr< FoundDynamicFolder > FindDynamicFolder(const std::filesystem::path& path, const int filter = GetFilterAll());
 
    // only callsback on "all" the providers of filter being ready?
    // filter bit [2, 4], then providers [2,4] must be ready before callback is called
-   void AddCallbackAllProvidersReady(const int filter, const TVoidCallback& callback);
+   void AddCallbackAllProvidersReady(const TVoidCallback& callback, const int filter = GetFilterAll());
 
    /*
    //helper functions to save people from having to do a lot of work for basic functions

@@ -4,6 +4,21 @@
 #include "Common/FileSystem/IFileSystemProvider.h"
 #include "Common/FileSystem/IFileSystemVisitorFound.h"
 
+static void LoadStaticFile(
+   IFileSystemVisitorFound* const pFileSystem, 
+   const FoundStaticFile::TLoadCallback& loadCallback,
+   const std::filesystem::path& path,
+   IFileSystemProvider* pBestProvider
+   )
+{
+   if (nullptr != pBestProvider)
+   {
+      pFileSystem->AddAsyncTask([=](){
+         pBestProvider->AsyncLoadStaticFile(loadCallback, path);
+      });
+   }
+}
+
 std::shared_ptr< FoundStaticFile > FoundStaticFile::Factory(
    const std::filesystem::path& path, 
    const int filter,
@@ -71,9 +86,7 @@ void FoundStaticFile::OnProviderChange(IFileSystemProvider* const)
    {
       for (const auto& iter : arrayCallbackBestChange)
       {
-         m_pFileSystem->AddAsyncTask([=](){
-            pBestProvider->AsyncLoadStaticFile(iter);
-         });
+         LoadStaticFile(m_pFileSystem, iter, m_path, pBestProvider);
       }
    }
 }
@@ -93,12 +106,7 @@ void FoundStaticFile::AsyncLoadBest(const TLoadCallback& loadCallback)
       std::lock_guard lock(m_bestMutex);
       pBestProvider = m_pBestProvider;
    }
-   if (nullptr != pBestProvider)
-   {
-      m_pFileSystem->AddAsyncTask([=](){
-         pBestProvider->AsyncLoadStaticFile(loadCallback);
-      });
-   }
+   LoadStaticFile(m_pFileSystem, loadCallback, m_path, pBestProvider);
 }
 
 //load each file that passes filter (ie, from possibly multiple providers)
@@ -113,12 +121,7 @@ void FoundStaticFile::AddCallbackChangeBest(const TLoadCallback& loadCallback)
       m_arrayCallbackBestChange.push_back(loadCallback);
       pBestProvider = m_pBestProvider;
    }
-   if (nullptr != pBestProvider)
-   {
-      m_pFileSystem->AddAsyncTask([=](){
-         pBestProvider->AsyncLoadStaticFile(loadCallback);
-      });
-   }
+   LoadStaticFile(m_pFileSystem, loadCallback, m_path, pBestProvider);
    return;
 }
 

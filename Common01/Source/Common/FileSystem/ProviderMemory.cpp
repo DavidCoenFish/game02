@@ -1,59 +1,81 @@
 #include "CommonPCH.h"
 
 #include "Common/FileSystem/ProviderMemory.h"
-#if 0
-OverlayMemory::OverlayMemory(
-   const int priority, 
-   const int mask, 
-   const std::map< std::filesystem::path, std::shared_ptr< std::vector<uint8_t>>>& memoryFiles
+#include "Common/FileSystem/ComponentFileMap.h"
+#include "Common/FileSystem/IFileSystemVisitorProvider.h"
+
+std::shared_ptr<ProviderMemory> ProviderMemory::Factory(
+   const TStaticFileMap& staticFiles,
+   const TDynamicFileMap& dynamicFiles
    )
-: m_priority(priority)
-, m_mask(mask)
-, m_memoryFiles(memoryFiles)
 {
-   //nop
-}
-
-OverlayMemory::~OverlayMemory()
-{
-   //nop
-}
-
-std::shared_ptr< std::vector<uint8_t> > OverlayMemory::ReadFileLoadData(const std::filesystem::path& path)
-{
-   auto found = m_memoryFiles.find(path);
-   if (found != m_memoryFiles.end())
+   auto pComponentFileMap = std::make_shared<TComponentFileMap>();
+   for (const auto& iter : staticFiles )
    {
-      return found->second;
+      auto pData = std::make_shared< TStaticFileData>();
+      pData->m_fileHash = iter.second.second;
+      pData->m_fileData = iter.second.first;
+      pComponentFileMap->AddStaticFile(iter.first, pData);
    }
-   return nullptr;
-}
-
-const bool OverlayMemory::WriteFileSaveData(const std::filesystem::path& path, const std::vector<uint8_t>& data, const bool bAppend)
-{
-   if (true == bAppend)
+   for (const auto& iter : dynamicFiles )
    {
-      auto found = m_memoryFiles.find(path);
-      if (found != m_memoryFiles.end())
-      {
-         found->second->insert(found->second->end(), data.begin(), data.end());
-         return true;
-      }
+      auto pData = std::make_shared< TDynamicFileData >();
+      pData->m_fileData = iter.second;
+      pComponentFileMap->AddDynamicFile(iter.first, pData);
    }
 
-   m_memoryFiles[path] = std::make_shared< std::vector<uint8_t> >( data );
-   return true;
+   return std::make_shared<ProviderMemory>( pComponentFileMap );
 }
 
-//return true if delete worked
-const bool OverlayMemory::WriteFileDelete(const std::filesystem::path& path)
+ProviderMemory::ProviderMemory(
+   const TPointerComponentFileMap& pComponentFileMap
+   )
+   : m_filter(0)
+   , m_pVisitor(nullptr)
+   , m_pComponentFileMap(pComponentFileMap)
 {
-   auto found = m_memoryFiles.find(path);
-   if (found != m_memoryFiles.end())
+   return;
+}
+
+ProviderMemory::~ProviderMemory()
+{
+   return;
+}
+
+void ProviderMemory::SetFilter(const int filter)
+{
+   m_filter = filter;
+}
+
+const int ProviderMemory::GetFilter()const
+{
+   return m_filter;
+}
+
+void ProviderMemory::SetFileSystemVisitorProvider(IFileSystemVisitorProvider* const pVisitor)
+{
+   m_pVisitor = pVisitor;
+   m_pVisitor->OnReady(this);
+}
+
+const bool ProviderMemory::QueryStaticFile(TFileHash& hashIfFound, const std::filesystem::path& path)
+{
+   TPointerStaticFileData pData;
+   if (true == m_pComponentFileMap->GetStaticFile(path, pData))
    {
-      m_memoryFiles.erase(found);
+      hashIfFound = pData->m_fileHash;
       return true;
    }
+   hashIfFound = 0;
    return false;
 }
-#endif// 0
+
+void ProviderMemory::AsyncLoadStaticFile(const TLoadCallback& loadCallback, const std::filesystem::path& path)
+{
+   TPointerStaticFileData pData;
+   if (true == m_pComponentFileMap->GetStaticFile(path, pData))
+   {
+      loadCallback(pData->m_fileData);
+   }
+   return;
+}

@@ -4,6 +4,8 @@
 we can not create or delete static files
 changes in providers can however change contents of a static file, and if it exisits
 ie, a mod turning on or off, the contents of a file may change, and/or static files may be added or removed
+
+if you want to watch for file change callbacks, just call AddCallbackChangeBest and it will imediatle trigger the callback with the initial best file data
 */
 
 class IFileSystemVisitorFound;
@@ -13,7 +15,7 @@ class FoundStaticFile
 {
 public:
    typedef std::shared_ptr< std::vector< uint8_t > > TFileData;
-   typedef std::function< const bool(const TFileData&) > TLoadCallback;
+   typedef std::function< void(const TFileData&) > TLoadCallback;
    typedef uint32_t TFileHash;
 
    static std::shared_ptr< FoundStaticFile > Factory(
@@ -44,7 +46,7 @@ public:
    //load each file that passes filter (ie, from possibly multiple providers)
    //void AsyncLoadAll(const TLoadCallback& loadCallback);
    
-   //// trigger callback if the best files has a diffierent hash, callback triggers as soon as run as you don't start with a file, thus it has changed?
+   //// trigger callback if the best files has a diffierent hash, callback triggers as soon as run as you don't start with a file, thus it has changed
    void AddCallbackChangeBest(const TLoadCallback& loadCallback);
    void RemoveCallbackChangeBest(const TLoadCallback& loadCallback);
 
