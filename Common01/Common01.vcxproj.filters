@@ -261,6 +261,21 @@
     <ClCompile Include="Source\Common\FileSystem\FoundDynamicFolder.cpp">
       <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\IFileSystemVisitorFound.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\IFileSystemVisitorProvider.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\ProviderDisk.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\ProviderMemory.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\ProviderMods.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CommonPCH.h">
@@ -474,6 +489,24 @@
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\FileSystem\FoundDynamicFolder.h">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Worker\WorkerCount.h">
+      <Filter>Source\Common\Worker</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\IFileSystemVisitorFound.h">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\IFileSystemVisitorProvider.h">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\ProviderDisk.h">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\ProviderMemory.h">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\ProviderMods.h">
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
   </ItemGroup>

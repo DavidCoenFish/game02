@@ -1,38 +1,12 @@
 #pragma once
 
 /*
-do files have a change id? a hash? what if contents of folder change but not the file. 
-what if different file from a differnt overlay is now the priority file (file stamp{ mOverlay*, changeId }?)
-overlay provides the file
-
+we can not create or delete static folders
+changes in providers can however change what is in a static folder, add/ remove? static folders
+ie, a mod turning on or off, and it providing a folder named "foo" and some files or folders inside that
 */
 
-class IFileSystemOverlay;
-class FoundFile;
-
-class FoundLocation
+class FoundStaticFolder
 {
-public:
-   ~FoundLocation();
-
-   const bool Exisits() const;
-   const int GetFilter() const;
-
-   //mkdir?
-   //rmdir?
-
-   void CollectFiles(
-      std::vector<std::shared_ptr<FoundFile>>& foundFileArray
-      );
-   //void VisitFiles(
-   //   const std::function<void()>& callback
-   //);
-   /*
-   do we gather files for all the
-   */
-
-private:
-   int m_filter;
-   std::vector< std::weak_ptr< IFileSystemOverlay > > m_pOverlayStack;
-
 };
+

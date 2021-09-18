@@ -62,6 +62,7 @@ void WorkerTask::DoWork()
       if (flagWorkCache != flagWork)
       {
          flagWorkCache = flagWork;
+         //we expect task to keep running while it has work, rather than telling to run once for each time SignalWorkToDo() has been called
          m_task();
       }
 

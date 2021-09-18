@@ -14,7 +14,7 @@ public:
    void AddStaticFile(const std::filesystem::path& path, const TFileHash hash);
    void AddStaticFolder(const std::filesystem::path& path);
 
-   //do dynamic files have a hash? file can be modified run time, do we want to regen hash?
+   //do dynamic files have a hash? file can be modified run time, do we want to regen hash? not really
    void AddDynamicFile(const std::filesystem::path& path);
    void AddDynamicFolder(const std::filesystem::path& path);
 
@@ -30,7 +30,7 @@ private:
    std::map< std::filesystem::path, std::shared_ptr< std::set< std::filesystem::path > > > m_mapStaticFolderFolder;
 
    std::set< std::filesystem::path> m_mapDynamicFiles;
-   std::map< std::filesystem::path, std::shared_ptr< std::set< std::filesystem::path > > > m_mapStaticFolderFiles;
-   std::map< std::filesystem::path, std::shared_ptr< std::set< std::filesystem::path > > > m_mapStaticFolderFolder;
+   std::map< std::filesystem::path, std::shared_ptr< std::set< std::filesystem::path > > > m_mapDynamicFolderFiles;
+   std::map< std::filesystem::path, std::shared_ptr< std::set< std::filesystem::path > > > m_mapDynamicFolderFolder;
 
 };

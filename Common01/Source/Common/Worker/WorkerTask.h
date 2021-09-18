@@ -10,12 +10,12 @@ not using multiple signals for the two states as was loosing info on [signal wor
 class WorkerTask
 {
 private:
+   //disabled
    WorkerTask(const WorkerTask&);
 
 public:
    static std::shared_ptr<WorkerTask> Factory(const std::function<void(void)>& task);
    WorkerTask(const std::function<void(void)>& task);
-   //WorkerTask();
    ~WorkerTask();
    void SignalWorkToDo();
 

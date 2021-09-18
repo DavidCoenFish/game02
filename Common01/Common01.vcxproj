@@ -70,6 +70,11 @@
     <ClCompile Include="Source\Common\FileSystem\FoundStaticFile.cpp" />
     <ClCompile Include="Source\Common\FileSystem\FoundStaticFolder.cpp" />
     <ClCompile Include="Source\Common\FileSystem\IFileSystemProvider.cpp" />
+    <ClCompile Include="Source\Common\FileSystem\IFileSystemVisitorFound.cpp" />
+    <ClCompile Include="Source\Common\FileSystem\IFileSystemVisitorProvider.cpp" />
+    <ClCompile Include="Source\Common\FileSystem\ProviderDisk.cpp" />
+    <ClCompile Include="Source\Common\FileSystem\ProviderMemory.cpp" />
+    <ClCompile Include="Source\Common\FileSystem\ProviderMods.cpp" />
     <ClCompile Include="Source\Common\JSON\JSONDagCollection.cpp" />
     <ClCompile Include="Source\Common\JSON\JSONDrawSystem.cpp" />
     <ClCompile Include="Source\Common\JSON\JSONDrawSystemEnum.cpp" />
@@ -142,6 +147,11 @@
     <ClInclude Include="Source\Common\FileSystem\FoundStaticFile.h" />
     <ClInclude Include="Source\Common\FileSystem\FoundStaticFolder.h" />
     <ClInclude Include="Source\Common\FileSystem\IFileSystemProvider.h" />
+    <ClInclude Include="Source\Common\FileSystem\IFileSystemVisitorFound.h" />
+    <ClInclude Include="Source\Common\FileSystem\IFileSystemVisitorProvider.h" />
+    <ClInclude Include="Source\Common\FileSystem\ProviderDisk.h" />
+    <ClInclude Include="Source\Common\FileSystem\ProviderMemory.h" />
+    <ClInclude Include="Source\Common\FileSystem\ProviderMods.h" />
     <ClInclude Include="Source\Common\JSON\JSONDagCollection.h" />
     <ClInclude Include="Source\Common\JSON\JSONDrawSystem.h" />
     <ClInclude Include="Source\Common\JSON\JSONDrawSystemEnum.h" />
@@ -162,6 +172,7 @@
     <ClInclude Include="Source\Common\UISystem\IUISystemDataSource.h" />
     <ClInclude Include="Source\Common\Util\Utf8.h" />
     <ClInclude Include="Source\Common\Worker\WorkerCollection.h" />
+    <ClInclude Include="Source\Common\Worker\WorkerCount.h" />
     <ClInclude Include="Source\Common\Worker\WorkerTask.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

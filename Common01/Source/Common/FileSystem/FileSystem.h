@@ -8,14 +8,15 @@ class FoundDynamicFile;
 class FoundDynamicFolder;
 
 /*
-dynamic and static fo not exist in the same mapping of the filesystem, use relative paths?
-best is in reference to the higher the index of the provider, the higher the priority which makes it "Better"
-all is to allow action on every provider that passes the filter mask
+dynamic and static not exist in the same mapping of the filesystem, and both use relative paths?
+"best" is in reference to the higher the index of the provider, the higher the priority which makes it "Better". filter mask = 1 << index
+"all" is to allow action on every provider that passes the filter mask
 
 may not need to change avaliablity/ order of overlays at runtime, thought that may result in mods having to do more work, 
    ie. one mod provider that internally manages mod order and being on/off
    this could look like having the file system created early, with placeholders provider, which lets observers know when things change/ are ready?
 
+do the providers use the file system AddAsyncTask to do startup work, or it that the application's job
 
 
 IFileSystemProvider
@@ -69,32 +70,37 @@ FoundDynamicFolder
 class FileSystem
 {
 public:
+   typedef std::shared_ptr< std::vector< uint8_t > > TFileData;
+   typedef std::function< void(void) > TVoidCallback;
+   typedef uint32_t TFileHash;
+
+   // we construct the file system with an array of providers, however they need to tell the file system when they are ready
+   static std::shared_ptr< FileSystem > Factory(const std::vector<std::shared_ptr< IFileSystemProvider > >& arrayOverlay);
+
    static const std::filesystem::path GetModualDir(HINSTANCE hInstance);
    static const std::filesystem::path GetTempDir();
    static const int GetFilterAll();
-   static const int GetNewFilter();
 
-public:
-   typedef std::shared_ptr< std::vector< uint8_t > > TFileData;
-   typedef uint32_t TFileHash;
-
-   static std::shared_ptr< FileSystem > Factory(const std::vector<std::shared_ptr< IFileSystemProvider > >& arrayOverlay);
    FileSystem(const std::vector<std::shared_ptr< IFileSystemProvider > >& arrayOverlay);
    ~FileSystem();
 
-   //static meaning they can not be edited, a provider may change what the static file provided is
+   //static meaning they can not be edited, a provider may change what the static file provided is however
    // static "/test.txt" <foo> from provider a, when provider b is ready, it may provide static "/test.txt" <foo2>
 
+   //we can find files/ folders that don't exist (yet) instead of FoundFile -> HandelFile?
+
    std::shared_ptr< FoundStaticFile > FindStaticFile(const std::filesystem::path& path, const int filter);
-   //std::shared_ptr< FoundStaticFile > FindStaticFilePriorityExtention(const std::filesystem::path& path, const int filter, const std::vector<std::string>& extentionArray);
+   std::shared_ptr< FoundStaticFile > FindStaticFilePriorityExtention(const std::filesystem::path& path, const std::vector<std::string>& priorityExtention, const int filter);
    std::shared_ptr< FoundStaticFolder > FindStaticFolder(const std::filesystem::path& path, const int filter);
 
    std::shared_ptr< FoundDynamicFile > FindDynamicFile(const std::filesystem::path& path, const int filter);
    std::shared_ptr< FoundDynamicFolder > FindDynamicFolder(const std::filesystem::path& path, const int filter);
 
-   // only callsback on all the providers of filter being ready?
-   void AddCallbackAllProvidersReady(const int filter, const std::function<void(void)>& callback);
+   // only callsback on "all" the providers of filter being ready?
+   // filter bit [2, 4], then providers [2,4] must be ready before callback is called
+   void AddCallbackAllProvidersReady(const int filter, const TVoidCallback& callback);
 
+   /*
    //helper functions to save people from having to do a lot of work for basic functions
    // load the file best matching provider
    // WARNING, is this safe to use if file will just get replace by mod-ed version latter? we might not care?
@@ -103,8 +109,9 @@ public:
    void AsyncDynamicFileLoadBest(const std::filesystem::path& path, const int filter, const std::function<const TFileData(void)>& callback);
    // save to all provider that pass filter
    void AsyncDynamicFileSaveAll(const std::filesystem::path& path, const int filter, const std::function<const TFileData(void)>& callback);
+   */
 
 private:
-   std::shared_ptr< FileSystemInternal > m_pInternal;
+   std::unique_ptr< FileSystemInternal > m_pInternal;
 
 };

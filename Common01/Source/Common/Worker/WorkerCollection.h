@@ -2,7 +2,6 @@
 
 /*
 wanted a collection of worker threads that i could give a set of tasks to
-for adding a callback for when all the tasks are done, see WorkerCollectionObserved
 */
 #include "Common/Worker/WorkerTask.h"
 
