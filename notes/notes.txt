@@ -8,15 +8,14 @@ dag node and json
 
 multithreaded dag node, set value from any thread, get value from any thread?
 
-Log and FifleSystem don't really need runtime change of condumers/overlay... could just pass them in at construnction 
-and the consumer/overlay can activate/deactivate internally
+callbacks on dag node change/ dirty?
 
-how to deal with mods turning on/off. sau UISystem is watching a file location, and a mod modifies a file under the watch.
-want the ui system to reload, additionally language change.
-is active language a mod/ overlay? may be a kind of overlay (localeOverlay)
+persistance of data nod, load, save? selected language, preferences
 
+file system, better targeting of file change, also questions of lifespan, and ending things on shutdown
 
-
+ideally shut things down in opposite order of creation, so close FoundFiles before FileSystem? 
+but what of stopping async work. change found files to have weak ref to filesystem?
 
 
 //unix time of head commit

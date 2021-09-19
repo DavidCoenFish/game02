@@ -21,7 +21,7 @@ public:
    static std::shared_ptr< FoundStaticFile > Factory(
       const std::filesystem::path& path, 
       const int filter,
-      const std::vector<IFileSystemProvider*>& arrayProviders,
+      const std::vector< std::weak_ptr< IFileSystemProvider > >& arrayProviders,
       IFileSystemVisitorFound* pFileSystem,
       const std::vector<std::string>& priorityExtention = std::vector<std::string>()
       );
@@ -30,7 +30,7 @@ public:
       const std::filesystem::path& path, 
       const std::vector<std::string>& priorityExtention,
       const int filter,
-      const std::vector<IFileSystemProvider*>& arrayProviders,
+      const std::vector< std::weak_ptr< IFileSystemProvider > >& arrayProviders,
       IFileSystemVisitorFound* pFileSystem
       );
    ~FoundStaticFile();
@@ -58,14 +58,15 @@ private:
    std::filesystem::path m_path;
    std::vector<std::string> m_priorityExtention;
    int m_filter;
-   std::vector<IFileSystemProvider*> m_arrayProvider;
+   //std::vector<IFileSystemProvider*> m_arrayProvider;
+   std::vector< std::weak_ptr< IFileSystemProvider > > m_arrayProvider;
    IFileSystemVisitorFound* m_pFileSystem;
 
    //can change any thread
    mutable std::mutex m_bestMutex;
    bool m_bestFound; //ie, file exists
    TFileHash m_bestHash;
-   IFileSystemProvider* m_pBestProvider;
+   std::weak_ptr< IFileSystemProvider > m_pBestProvider;
 
    //can change any thread
    mutable std::mutex m_arrayCallbackBestChangeMutex;

@@ -72,6 +72,7 @@ class FileSystem
 public:
    typedef std::shared_ptr< std::vector< uint8_t > > TFileData;
    typedef std::function< void(void) > TVoidCallback;
+   typedef std::function< void(const bool bError, const TFileData& pFileData) > TLoadCallback;
    typedef uint32_t TFileHash;
 
    // we construct the file system with an array of providers, however they need to tell the file system when they are ready
@@ -89,10 +90,10 @@ public:
 
    //we can find files/ folders that don't exist (yet) instead of FoundFile -> HandelFile?
 
+   // the found objects are to get full interface for actions like add on change callback
    std::shared_ptr< FoundStaticFile > FindStaticFile(const std::filesystem::path& path, const int filter = GetFilterAll());
    std::shared_ptr< FoundStaticFile > FindStaticFilePriorityExtention(const std::filesystem::path& path, const std::vector<std::string>& priorityExtention, const int filter = GetFilterAll());
    std::shared_ptr< FoundStaticFolder > FindStaticFolder(const std::filesystem::path& path, const int filter = GetFilterAll());
-
    std::shared_ptr< FoundDynamicFile > FindDynamicFile(const std::filesystem::path& path, const int filter = GetFilterAll());
    std::shared_ptr< FoundDynamicFolder > FindDynamicFolder(const std::filesystem::path& path, const int filter = GetFilterAll());
 
@@ -100,16 +101,15 @@ public:
    // filter bit [2, 4], then providers [2,4] must be ready before callback is called
    void AddCallbackAllProvidersReady(const TVoidCallback& callback, const int filter = GetFilterAll());
 
-   /*
    //helper functions to save people from having to do a lot of work for basic functions
-   // load the file best matching provider
+   // 
    // WARNING, is this safe to use if file will just get replace by mod-ed version latter? we might not care?
-   void AsyncStaticFileLoadBest(const std::filesystem::path& path, const int filter, const std::function<const TFileData(void)>& callback);
-   // ie, load a json file of what mods are enabled/ disabled and where installed... might only have local file system filter...
-   void AsyncDynamicFileLoadBest(const std::filesystem::path& path, const int filter, const std::function<const TFileData(void)>& callback);
-   // save to all provider that pass filter
-   void AsyncDynamicFileSaveAll(const std::filesystem::path& path, const int filter, const std::function<const TFileData(void)>& callback);
-   */
+   // load the file best matching provider
+   void AsyncStaticFileLoadBest(const std::filesystem::path& path, const TLoadCallback& callback, const int filter = GetFilterAll());
+   void GatherStaticFolderContents(const std::filesystem::path& path, std::set<std::filesystem::path>& childFiles, std::set<std::filesystem::path>& childFolders, const int filter = GetFilterAll());
+   void AsyncDynamicFileLoadBest(const std::filesystem::path& path, const TLoadCallback& callback, const int filter = GetFilterAll());
+   // save to all provider that pass filter and allow dynamic save
+   void AsyncDynamicFileSaveAll(const std::filesystem::path& path, const TFileData& data, const int filter = GetFilterAll());
 
 private:
    std::unique_ptr< FileSystemInternal > m_pInternal;

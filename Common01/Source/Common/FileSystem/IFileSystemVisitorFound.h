@@ -11,8 +11,8 @@ public:
    virtual ~IFileSystemVisitorFound();
 
    //found files/ folders
-   virtual void AddFoundStaticFile(FoundStaticFile* const pFoundStaticFile) = 0;
-   virtual void RemoveFoundStaticFile(FoundStaticFile* const pFoundStaticFile) = 0;
+   //virtual void AddFoundStaticFile(FoundStaticFile* const pFoundStaticFile) = 0;
+   //virtual void RemoveFoundStaticFile(FoundStaticFile* const pFoundStaticFile) = 0;
    virtual void AddAsyncTask(const TVoidCallback& callback) = 0;
 
 };

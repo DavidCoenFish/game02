@@ -22,7 +22,7 @@ static void LoadStaticFile(
 std::shared_ptr< FoundStaticFile > FoundStaticFile::Factory(
    const std::filesystem::path& path, 
    const int filter,
-   const std::vector<IFileSystemProvider*>& arrayProviders,
+   const std::vector< std::weak_ptr< IFileSystemProvider > >& arrayProviders,
    IFileSystemVisitorFound* pFileSystem,
    const std::vector<std::string>& priorityExtention
    )
@@ -40,7 +40,7 @@ FoundStaticFile::FoundStaticFile(
    const std::filesystem::path& path, 
    const std::vector<std::string>& priorityExtention,
    const int filter,
-   const std::vector<IFileSystemProvider*>& arrayProviders,
+   const std::vector< std::weak_ptr< IFileSystemProvider > >& arrayProviders,
    IFileSystemVisitorFound* pFileSystem
    )
    : m_path(path)
@@ -48,18 +48,35 @@ FoundStaticFile::FoundStaticFile(
    , m_filter(filter)
    , m_arrayProvider(arrayProviders)
    , m_pFileSystem(pFileSystem)
-   , m_pBestProvider(nullptr)
+   , m_pBestProvider()
    , m_bestHash(0)
    , m_bestFound(false)
 {
-   m_pFileSystem->AddFoundStaticFile(this);
+   //m_pFileSystem->AddFoundStaticFile(this);
+   for (const auto& iter: m_arrayProvider)
+   {
+      auto pPointer = iter.lock();
+      if (nullptr != pPointer)
+      {
+         pPointer->AddFoundStaticFile(this);
+      }
+   }
    EvalueBest();
    return;
 }
 
 FoundStaticFile::~FoundStaticFile()
 {
-   m_pFileSystem->RemoveFoundStaticFile(this);
+   //m_pFileSystem->RemoveFoundStaticFile(this);
+   for (const auto& iter: m_arrayProvider)
+   {
+      auto pPointer = iter.lock();
+      if (nullptr != pPointer)
+      {
+         pPointer->RemoveFoundStaticFile(this);
+      }
+   }
+
    return;
 }
 
@@ -75,18 +92,18 @@ void FoundStaticFile::OnProviderChange(IFileSystemProvider* const)
       return;
    }
 
-   IFileSystemProvider* pBestProvider = nullptr;
+   std::shared_ptr< IFileSystemProvider> pBestProvider = nullptr;
    std::vector< TLoadCallback > arrayCallbackBestChange;
    {
       std::lock_guard lock(m_bestMutex);
       arrayCallbackBestChange = m_arrayCallbackBestChange;
-      pBestProvider = m_pBestProvider;
+      pBestProvider = m_pBestProvider.lock();
    }
    if (nullptr != pBestProvider)
    {
       for (const auto& iter : arrayCallbackBestChange)
       {
-         LoadStaticFile(m_pFileSystem, iter, m_path, pBestProvider);
+         LoadStaticFile(m_pFileSystem, iter, m_path, pBestProvider.get());
       }
    }
 }
@@ -101,12 +118,12 @@ const bool FoundStaticFile::GetExist() const
 //load the best file that passes filter, return false if file doesn't exist
 void FoundStaticFile::AsyncLoadBest(const TLoadCallback& loadCallback)
 {
-   IFileSystemProvider* pBestProvider = nullptr;
+   std::shared_ptr< IFileSystemProvider> pBestProvider = nullptr;
    {
       std::lock_guard lock(m_bestMutex);
-      pBestProvider = m_pBestProvider;
+      pBestProvider = m_pBestProvider.lock();
    }
-   LoadStaticFile(m_pFileSystem, loadCallback, m_path, pBestProvider);
+   LoadStaticFile(m_pFileSystem, loadCallback, m_path, pBestProvider.get());
 }
 
 //load each file that passes filter (ie, from possibly multiple providers)
@@ -115,13 +132,13 @@ void FoundStaticFile::AsyncLoadBest(const TLoadCallback& loadCallback)
 // trigger callback if the best files has a diffierent hash, callback triggers as soon as run as you don't start with a file, thus it has changed?
 void FoundStaticFile::AddCallbackChangeBest(const TLoadCallback& loadCallback)
 {
-   IFileSystemProvider* pBestProvider = nullptr;
+   std::shared_ptr< IFileSystemProvider> pBestProvider = nullptr;
    {
       std::lock_guard lock(m_bestMutex);
       m_arrayCallbackBestChange.push_back(loadCallback);
-      pBestProvider = m_pBestProvider;
+      pBestProvider = m_pBestProvider.lock();
    }
-   LoadStaticFile(m_pFileSystem, loadCallback, m_path, pBestProvider);
+   LoadStaticFile(m_pFileSystem, loadCallback, m_path, pBestProvider.get());
    return;
 }
 
@@ -152,13 +169,18 @@ const bool FoundStaticFile::EvalueBest()
    const TFileHash oldBestHash(m_bestFound);
    m_bestFound = false;
    m_bestHash = 0;
-   m_pBestProvider = nullptr;
+   m_pBestProvider.reset();
 
    std::lock_guard lock(m_bestMutex);
    for (const auto& iter: m_arrayProvider)
    {
+      auto pProvider = iter.lock();
+      if (nullptr == pProvider)
+      {
+         continue;
+      }
       TFileHash hash = 0;
-      if (iter->QueryStaticFile(hash, m_path))
+      if (pProvider->QueryStaticFile(hash, m_path))
       {
          m_bestFound = true;
          m_bestHash = hash;

@@ -4,8 +4,13 @@
 dynamic fils can be read, written to , created and deleted
 changes to provider may change the contents of file, and if it exists
 */
+class IFileSystemProvider;
 
 class FoundDynamicFile
 {
+public:
+   const int GetFilter() const;
+   void OnProviderChange(IFileSystemProvider* const pProvider);
+
 };
 

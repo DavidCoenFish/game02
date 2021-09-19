@@ -9,6 +9,6 @@ public:
 
    //provider
    virtual void OnReady(const IFileSystemProvider* pProvider) = 0;
-   virtual void OnStaticFilesChange(IFileSystemProvider* const pProvider) = 0;
+   //virtual void OnStaticFilesChange(IFileSystemProvider* const pProvider) = 0;
 
 };

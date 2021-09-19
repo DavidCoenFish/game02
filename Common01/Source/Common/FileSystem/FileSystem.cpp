@@ -38,23 +38,24 @@ public:
    void AddCallbackAllProvidersReady(const int filter, const TVoidCallback& callback);
 
 private:
-   void GatherProviders(std::vector< IFileSystemProvider* >& arrayProvider, const int filter);
+   void GatherProviders(std::vector< std::weak_ptr< IFileSystemProvider > >& arrayProvider, const int filter);
 
    //IFileSystemVisitorFound
    virtual void AddAsyncTask(const TVoidCallback& callback) override;
-   virtual void AddFoundStaticFile(FoundStaticFile* const pFoundStaticFile) override;
-   virtual void RemoveFoundStaticFile(FoundStaticFile* const pFoundStaticFile) override;
+   //virtual void AddFoundStaticFile(FoundStaticFile* const pFoundStaticFile) override;
+   //virtual void RemoveFoundStaticFile(FoundStaticFile* const pFoundStaticFile) override;
 
    //IFileSystemVisitorProvider
    virtual void OnReady(const IFileSystemProvider* pProvider) override;
-   virtual void OnStaticFilesChange(IFileSystemProvider* const pProvider) override;
+   //virtual void OnStaticFilesChange(IFileSystemProvider* const pProvider) override;
 
 private:
    WorkerCollection<FILE_SYSTEM_WORKER_COUNT> m_workerCollection;
 
    //no mutex, constant after ctor
-   std::vector<std::shared_ptr< IFileSystemProvider > > m_arrayOverlay;
-   std::vector< std::pair< int, IFileSystemProvider* > > m_arrayFilterOverlay;
+   std::vector< std::shared_ptr< IFileSystemProvider > > m_arrayProvider;
+   typedef std::weak_ptr< IFileSystemProvider > TWeakProvider;
+   std::vector< std::pair< int, TWeakProvider > > m_arrayFilterOverlay;
 
    //can change on multiple threads after ctor, under mutex
    std::mutex m_arrayReadyCallbackMutex;
@@ -65,31 +66,31 @@ private:
    do we need to make this one map per provider? to save itterating over so many on provider change?
    changing what files a provider has is always going to be expencive? minimise how many found file we keep active
    allow a path to load files skipping the creation of the found static file object?
-   */
+
    //weak or raw, we are a cache, not a point of ownership.
    std::mutex m_setFoundStaticFileMutex;
    std::set<FoundStaticFile*> m_setFoundStaticFile;
-
+   */
 
 };
 
 FileSystemInternal::FileSystemInternal(const std::vector<std::shared_ptr< IFileSystemProvider > >& arrayOverlay)
-   : m_arrayOverlay(arrayOverlay)
+   : m_arrayProvider(arrayOverlay)
    , m_filterReady(0)
 {
-   for (const auto& iter : m_arrayOverlay)
+   for (const auto& iter : m_arrayProvider)
    {
       const int filter = GetNewFilter();
       iter->SetFilter(filter);
       iter->SetFileSystemVisitorProvider(this);
-      m_arrayFilterOverlay.push_back(std::pair< int, IFileSystemProvider* >(filter, iter.get()));
+      m_arrayFilterOverlay.push_back(std::pair< int, TWeakProvider >(filter, iter));
    }
    return;
 }
 
 std::shared_ptr< FoundStaticFile > FileSystemInternal::FindStaticFile(const std::filesystem::path& path, const int filter)
 {
-   std::vector< IFileSystemProvider* > arrayProvider;
+   std::vector< std::weak_ptr< IFileSystemProvider > > arrayProvider;
    GatherProviders(arrayProvider, filter);
    if (true == arrayProvider.empty())
    {
@@ -100,7 +101,7 @@ std::shared_ptr< FoundStaticFile > FileSystemInternal::FindStaticFile(const std:
    return pFoundFile;
 }
 
-void FileSystemInternal::GatherProviders(std::vector< IFileSystemProvider* >& arrayProvider, const int filter)
+void FileSystemInternal::GatherProviders(std::vector< std::weak_ptr< IFileSystemProvider > >& arrayProvider, const int filter)
 {
    for (const auto& iter : m_arrayFilterOverlay)
    {
@@ -109,14 +110,15 @@ void FileSystemInternal::GatherProviders(std::vector< IFileSystemProvider* >& ar
          continue;
       }
 
-      arrayProvider.push_back(iter.second);
+
+      arrayProvider.push_back(std::weak_ptr< IFileSystemProvider >(iter.second));
    }
    return;
 }
 
 std::shared_ptr< FoundStaticFile > FileSystemInternal::FindStaticFilePriorityExtention(const std::filesystem::path& path, const std::vector<std::string>& priorityExtention, const int filter)
 {
-   std::vector< IFileSystemProvider* > arrayProvider;
+   std::vector< std::weak_ptr< IFileSystemProvider > > arrayProvider;
    GatherProviders(arrayProvider, filter);
    if (true == arrayProvider.empty())
    {
@@ -129,8 +131,15 @@ std::shared_ptr< FoundStaticFile > FileSystemInternal::FindStaticFilePriorityExt
 
 std::shared_ptr< FoundStaticFolder > FileSystemInternal::FindStaticFolder(const std::filesystem::path& path, const int filter)
 {
-   path;filter;
-   return nullptr;
+   std::vector< std::weak_ptr< IFileSystemProvider > > arrayProvider;
+   GatherProviders(arrayProvider, filter);
+   if (true == arrayProvider.empty())
+   {
+      return nullptr;
+   }
+
+   auto pFoundFolder = FoundStaticFolder::Factory( path, filter, arrayProvider, this );
+   return pFoundFolder;
 }
 
 std::shared_ptr< FoundDynamicFile > FileSystemInternal::FindDynamicFile(const std::filesystem::path& path, const int filter)
@@ -182,36 +191,9 @@ void FileSystemInternal::OnReady(const IFileSystemProvider* pProvider)
    }
 }
 
-void FileSystemInternal::OnStaticFilesChange(IFileSystemProvider* const pProvider)
-{
-   const int filter = pProvider->GetFilter();
-   {
-      std::lock_guard lock(m_setFoundStaticFileMutex);
-      for (auto& iter : m_setFoundStaticFile)
-      {
-         if (0 != (filter & iter->GetFilter()))
-         {
-            iter->OnProviderChange(pProvider);
-         }
-      }
-   }
-}
-
 void FileSystemInternal::AddAsyncTask(const TVoidCallback& callback)
 {
    m_workerCollection.AddWork(callback);
-}
-
-void FileSystemInternal::AddFoundStaticFile(FoundStaticFile* const pFoundStaticFile)
-{
-   std::lock_guard lock(m_setFoundStaticFileMutex);
-   m_setFoundStaticFile.insert(pFoundStaticFile);
-}
-
-void FileSystemInternal::RemoveFoundStaticFile(FoundStaticFile* const pFoundStaticFile)
-{
-   std::lock_guard lock(m_setFoundStaticFileMutex);
-   m_setFoundStaticFile.erase(pFoundStaticFile);
 }
 
 std::shared_ptr< FileSystem > FileSystem::Factory(const std::vector<std::shared_ptr< IFileSystemProvider > >& arrayOverlay)

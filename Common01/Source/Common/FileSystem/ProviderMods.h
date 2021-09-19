@@ -14,6 +14,16 @@ public:
    void AddMod(const std::filesystem::path& path);
    void RemoveMod(const std::filesystem::path& path);
 
+   virtual void AddFoundStaticFile(FoundStaticFile* const pFoundStaticFile) override;
+   virtual void RemoveFoundStaticFile(FoundStaticFile* const pFoundStaticFile) override;
+   virtual void AddFoundStaticFolder(FoundStaticFolder* const pFoundStaticFolder) override;
+   virtual void RemoveFoundStaticFolder(FoundStaticFolder* const pFoundStaticFolder) override;
+
+   virtual void AddFoundDynamicFile(FoundDynamicFile* const pFoundDynamicFile) override;
+   virtual void RemoveFoundDynamicFile(FoundDynamicFile* const pFoundDynamicFile) override;
+   virtual void AddFoundDynamicFolder(FoundDynamicFolder* const pFoundDynamicFolder) override;
+   virtual void RemoveFoundDynamicFolder(FoundDynamicFolder* const pFoundDynamicFolder) override;
+
 private:
 
 private:

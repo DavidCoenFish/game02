@@ -4,6 +4,7 @@
 #include "Common/FileSystem/ProviderMemory.h"
 #include "Common/FileSystem/ProviderDisk.h"
 #include "Common/FileSystem/FoundStaticFile.h"
+#include "Common/FileSystem/FoundStaticFolder.h"
 
 //Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsNotNull( pResultType );
 //Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(9, pResultType->Get<int>() );
@@ -47,25 +48,45 @@ namespace CommonFileSystem
       TEST_METHOD(BasicMemory)
       {
          ProviderMemory::TStaticFileMap staticMapA = {
-               {std::filesystem::path("one.txt"), {std::make_shared<std::vector<uint8_t>>(std::vector<uint8_t>({1,2,3,4,5})), 0}}, 
-               {std::filesystem::path("two/three.txt"), {std::make_shared<std::vector<uint8_t>>(std::vector<uint8_t>({2,2,3,4,5})), 1}}, 
-               {std::filesystem::path("two/five.txt"), {std::make_shared<std::vector<uint8_t>>(std::vector<uint8_t>({3,2,3,4,5})), 2}}, 
-               {std::filesystem::path("two/six/seven.txt"), {std::make_shared<std::vector<uint8_t>>(std::vector<uint8_t>({4,2,3,4,5})), 3}}, 
-               {std::filesystem::path("eight.j"), {std::make_shared<std::vector<uint8_t>>(std::vector<uint8_t>({5,2,3,4,5})), 4}}, 
-               };
+               {
+                  std::filesystem::path("one.txt"), 
+                  std::make_shared<ProviderMemory::TStaticFileData>(ProviderMemory::TStaticFileData({0, std::make_shared<std::vector<uint8_t>>(std::vector<uint8_t>({1,2,3,4,5}))}))
+               }, 
+               {
+                  std::filesystem::path("two/three.txt"), 
+                  std::make_shared<ProviderMemory::TStaticFileData>(ProviderMemory::TStaticFileData({1, std::make_shared<std::vector<uint8_t>>(std::vector<uint8_t>({2,2,3,4,5}))}))
+               }, 
+            };
          auto pProviderMemoryA = ProviderMemory::Factory(staticMapA);
 
          std::atomic_bool bFileLoaded = false;
          {
             auto pFileSystem = FileSystem::Factory({pProviderMemoryA});
             {
+               auto pFile = pFileSystem->FindStaticFile("dontexists.txt");
+               Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreNotEqual<void*>(nullptr, pFile.get());
+               Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(false, pFile->GetExist());
+            }
+            {
                auto pFile = pFileSystem->FindStaticFile("one.txt");
+               Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreNotEqual<void*>(nullptr, pFile.get());
                Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(true, pFile->GetExist());
                pFile->AsyncLoadBest([&](const std::shared_ptr< std::vector< uint8_t > >& data){
                   auto expected = std::vector<uint8_t>({1,2,3,4,5});
                   Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(expected, *data);
                   bFileLoaded = true;
                });
+            }
+            {
+               auto pFolder = pFileSystem->FindStaticFolder("dontexists");
+               Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreNotEqual<void*>(nullptr, pFolder.get());
+               Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(false, pFolder->GetExist());
+            }
+
+            {
+               auto pFolder = pFileSystem->FindStaticFolder("two");
+               Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreNotEqual<void*>(nullptr, pFolder.get());
+               Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(true, pFolder->GetExist());
             }
          }
          //the dtor of the file system waits for all the jobs to finish

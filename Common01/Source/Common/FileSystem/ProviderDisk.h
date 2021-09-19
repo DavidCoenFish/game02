@@ -2,6 +2,11 @@
 #include "Common/FileSystem/IFileSystemProvider.h"
 #include "Common/FileSystem/ComponentFileMap.h"
 
+class FoundStaticFile;
+class FoundStaticFolder;
+class FoundDynamicFile;
+class FoundDynamicFolder;
+
 class ProviderDisk : public IFileSystemProvider
 {
 public:
@@ -23,6 +28,16 @@ private:
 
    //we don't care if the found hash changes between QueryStaticFile and AsyncLoadStaticFile calls, as we will have told the IFileSystem that we changed
    virtual void AsyncLoadStaticFile(const TLoadCallback& loadCallback, const std::filesystem::path& path) override;
+
+   virtual void AddFoundStaticFile(FoundStaticFile* const pFoundStaticFile) override;
+   virtual void RemoveFoundStaticFile(FoundStaticFile* const pFoundStaticFile) override;
+   virtual void AddFoundStaticFolder(FoundStaticFolder* const pFoundStaticFolder) override;
+   virtual void RemoveFoundStaticFolder(FoundStaticFolder* const pFoundStaticFolder) override;
+
+   virtual void AddFoundDynamicFile(FoundDynamicFile* const pFoundDynamicFile) override;
+   virtual void RemoveFoundDynamicFile(FoundDynamicFile* const pFoundDynamicFile) override;
+   virtual void AddFoundDynamicFolder(FoundDynamicFolder* const pFoundDynamicFolder) override;
+   virtual void RemoveFoundDynamicFolder(FoundDynamicFolder* const pFoundDynamicFolder) override;
 
 private:
    std::filesystem::path m_basePath;

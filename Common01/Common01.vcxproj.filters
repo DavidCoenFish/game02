@@ -276,6 +276,9 @@
     <ClCompile Include="Source\Common\FileSystem\ProviderMods.cpp">
       <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\ComponentFound.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CommonPCH.h">
@@ -507,6 +510,9 @@
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\FileSystem\ProviderMods.h">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\ComponentFound.h">
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
   </ItemGroup>

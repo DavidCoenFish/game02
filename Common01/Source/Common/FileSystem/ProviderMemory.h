@@ -2,6 +2,11 @@
 #include "Common/FileSystem/IFileSystemProvider.h"
 #include "Common/FileSystem/ComponentFileMap.h"
 
+class FoundStaticFile;
+class FoundStaticFolder;
+class FoundDynamicFile;
+class FoundDynamicFolder;
+
 /*
 this was intened for 
 */
@@ -10,23 +15,13 @@ this was intened for
 //template <typename TStaticFileData = TComponentFileMapEmpty, typename TDynamicFileData = TComponentFileMapEmpty>
 //class ComponentFileMap;
 
+class ComponentFound;
+
 class ProviderMemory : public IFileSystemProvider
 {
 public:
    typedef std::shared_ptr< std::vector< uint8_t > > TFileData;
    typedef uint32_t TFileHash;
-   typedef std::pair< TFileData, TFileHash > TFile;
-   typedef std::map< std::filesystem::path, TFile> TStaticFileMap;
-   typedef std::map< std::filesystem::path, TFileData> TDynamicFileMap;
-
-   typedef std::pair< std::vector<std::filesystem::path>, std::vector<std::filesystem::path> > TArrayFileArrayFolder;
-   typedef std::map< std::filesystem::path, TArrayFileArrayFolder> TFolderMap;
-
-   static std::shared_ptr<ProviderMemory> Factory(
-      const TStaticFileMap& staticFiles = TStaticFileMap(),
-      const TDynamicFileMap& dynamicFiles = TDynamicFileMap()
-      );
-private:
    struct TStaticFileData
    {
       TFileHash m_fileHash;
@@ -38,11 +33,21 @@ private:
       TFileData m_fileData;
    };
    typedef std::shared_ptr< TDynamicFileData > TPointerDynamicFileData;
-   typedef ComponentFileMap< TPointerStaticFileData, TPointerDynamicFileData > TComponentFileMap;
-   typedef std::shared_ptr< TComponentFileMap > TPointerComponentFileMap;
-public:
+   typedef ComponentFileMap< TPointerStaticFileData > TComponentStaticFileMap;
+   typedef std::shared_ptr< TComponentStaticFileMap > TPointerComponentStaticFileMap;
+   typedef ComponentFileMap< TPointerDynamicFileData > TComponentDynamicFileMap;
+   typedef std::shared_ptr< TComponentDynamicFileMap > TPointerComponentDynamicFileMap;
+
+   typedef std::map< std::filesystem::path, TPointerStaticFileData > TStaticFileMap;
+   typedef std::map< std::filesystem::path, TPointerDynamicFileData > TDynamicFileMap;
+
+   static std::shared_ptr<ProviderMemory> Factory(
+      const TStaticFileMap& staticFiles = TStaticFileMap(),
+      const TDynamicFileMap& dynamicFiles = TDynamicFileMap()
+      );
    ProviderMemory(
-      const TPointerComponentFileMap& pComponentFileMap
+      const TPointerComponentStaticFileMap& pComponentStaticFileMap,
+      const TPointerComponentDynamicFileMap& pComponentDynamicFileMap
       );
    virtual ~ProviderMemory();
 
@@ -53,9 +58,31 @@ private:
    virtual const bool QueryStaticFile(TFileHash& hashIfFound, const std::filesystem::path& path) override;
    virtual void AsyncLoadStaticFile(const TLoadCallback& loadCallback, const std::filesystem::path& path) override;
 
+   virtual const bool QueryStaticFolder(const std::filesystem::path& path) override;
+   virtual const bool GatherStaticFolderContents(
+      std::vector< std::filesystem::path >& childFiles,
+      std::vector< std::filesystem::path >& childFolders,
+      const std::filesystem::path& path
+      ) override;
+
+   //virtual const bool SupportDynamic(void) const override;
+
+   virtual void AddFoundStaticFile(FoundStaticFile* const pFoundStaticFile) override;
+   virtual void RemoveFoundStaticFile(FoundStaticFile* const pFoundStaticFile) override;
+   virtual void AddFoundStaticFolder(FoundStaticFolder* const pFoundStaticFolder) override;
+   virtual void RemoveFoundStaticFolder(FoundStaticFolder* const pFoundStaticFolder) override;
+
+   virtual void AddFoundDynamicFile(FoundDynamicFile* const pFoundDynamicFile) override;
+   virtual void RemoveFoundDynamicFile(FoundDynamicFile* const pFoundDynamicFile) override;
+   virtual void AddFoundDynamicFolder(FoundDynamicFolder* const pFoundDynamicFolder) override;
+   virtual void RemoveFoundDynamicFolder(FoundDynamicFolder* const pFoundDynamicFolder) override;
+
+
 private:
    int m_filter;
    IFileSystemVisitorProvider* m_pVisitor;
-   TPointerComponentFileMap m_pComponentFileMap;
+   TPointerComponentStaticFileMap m_pComponentStaticFileMap;
+   TPointerComponentDynamicFileMap m_pComponentDynamicFileMap;
+   std::unique_ptr< ComponentFound > m_pComponentFound;
 
 };
