@@ -31,7 +31,10 @@ namespace UnitTestGeneral
          Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual<void*>(nullptr, data[2] );
          Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual<void*>(nullptr, data[3] );
       }
+   };
 
+   TEST_CLASS(Signal)
+   {
       TEST_METHOD(CanYouSetEventBeforeTheWait)
       {
          auto localEvent = CreateEvent( 
@@ -60,7 +63,23 @@ namespace UnitTestGeneral
             CloseHandle(localEvent);
          }
       }
+   };
 
+   TEST_CLASS(FileSystem)
+   {
+   public:
+      TEST_METHOD(FileSystemPathCmp)
+      {
+         std::filesystem::path path00("one.txt");
+         std::filesystem::path path01("two.txt");
+         std::filesystem::path path02("two.txt");
+         std::filesystem::path path03("");
+
+         Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(false, path00 == path01);
+         Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(true, path01 == path02);
+         Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(false, path00 == path03);
+
+      }
 
    };
 }

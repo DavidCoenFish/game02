@@ -33,6 +33,9 @@
     <ClCompile Include="Source\UnitTestGeneral.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\CommonComponentFileMap.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\UnitTestPCH.h">

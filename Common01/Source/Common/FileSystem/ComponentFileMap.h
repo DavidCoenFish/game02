@@ -72,6 +72,17 @@ public:
       return;
    }
 
+   const bool HasFile(const std::filesystem::path& path)
+   {
+      std::lock_guard lock(m_mapFilesMutex);
+      auto found = m_mapFiles.find(path);
+      if (found == m_mapFiles.end())
+      {
+         return false;
+      }
+      return true;
+   }
+
    const bool GetFile(const std::filesystem::path& path, TFileData& data)
    {
       std::lock_guard lock(m_mapFilesMutex);
@@ -248,7 +259,7 @@ private:
    {
       std::filesystem::path tracePrev = path;
       std::filesystem::path trace = path.parent_path();
-      while (tracePrev != trace);
+      while (tracePrev != trace)
       {
          {
             std::lock_guard lock(m_mapFolderFolderMutex);
