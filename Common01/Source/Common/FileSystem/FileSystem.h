@@ -106,10 +106,12 @@ public:
    // WARNING, is this safe to use if file will just get replace by mod-ed version latter? we might not care?
    // load the file best matching provider
    void AsyncStaticFileLoadBest(const std::filesystem::path& path, const TLoadCallback& callback, const int filter = GetFilterAll());
-   void GatherStaticFolderContents(const std::filesystem::path& path, std::set<std::filesystem::path>& childFiles, std::set<std::filesystem::path>& childFolders, const int filter = GetFilterAll());
+   void GatherStaticFolderContents(const std::filesystem::path& path, std::vector<std::filesystem::path>& childFiles, std::vector<std::filesystem::path>& childFolders, const int filter = GetFilterAll());
    void AsyncDynamicFileLoadBest(const std::filesystem::path& path, const TLoadCallback& callback, const int filter = GetFilterAll());
+
    // save to all provider that pass filter and allow dynamic save
    void AsyncDynamicFileSaveAll(const std::filesystem::path& path, const TFileData& data, const int filter = GetFilterAll());
+   void AsyncDynamicFileDeleteAll(const std::filesystem::path& path, const int filter = GetFilterAll());
 
 private:
    std::unique_ptr< FileSystemInternal > m_pInternal;

@@ -10,7 +10,7 @@ class IFileSystemProvider
 {
 public:
    typedef std::shared_ptr< std::vector< uint8_t > > TFileData;
-   typedef std::function< void(const TFileData&) > TLoadCallback;
+   typedef std::function< void(const bool bError, const TFileData& pFileData) > TLoadCallback;
    typedef uint32_t TFileHash;
 
    virtual ~IFileSystemProvider();
@@ -31,7 +31,17 @@ public:
       const std::filesystem::path& path
       ) = 0;
 
-   //virtual const bool SupportDynamic(void) const = 0;
+   virtual const bool QueryDynamicFile(const std::filesystem::path& path) = 0;
+   virtual void AsyncLoadDynamicFile(const TLoadCallback& loadCallback, const std::filesystem::path& path) = 0;
+   virtual void AsyncSaveDynamicFile(const std::filesystem::path& path, const TFileData& data) = 0;
+   virtual void AsyncDeleteDynamicFile(const std::filesystem::path& path) = 0;
+
+   virtual const bool QueryDynamicFolder(const std::filesystem::path& path) = 0;
+   virtual const bool GatherDynamicFolderContents(
+      std::vector< std::filesystem::path >& childFiles,
+      std::vector< std::filesystem::path >& childFolders,
+      const std::filesystem::path& path
+      ) = 0;
 
    virtual void AddFoundStaticFile(FoundStaticFile* const pFoundStaticFile) = 0;
    virtual void RemoveFoundStaticFile(FoundStaticFile* const pFoundStaticFile) = 0;

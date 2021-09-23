@@ -15,7 +15,7 @@ class FoundStaticFile
 {
 public:
    typedef std::shared_ptr< std::vector< uint8_t > > TFileData;
-   typedef std::function< void(const TFileData&) > TLoadCallback;
+   typedef std::function< void(const bool bError, const TFileData& pFileData) > TLoadCallback;
    typedef uint32_t TFileHash;
 
    static std::shared_ptr< FoundStaticFile > Factory(

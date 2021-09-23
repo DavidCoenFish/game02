@@ -32,7 +32,7 @@ public:
    {
       TFileData m_fileData;
    };
-   typedef std::shared_ptr< TDynamicFileData > TPointerDynamicFileData;
+   typedef TFileData TPointerDynamicFileData;
    typedef ComponentFileMap< TPointerStaticFileData > TComponentStaticFileMap;
    typedef std::shared_ptr< TComponentStaticFileMap > TPointerComponentStaticFileMap;
    typedef ComponentFileMap< TPointerDynamicFileData > TComponentDynamicFileMap;
@@ -65,7 +65,17 @@ private:
       const std::filesystem::path& path
       ) override;
 
-   //virtual const bool SupportDynamic(void) const override;
+   virtual const bool QueryDynamicFile(const std::filesystem::path& path) override;
+   virtual void AsyncLoadDynamicFile(const TLoadCallback& loadCallback, const std::filesystem::path& path) override;
+   virtual void AsyncSaveDynamicFile(const std::filesystem::path& path, const TFileData& data) override;
+   virtual void AsyncDeleteDynamicFile(const std::filesystem::path& path) override;
+
+   virtual const bool QueryDynamicFolder(const std::filesystem::path& path) override;
+   virtual const bool GatherDynamicFolderContents(
+      std::vector< std::filesystem::path >& childFiles,
+      std::vector< std::filesystem::path >& childFolders,
+      const std::filesystem::path& path
+      ) override;
 
    virtual void AddFoundStaticFile(FoundStaticFile* const pFoundStaticFile) override;
    virtual void RemoveFoundStaticFile(FoundStaticFile* const pFoundStaticFile) override;

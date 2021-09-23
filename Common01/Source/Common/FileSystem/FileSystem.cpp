@@ -26,6 +26,7 @@ class FileSystemInternal : public IFileSystemVisitorFound, public IFileSystemVis
 {
 public:
    typedef std::function< void(void) > TVoidCallback;
+   typedef std::function< void(const bool bError, const TFileData& pFileData) > TLoadCallback;
    typedef uint32_t TFileHash;
 
    FileSystemInternal(const std::vector<std::shared_ptr< IFileSystemProvider > >& arrayOverlay);
@@ -37,8 +38,15 @@ public:
    std::shared_ptr< FoundDynamicFolder > FindDynamicFolder(const std::filesystem::path& path, const int filter);
    void AddCallbackAllProvidersReady(const int filter, const TVoidCallback& callback);
 
+   void AsyncStaticFileLoadBest(const std::filesystem::path& path, const TLoadCallback& callback, const int filter);
+   void GatherStaticFolderContents(const std::filesystem::path& path, std::vector<std::filesystem::path>& childFiles, std::vector<std::filesystem::path>& childFolders, const int filter);
+   void AsyncDynamicFileLoadBest(const std::filesystem::path& path, const TLoadCallback& callback, const int filter);
+   void AsyncDynamicFileSaveAll(const std::filesystem::path& path, const TFileData& data, const int filter);
+   void AsyncDynamicFileDeleteAll(const std::filesystem::path& path, const int filter);
+
 private:
    void GatherProviders(std::vector< std::weak_ptr< IFileSystemProvider > >& arrayProvider, const int filter);
+   IFileSystemProvider* const GetBestProvider(const std::filesystem::path& path, const int filter);
 
    //IFileSystemVisitorFound
    virtual void AddAsyncTask(const TVoidCallback& callback) override;
@@ -56,6 +64,7 @@ private:
    std::vector< std::shared_ptr< IFileSystemProvider > > m_arrayProvider;
    typedef std::weak_ptr< IFileSystemProvider > TWeakProvider;
    std::vector< std::pair< int, TWeakProvider > > m_arrayFilterOverlay;
+   std::vector< std::pair< int, IFileSystemProvider* > > m_arrayFilterOverlay2;
 
    //can change on multiple threads after ctor, under mutex
    std::mutex m_arrayReadyCallbackMutex;
@@ -84,6 +93,7 @@ FileSystemInternal::FileSystemInternal(const std::vector<std::shared_ptr< IFileS
       iter->SetFilter(filter);
       iter->SetFileSystemVisitorProvider(this);
       m_arrayFilterOverlay.push_back(std::pair< int, TWeakProvider >(filter, iter));
+      m_arrayFilterOverlay2.push_back(std::pair< int, IFileSystemProvider* >(filter, iter.get()));
    }
    return;
 }
@@ -109,7 +119,6 @@ void FileSystemInternal::GatherProviders(std::vector< std::weak_ptr< IFileSystem
       {
          continue;
       }
-
 
       arrayProvider.push_back(std::weak_ptr< IFileSystemProvider >(iter.second));
    }
@@ -160,6 +169,120 @@ void FileSystemInternal::AddCallbackAllProvidersReady(const int filter, const TV
    m_arrayReadyCallback.push_back(std::pair< int, TVoidCallback >(filter, callback));
    return;
 }
+
+IFileSystemProvider* const FileSystemInternal::GetBestProvider(const std::filesystem::path& path, const int filter)
+{
+   for (auto iter = m_arrayFilterOverlay2.rbegin(); 
+           iter != m_arrayFilterOverlay2.rend(); ++iter )
+   { 
+      if (0 == (filter & iter->first))
+      {
+         continue;
+      }
+      IFileSystemProvider* pProvider = iter->second;
+      if (nullptr == pProvider)
+      {
+         continue;
+      }
+      TFileHash hash = 0;
+      if (pProvider->QueryStaticFile(hash, path))
+      {
+         return pProvider;
+      }
+   }
+
+   return nullptr;
+}
+
+void FileSystemInternal::AsyncStaticFileLoadBest(const std::filesystem::path& path, const TLoadCallback& callback, const int filter)
+{
+   auto pProvider = GetBestProvider(path, filter);
+
+   if (nullptr != pProvider)
+   {
+      AddAsyncTask([=](){
+         pProvider->AsyncLoadStaticFile(callback, path);
+      });
+   }
+   else
+   {
+      callback(false, nullptr);
+   }
+   return;
+}
+
+void FileSystemInternal::GatherStaticFolderContents(const std::filesystem::path& path, std::vector<std::filesystem::path>& childFiles, std::vector<std::filesystem::path>& childFolders, const int filter)
+{
+   for (const auto& iter : m_arrayFilterOverlay2)
+   {
+      if (0 == (filter & iter.first))
+      {
+         continue;
+      }
+      IFileSystemProvider* pProvider = iter.second;
+      if (nullptr == pProvider)
+      {
+         continue;
+      }
+      pProvider->GatherStaticFolderContents(childFiles, childFolders, path);
+   }
+}
+
+void FileSystemInternal::AsyncDynamicFileLoadBest(const std::filesystem::path& path, const TLoadCallback& callback, const int filter)
+{
+   auto pProvider = GetBestProvider(path, filter);
+
+   if (nullptr != pProvider)
+   {
+      AddAsyncTask([=](){
+         pProvider->AsyncLoadDynamicFile(callback, path);
+      });
+   }
+   else
+   {
+      callback(false, nullptr);
+   }
+   return;
+}
+
+void FileSystemInternal::AsyncDynamicFileSaveAll(const std::filesystem::path& path, const TFileData& data, const int filter)
+{
+   for (const auto& iter : m_arrayFilterOverlay2)
+   {
+      if (0 == (filter & iter.first))
+      {
+         continue;
+      }
+      IFileSystemProvider* pProvider = iter.second;
+      if (nullptr == pProvider)
+      {
+         continue;
+      }
+      AddAsyncTask([=](){
+         pProvider->AsyncSaveDynamicFile(path, data);
+      });
+   }
+}
+
+void FileSystemInternal::AsyncDynamicFileDeleteAll(const std::filesystem::path& path, const int filter)
+{
+   for (const auto& iter : m_arrayFilterOverlay2)
+   {
+      if (0 == (filter & iter.first))
+      {
+         continue;
+      }
+      IFileSystemProvider* pProvider = iter.second;
+      if (nullptr == pProvider)
+      {
+         continue;
+      }
+      AddAsyncTask([=](){
+         pProvider->AsyncDeleteDynamicFile(path);
+      });
+   }
+}
+
 
 //IFileSystemProviderVisitor
 void FileSystemInternal::OnReady(const IFileSystemProvider* pProvider)
@@ -265,3 +388,29 @@ void FileSystem::AddCallbackAllProvidersReady(const TVoidCallback& callback, con
 {
    return m_pInternal->AddCallbackAllProvidersReady(filter, callback);
 }
+
+void FileSystem::AsyncStaticFileLoadBest(const std::filesystem::path& path, const TLoadCallback& callback, const int filter)
+{
+   return m_pInternal->AsyncStaticFileLoadBest(path, callback, filter);
+}
+
+void FileSystem::GatherStaticFolderContents(const std::filesystem::path& path, std::vector<std::filesystem::path>& childFiles, std::vector<std::filesystem::path>& childFolders, const int filter)
+{
+   return m_pInternal->GatherStaticFolderContents(path, childFiles, childFolders, filter);
+}
+
+void FileSystem::AsyncDynamicFileLoadBest(const std::filesystem::path& path, const TLoadCallback& callback, const int filter)
+{
+   return m_pInternal->AsyncDynamicFileLoadBest(path, callback, filter);
+}
+
+void FileSystem::AsyncDynamicFileSaveAll(const std::filesystem::path& path, const TFileData& data, const int filter)
+{
+   return m_pInternal->AsyncDynamicFileSaveAll(path, data, filter);
+}
+void FileSystem::AsyncDynamicFileDeleteAll(const std::filesystem::path& path, const int filter)
+{
+   return m_pInternal->AsyncDynamicFileDeleteAll(path, filter);
+}
+
+

@@ -71,7 +71,8 @@ namespace CommonFileSystem
                auto pFile = pFileSystem->FindStaticFile("one.txt");
                Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreNotEqual<void*>(nullptr, pFile.get());
                Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(true, pFile->GetExist());
-               pFile->AsyncLoadBest([&](const std::shared_ptr< std::vector< uint8_t > >& data){
+               pFile->AsyncLoadBest([&](const bool error, const std::shared_ptr< std::vector< uint8_t > >& data){
+                  Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(false, error);
                   auto expected = std::vector<uint8_t>({1,2,3,4,5});
                   Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(expected, *data);
                   bFileLoaded = true;

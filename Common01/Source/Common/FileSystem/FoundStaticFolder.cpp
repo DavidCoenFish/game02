@@ -70,7 +70,7 @@ const int FoundStaticFolder::GetFilter() const
    return m_filter;
 }
 
-void FoundStaticFolder::OnProviderChange(IFileSystemProvider* const pProvider)
+void FoundStaticFolder::OnProviderChange(IFileSystemProvider* const)
 {
    bool found = false;
    for (const auto& iter: m_arrayProvider)
