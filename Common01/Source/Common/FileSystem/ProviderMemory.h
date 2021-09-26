@@ -60,22 +60,24 @@ private:
 
    virtual const bool QueryStaticFolder(const std::filesystem::path& path) override;
    virtual const bool GatherStaticFolderContents(
-      std::vector< std::filesystem::path >& childFiles,
-      std::vector< std::filesystem::path >& childFolders,
+      std::set< std::filesystem::path >& childFiles,
+      std::set< std::filesystem::path >& childFolders,
       const std::filesystem::path& path
       ) override;
 
    virtual const bool QueryDynamicFile(const std::filesystem::path& path) override;
    virtual void AsyncLoadDynamicFile(const TLoadCallback& loadCallback, const std::filesystem::path& path) override;
-   virtual void AsyncSaveDynamicFile(const std::filesystem::path& path, const TFileData& data) override;
-   virtual void AsyncDeleteDynamicFile(const std::filesystem::path& path) override;
+   virtual void AsyncSaveDynamicFile(const std::filesystem::path& path, const TFileData& data, const TPassableCallback& callback) override;
+   virtual void AsyncDeleteDynamicFile(const std::filesystem::path& path, const TPassableCallback& callback) override;
 
    virtual const bool QueryDynamicFolder(const std::filesystem::path& path) override;
    virtual const bool GatherDynamicFolderContents(
-      std::vector< std::filesystem::path >& childFiles,
-      std::vector< std::filesystem::path >& childFolders,
+      std::set< std::filesystem::path >& childFiles,
+      std::set< std::filesystem::path >& childFolders,
       const std::filesystem::path& path
       ) override;
+   virtual void AsyncCreateDynamicFolder(const std::filesystem::path& path, const TPassableCallback& callback) override;
+   virtual void AsyncDeleteDynamicFolder(const std::filesystem::path& path, const TPassableCallback& callback) override;
 
    virtual void AddFoundStaticFile(FoundStaticFile* const pFoundStaticFile) override;
    virtual void RemoveFoundStaticFile(FoundStaticFile* const pFoundStaticFile) override;

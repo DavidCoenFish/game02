@@ -13,6 +13,9 @@ enum class LogTopic : int
    DrawSystem,
    UISystem,
 
+   UnitTest0,
+   UnitTest1,
+
    //have a heap of custom enums, allow consumers to rebrand a topic if they want to
    Custom0,
    Custom1,

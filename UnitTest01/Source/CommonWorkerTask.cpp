@@ -4,7 +4,14 @@
 //Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsNotNull( pResultType );
 //Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(9, pResultType->Get<int>() );
 
-namespace CommonUtilWorkerTask
+#if 0
+   #define LOGGER(message) Microsoft::VisualStudio::CppUnitTestFramework::Logger::WriteMessage(message)
+#else
+   #define LOGGER(message) (void)0
+#endif
+
+
+namespace CommonWorkerTask
 {
    TEST_CLASS(Basic)
    {
@@ -33,12 +40,12 @@ namespace CommonUtilWorkerTask
          }
       }
 
-#if 0
+#if 1
       TEST_METHOD(DoesDtorWaitForTask100)
       {
          for (int index = 0; index < 100; ++index)
          {
-            Microsoft::VisualStudio::CppUnitTestFramework::Logger::WriteMessage(std::to_string(index).c_str());
+            LOGGER(std::to_string(index).c_str());
 
             std::mutex countMutex;
             int count = 0;

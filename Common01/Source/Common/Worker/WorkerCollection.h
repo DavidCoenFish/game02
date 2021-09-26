@@ -2,10 +2,13 @@
 
 /*
 wanted a collection of worker threads that i could give a set of tasks to
+
+add a template param of finish all work before shutdown? current setup will try to finish all tasks before shutdown?
+could add a remove tasks to clear any unfinished work? "ClearWork" to allow early abort on shutdown
 */
 #include "Common/Worker/WorkerTask.h"
 
-template <int _ThreadCount>
+template <int _ThreadCount> //, bool _finishAllWorkBeforeShutdown = false>
 class WorkerCollection
 {
 public:
@@ -54,6 +57,13 @@ public:
       return;
    }
 
+   // delete any incomplete work, allows quicker shutdown if called, as on dtor we try to finished everything first...
+   void ClearWork()
+   {
+      std::lock_guard< std::mutex > lock(m_workArrayMutex);
+      m_workArray.clear();
+   }
+
    void SetActiveWorkFinishedCallback(const std::function<void()>& callbackActiveWorkFinished)
    {
       std::lock_guard< std::mutex > lock(m_callbackActiveWorkFinishedMutex);
@@ -93,6 +103,7 @@ private:
          work();
 
          //if we finished work, and we are the last active worker, consume the ActiveWorkFinished
+         bool bLastToFinish = false;
          {
             std::lock_guard< std::mutex > lock(m_workArrayMutex);
             if (nullptr != work)
@@ -101,10 +112,15 @@ private:
 
                if ((true == m_workArray.empty()) && (m_workingThreadCount == 0))
                {
-                  DoActiveWorkFinishedCallback();
+                  bLastToFinish = true;
                }
             }
          }
+         if (true == bLastToFinish)
+         {
+            DoActiveWorkFinishedCallback();
+         }
+
          work = nullptr;
       }
       //if there is any more on the array...? otherwise there is a risk of items never removed from list? use while loop instead
@@ -126,12 +142,12 @@ private:
    }
 
 private:
-   std::list< std::function<void(void)> > m_workArray;
-   int m_workingThreadCount;
-   std::mutex m_workArrayMutex;
-
    std::shared_ptr<WorkerTask> m_workerThread[_ThreadCount];
 
-   std::vector< std::function<void()> > m_callbackActiveWorkFinished;
+   std::mutex m_workArrayMutex;
+   std::list< std::function<void(void)> > m_workArray;
+   int m_workingThreadCount; //we could remove m_workingThreadCount if m_callbackActiveWorkFinished is empty, but would still need m_workArrayMutex's lock for m_workArray
+
    std::mutex m_callbackActiveWorkFinishedMutex;
+   std::vector< std::function<void()> > m_callbackActiveWorkFinished;
 };

@@ -1,5 +1,5 @@
 #include "CommonPCH.h"
-#include "Common/Application/ApplicationTestTriangle.h"
+#include "Common/Application/ApplicationTriangle.h"
 #include "Common/Log/Log.h"
 #include "Common/DrawSystem/DrawSystem.h"
 #include "Common/DrawSystem/DrawSystemFrame.h"
@@ -9,13 +9,16 @@
 #include "Common/DrawSystem/Geometry/GeometryGeneric.h"
 #include "Common/DrawSystem/Shader/Shader.h"
 
-/*
-
-ApplicationTestTriangle::ApplicationTestTriangle(const IApplicationParam& applicationParam, const std::filesystem::path& rootPath)
-   : IApplication(applicationParam)
+IApplication* const ApplicationTriangle::Factory(const HWND hWnd, const IApplicationParam& applicationParam)
 {
-   LOG_MESSAGE("ApplicationTestTriangle ctor %p", this);
-   m_pDrawSystem = std::make_unique< DrawSystem>(applicationParam.m_hWnd);
+   return new ApplicationTriangle(hWnd, applicationParam);
+}
+
+ApplicationTriangle::ApplicationTriangle(const HWND hWnd, const IApplicationParam& applicationParam)
+   : IApplication(hWnd, applicationParam)
+{
+   LOG_MESSAGE("ApplicationTriangle  ctor %p", this);
+   m_pDrawSystem = std::make_unique< DrawSystem>(hWnd);
 
    std::vector< D3D12_INPUT_ELEMENT_DESC > inputElementDescArray;
    inputElementDescArray.push_back(D3D12_INPUT_ELEMENT_DESC{
@@ -39,8 +42,8 @@ ApplicationTestTriangle::ApplicationTestTriangle(const IApplicationParam& applic
 
    auto pCommandList = m_pDrawSystem->CreateCustomCommandList();
    {
-      auto pVertexShaderData = FileSystem::ReadFileLoadData(rootPath / "VertexShader.cso");
-      auto pPixelShaderData = FileSystem::ReadFileLoadData(rootPath / "PixelShader.cso");
+      auto pVertexShaderData = FileSystem::SyncReadFile(applicationParam.m_rootPath / "VertexShader.cso");
+      auto pPixelShaderData = FileSystem::SyncReadFile(applicationParam.m_rootPath / "PixelShader.cso");
       std::vector<DXGI_FORMAT> renderTargetFormat;
       renderTargetFormat.push_back(DXGI_FORMAT_B8G8R8A8_UNORM);
 
@@ -51,7 +54,7 @@ ApplicationTestTriangle::ApplicationTestTriangle(const IApplicationParam& applic
          renderTargetFormat,
          CD3DX12_BLEND_DESC(D3D12_DEFAULT),
          CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT),
-         CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT)
+         CD3DX12_DEPTH_STENCIL_DESC() //CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT)
          );
 
       m_pShader = m_pDrawSystem->MakeShader(
@@ -64,30 +67,21 @@ ApplicationTestTriangle::ApplicationTestTriangle(const IApplicationParam& applic
    }
 
    {
-      static const float sData[] = {
-         0.0, 0.5,  1.0, 0.0, 0.0, 1.0, 
-         0.5, -0.5,   0.0, 1.0, 0.0, 1.0, 
-         -0.5, -0.5,  0.0, 0.0, 1.0, 1.0,
-      };
-
-      std::vector< float > vertexDataRaw;
-      for (int index = 0; index < sizeof(sData) / sizeof(sData[0]); ++index)
-      {
-         vertexDataRaw.push_back(sData[index]);
-      }
-
-      m_pGeometry = m_pDrawSystem->MakeGeometryGeneric(
+      std::vector< Vertex > vertexData({
+         {{0.0f,0.5f}, {1.0f, 0.0f, 0.0f, 1.0f}}, 
+         {{0.5f,-0.5}, {0.0f, 1.0f, 0.0f, 1.0f}},
+         {{-0.5f,-0.5}, {0.0f, 0.0f, 1.0f, 1.0f}},
+         });
+      m_pGeometry = m_pDrawSystem->MakeGeometry(
          pCommandList->GetCommandList(),
          D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
          inputElementDescArray,
-         vertexDataRaw,
-         6
+         vertexData
          );
    }
-
 }
 
-ApplicationTestTriangle::~ApplicationTestTriangle()
+ApplicationTriangle ::~ApplicationTriangle ()
 {
    if (m_pDrawSystem)
    {
@@ -97,10 +91,10 @@ ApplicationTestTriangle::~ApplicationTestTriangle()
    m_pGeometry.reset();
    m_pDrawSystem.reset();
 
-   LOG_MESSAGE("ApplicationTestTriangle dtor %p", this);
+   LOG_MESSAGE("ApplicationTriangle  dtor %p", this);
 }
 
-void ApplicationTestTriangle::Update()
+void ApplicationTriangle ::Update()
 {
    BaseType::Update();
    if (m_pDrawSystem)
@@ -109,13 +103,10 @@ void ApplicationTestTriangle::Update()
       pFrame->SetRenderTarget(m_pDrawSystem->GetRenderTargetBackBuffer());
       pFrame->SetShader(m_pShader.get());
       pFrame->Draw(m_pGeometry.get());
-      //m_pDrawSystem->Clear();
-      //m_pShader->SetActivate(pFrame->GetCommandList(), pFrame->GetBackBufferIndex());
-      //m_pGeometry->Draw(pFrame->GetCommandList());
    }
 }
 
-void ApplicationTestTriangle::OnWindowSizeChanged(const int width, const int height)
+void ApplicationTriangle ::OnWindowSizeChanged(const int width, const int height)
 {
    BaseType::OnWindowSizeChanged(width, height);
    if (m_pDrawSystem)
@@ -125,4 +116,3 @@ void ApplicationTestTriangle::OnWindowSizeChanged(const int width, const int hei
 
    return;
 }
-*/

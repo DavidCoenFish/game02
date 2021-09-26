@@ -15,9 +15,11 @@ some logs may want to append a log file
 some logs may only want to save out file for messages of certain topic
 some logs want to emit to stdout/console/push
 
-move to run time constant set of consumers, and Lob having scope. 
+move to run time constant set of consumers, and Log object/ having scope. 
 the consumers may need to queue messages till they are ready, but may not need runtime flexibility
-advantage of not needing to lock the thread of consumers on every message sent
+advantage of runtime constant is not needing to lock the thread of consumers on every message sent
+
+what would a FileSystem log consumer look like, how does it know the provider filter? gets told when ready?
 */
 
 #if defined(DSC_LOG)
@@ -53,15 +55,33 @@ class Log
 public:
    typedef std::vector< std::shared_ptr< ILogConsumer >> LogContainer;
 
-   static std::shared_ptr< Log > Factory(const LogContainer& arrayConsumer);
-   Log(const std::vector< std::shared_ptr< ILogConsumer >>& arrayConsumer);
+   //any thread, no dependance on scope of Log object, just put a message on the visual studio output console
+   static void AddConsole(const char* const pFormat, ... );
+
+   //for the application, only call once with bOwnerSingelton==true, singelton is used for static AddMessage as used by the macros LOG_MESSAGE...
+   // bOwnerSingelton==false is used for unit test to check the Log object works
+   static std::shared_ptr< Log > Factory(const LogContainer& arrayConsumer, const bool bOwnerSingelton = true);
+
+   Log(const std::vector< std::shared_ptr< ILogConsumer >>& arrayConsumer, const bool bOwnerSingelton);
    ~Log();
 
    //any thread, asserts if outside scope of Log object
    static void AddMessage(const LogTopic topic, const char* const pFormat, ... );
-   static void AddConsole(const char* const pFormat, ... );
+
+   //let logs know that unit test are running and not to panic if messages are not consumed
+   static void RunningUintTest();
+
+   //for unit test to directly add message to Log object
+   void MemberAddMessage(const LogTopic topic, const char* const pFormat, ... );
 
 private:
+   const bool AcceptsTopic(const LogTopic topic);
+   void DrainLogMessages();
+
+   void AddMessageInternal(const LogTopic topic, const std::string& message);
+
+private:
+   bool m_bOwnerSingelton;
    std::unique_ptr< LogImplimentation > m_pImplimentation;
 
 };

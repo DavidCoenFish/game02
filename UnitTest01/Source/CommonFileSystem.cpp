@@ -1,5 +1,6 @@
 #include "UnitTestPCH.h"
 
+#include "Common/FileSystem/OverlayFileSystem.h"
 #include "Common/FileSystem/FileSystem.h"
 #include "Common/FileSystem/ProviderMemory.h"
 #include "Common/FileSystem/ProviderDisk.h"
@@ -61,7 +62,7 @@ namespace CommonFileSystem
 
          std::atomic_bool bFileLoaded = false;
          {
-            auto pFileSystem = FileSystem::Factory({pProviderMemoryA});
+            auto pFileSystem = OverlayFileSystem::Factory({pProviderMemoryA});
             {
                auto pFile = pFileSystem->FindStaticFile("dontexists.txt");
                Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreNotEqual<void*>(nullptr, pFile.get());

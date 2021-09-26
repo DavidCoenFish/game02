@@ -15,6 +15,10 @@ public:
    ProviderDisk(const std::filesystem::path& basePath);
    ~ProviderDisk();
 
+   //if this is intented for application startup only, then move it into Main.cpp?
+   //static const std::string DataToString(const std::shared_ptr< std::vector< uint8_t > >& pData);
+   //static const std::shared_ptr< std::vector< uint8_t > > ReadFileLoadData(const std::filesystem::path& path);
+
    //get told to do the startup work on some thread when things are ready, once done we tell IFileSystemVisitorProvider we are ready
    void DoStartupWork();
 

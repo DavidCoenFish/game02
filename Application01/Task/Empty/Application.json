@@ -1,11 +1,15 @@
 {
-   "windows": [
+   "tasks":[
       {
-         "name": "Empty",
-         "fullScreen": false,
-         "width": 800,
-         "height": 600,
-         "factory": "ApplicationBasic"
+         "factoryKey": "Window",
+         "data": [
+            {
+               "name": "Empty",
+               "fullScreen": false,
+               "width": 800,
+               "height": 600
+            }
+         ]
       }
    ]
 }

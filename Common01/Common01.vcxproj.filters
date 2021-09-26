@@ -52,6 +52,9 @@
     <Filter Include="Source\Common\Worker">
       <UniqueIdentifier>{502c2fa6-ef43-4725-a29a-745cb5db607e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Common\Task">
+      <UniqueIdentifier>{3e8fec76-9387-4fca-807e-b15eeb625d45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Common01.props" />
@@ -87,16 +90,10 @@
     <ClCompile Include="Source\Common\FileSystem\IFileSystemProvider.cpp">
       <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\FileSystem\FileSystem.cpp">
-      <Filter>Source\Common\FileSystem</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Common\Application\ApplicationHolder.cpp">
       <Filter>Source\Common\Application</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\Application\IApplication.cpp">
-      <Filter>Source\Common\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Application\ApplicationBasic.cpp">
       <Filter>Source\Common\Application</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\DrawSystem\DrawSystem.cpp">
@@ -156,9 +153,6 @@
     <ClCompile Include="Source\Common\DrawSystem\Geometry\IGeometry.cpp">
       <Filter>Source\Common\DrawSystem\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\Application\ApplicationTestTriangle.cpp">
-      <Filter>Source\Common\Application</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Common\DrawSystem\Geometry\GeometryGeneric.cpp">
       <Filter>Source\Common\DrawSystem\Geometry</Filter>
     </ClCompile>
@@ -182,9 +176,6 @@
     </ClCompile>
     <ClCompile Include="Source\Common\Math\VectorFloat4.cpp">
       <Filter>Source\Common\DrawSystem\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Application\ApplicationDisplayList.cpp">
-      <Filter>Source\Common\Application</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\JSON\JSONDrawSystemEnum.cpp">
       <Filter>Source\Common\JSON</Filter>
@@ -279,6 +270,30 @@
     <ClCompile Include="Source\Common\FileSystem\ComponentFound.cpp">
       <Filter>Source\Common\FileSystem</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Common\Worker\JobFinished.cpp">
+      <Filter>Source\Common\Worker</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Worker\JobFinishedToken.cpp">
+      <Filter>Source\Common\Worker</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Task\ITask.cpp">
+      <Filter>Source\Common\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Task\TaskWindow.cpp">
+      <Filter>Source\Common\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\OverlayFileSystem.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\FileSystem\FileSystem.cpp">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Application\ApplicationTriangle.cpp">
+      <Filter>Source\Common\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Application\ApplicationTriangleJson.cpp">
+      <Filter>Source\Common\Application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CommonPCH.h">
@@ -311,9 +326,6 @@
     <ClInclude Include="Source\Common\Log\ILogConsumer.h">
       <Filter>Source\Common\Log</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\FileSystem\FileSystem.h">
-      <Filter>Source\Common\FileSystem</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\FileSystem\IFileSystemProvider.h">
       <Filter>Source\Common\FileSystem</Filter>
     </ClInclude>
@@ -321,9 +333,6 @@
       <Filter>Source\Common\Application</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Application\IApplication.h">
-      <Filter>Source\Common\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Application\ApplicationBasic.h">
       <Filter>Source\Common\Application</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\DrawSystem\DrawSystem.h">
@@ -386,9 +395,6 @@
     <ClInclude Include="Source\Common\DrawSystem\Geometry\IGeometry.h">
       <Filter>Source\Common\DrawSystem\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\Application\ApplicationTestTriangle.h">
-      <Filter>Source\Common\Application</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\DrawSystem\Geometry\GeometryGeneric.h">
       <Filter>Source\Common\DrawSystem\Geometry</Filter>
     </ClInclude>
@@ -412,9 +418,6 @@
     </ClInclude>
     <ClInclude Include="Source\Common\Math\VectorFloat4.h">
       <Filter>Source\Common\DrawSystem\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Application\ApplicationDisplayList.h">
-      <Filter>Source\Common\Application</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\JSON\JSONDrawSystemEnum.h">
       <Filter>Source\Common\JSON</Filter>
@@ -514,6 +517,30 @@
     </ClInclude>
     <ClInclude Include="Source\Common\FileSystem\ComponentFound.h">
       <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Worker\JobFinished.h">
+      <Filter>Source\Common\Worker</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Worker\JobFinishedToken.h">
+      <Filter>Source\Common\Worker</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Task\ITask.h">
+      <Filter>Source\Common\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Task\TaskWindow.h">
+      <Filter>Source\Common\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\OverlayFileSystem.h">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\FileSystem\FileSystem.h">
+      <Filter>Source\Common\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Application\ApplicationTriangle.h">
+      <Filter>Source\Common\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Application\ApplicationTriangleJson.h">
+      <Filter>Source\Common\Application</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

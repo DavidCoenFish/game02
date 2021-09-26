@@ -1,11 +1,16 @@
 {
-   "windows": [
+   "tasks": [
       {
-         "name": "TestTriangle",
-         "fullScreen": false,
-         "width": 800,
-         "height": 600,
-         "factory": "ApplicationTestTriangle"
+         "factoryKey": "Window",
+         "data": [
+            {
+               "name": "Triangle",
+               "fullScreen": false,
+               "width": 800,
+               "height": 600,
+               "factory": "Triangle"
+            }
+         ]
       }
    ]
 }

@@ -9,39 +9,14 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 typedef std::function< IApplication*(const HWND hWnd)> TCreateFunction;
 
-//struct CreateData
-//{
-   //CreateData(
-   //   const std::shared_ptr<ApplicationHolder>& pTaskHolder,
-   //   const std::function< IApplication*(const IApplicationParam&) >& pApplicationFactory,
-   //   const bool bFullscreen,
-   //   const int width,
-   //   const int height
-   //   )
-   //   : m_pTaskHolder(pTaskHolder)
-   //   , m_pApplicationFactory(pApplicationFactory)
-   //   , m_bFullscreen(bFullscreen)
-   //   , m_width(width)
-   //   , m_height(height)
-   //{
-   //   //nop
-   //}
-   //std::shared_ptr<ApplicationHolder> m_pTaskHolder;
-   //std::function< IApplication*(const IApplicationParam&) > m_pApplicationFactory;
-   //bool m_bFullscreen;
-   //int m_width;
-   //int m_height;
-//};
-
 const int WindowHelper(
-   const std::shared_ptr<ApplicationHolder>& pApplicationHolder,
-   const std::function< IApplication*(const IApplicationParam&) >& pApplicationFactory,
+   const TApplicationFactory& pApplicationFactory,
+   const IApplicationParam& applicationParam,
    HINSTANCE hInstance,
    const std::string& applicationName,
-   const bool bFullScreen,
-   const int defaultWidth,
-   const int defaultHeight,
-   const std::shared_ptr< CommandLine >& pCommandLine,
+   //const bool bFullScreen,
+   //const int defaultWidth,
+   //const int defaultHeight,
    const int nCmdShow
    )
 {
@@ -68,23 +43,16 @@ const int WindowHelper(
 
    // Create window
    {
-      RECT rc = { 0, 0, static_cast<LONG>(defaultWidth), static_cast<LONG>(defaultHeight) };
+      RECT rc = { 0, 0, static_cast<LONG>(applicationParam.m_width), static_cast<LONG>(applicationParam.m_height) };
 
       HWND hwnd = 0;
       TCreateFunction createFunction = [=](const HWND hWndParam)
       {
-         return pApplicationFactory(IApplicationParam(
-            hWndParam,
-            pApplicationHolder,
-            bFullScreen,
-            defaultWidth,
-            defaultHeight,
-            pCommandLine
-            ));
+         return pApplicationFactory(hWndParam, applicationParam);
       };
-      DWORD dwStyle = bFullScreen ? WS_POPUP : WS_OVERLAPPEDWINDOW;
+      DWORD dwStyle = applicationParam.m_bFullScreen ? WS_POPUP : WS_OVERLAPPEDWINDOW;
       AdjustWindowRect(&rc, dwStyle, FALSE);
-      hwnd = CreateWindowExW(bFullScreen ? WS_EX_TOPMOST : 0, className.c_str(), name.c_str(), dwStyle,
+      hwnd = CreateWindowExW(applicationParam.m_bFullScreen ? WS_EX_TOPMOST : 0, className.c_str(), name.c_str(), dwStyle,
          CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, 
          nullptr, hInstance, &createFunction);
 
@@ -93,7 +61,7 @@ const int WindowHelper(
          return -1;
       }
 
-      ShowWindow(hwnd, bFullScreen ? SW_SHOWMAXIMIZED : nCmdShow);
+      ShowWindow(hwnd, applicationParam.m_bFullScreen ? SW_SHOWMAXIMIZED : nCmdShow);
    }
 
    return 0;

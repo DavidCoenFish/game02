@@ -1,0 +1,26 @@
+{
+  "FileVersion": 2,
+  "Id": "470231f0-9e07-40d4-bad1-a45eb0710811",
+  "Items": [
+    {
+      "Id": "90c3ed90-3489-4802-ab7b-dec0d3bcb8b8",
+      "Command": "TestTriangleJson"
+    },
+    {
+      "Id": "4dd0cd4c-b665-4f7e-932e-25d6a52631dc",
+      "Command": "MultipleEmptyWindow"
+    },
+    {
+      "Id": "d369b04d-d49e-4a6b-a438-f350745eebc3",
+      "Command": "Empty"
+    },
+    {
+      "Id": "53189eee-64de-4198-8a77-1f8c138f3cba",
+      "Command": "TestTriangle"
+    },
+    {
+      "Id": "785f3f93-b100-4b0f-adf6-6c7c1c438eb6",
+      "Command": "DisplayList"
+    }
+  ]
+}

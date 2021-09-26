@@ -4,25 +4,27 @@
 #include "Common/Log/Log.h"
 
 IApplicationParam::IApplicationParam(
-   const HWND hWnd, 
    const std::shared_ptr<ApplicationHolder>& pApplicationHolder, 
    const bool bFullScreen,
    const int width,
    const int height,
-   const std::shared_ptr< CommandLine >& pCommandLine
+   const std::shared_ptr< CommandLine >& pCommandLine,
+   const std::filesystem::path& rootPath, 
+   const nlohmann::json& json
    )
-   : m_hWnd(hWnd)
-   , m_pApplicationHolder(pApplicationHolder)
+   : m_pApplicationHolder(pApplicationHolder)
    , m_bFullScreen(bFullScreen)
    , m_width(width)
    , m_height(height)
    , m_pCommandLine(pCommandLine)
+   , m_rootPath(rootPath)
+   , m_json(json)
 {
    //nop
 }
 
-IApplication::IApplication(const IApplicationParam& applicationParam)
-   : m_hWnd(applicationParam.m_hWnd)
+IApplication::IApplication(const HWND hWnd, const IApplicationParam& applicationParam)
+   : m_hWnd(hWnd)
    , m_pTaskHolder(applicationParam.m_pApplicationHolder)
    , m_bInSizemove(false)
    , m_bInSuspend(false)

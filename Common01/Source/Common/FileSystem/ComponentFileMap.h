@@ -95,10 +95,10 @@ public:
       return true;
    }
 
-   void AddFolder(const std::filesystem::path& path)
+   const bool AddFolder(const std::filesystem::path& path)
    {
-      AddFolderToFolders(path);
-      return;
+      const bool result = AddFolderToFolders(path);
+      return result;
    }
 
    const bool HasFolder(const std::filesystem::path& path)
@@ -124,8 +124,8 @@ public:
 
    const bool GatherFolder(
       const std::filesystem::path& path, 
-      std::vector<std::filesystem::path>& arrayFiles, 
-      std::vector<std::filesystem::path>& arrayFolders
+      std::set<std::filesystem::path>& arrayFiles, 
+      std::set<std::filesystem::path>& arrayFolders
       )
    {
       bool found = false;
@@ -138,7 +138,7 @@ public:
             found = true;
             for (const auto& item : *(iter->second))
             {
-               arrayFiles.push_back(item);
+               arrayFiles.insert(item);
             }
          }
       }
@@ -150,42 +150,46 @@ public:
             found = true;
             for (const auto& item : *(iter->second))
             {
-               arrayFolders.push_back(item);
+               arrayFolders.insert(item);
             }
          }
       }
       return found;
    }
 
-   void RemoveFile(const std::filesystem::path& path)
+   const bool RemoveFile(const std::filesystem::path& path)
    {
+      //remove the file
       {
          std::lock_guard lock(m_mapFilesMutex);
          auto found = m_mapFiles.find(path);
          if (found == m_mapFiles.end())
          {
-            return;
+            return false;
          }
          m_mapFiles.erase(found);
       }
+      //remove the file from the 
       {
          std::filesystem::path trace = path.parent_path();
-         if (true == trace.empty())
-         {
-            return;
-         }
+         // allow root folder
+         //if (true == trace.empty())
+         //{
+         //   return true;
+         //}
          std::lock_guard lock(m_mapFolderFilesMutex);
          auto found = m_mapFolderFiles.find(trace);
-         if (found == m_mapFolderFiles.end())
+         if (found != m_mapFolderFiles.end())
          {
-            return;
+            m_mapFolderFiles.erase(found);
          }
-         m_mapFolderFiles.erase(found);
       }
+      return true;
    }
 
-   void RemoveFolder(const std::filesystem::path& path)
+   const bool RemoveFolder(const std::filesystem::path& path)
    {
+      //std::map< std::filesystem::path, std::shared_ptr< std::set< std::filesystem::path > > > m_mapFolderFiles;
       std::shared_ptr< std::set< std::filesystem::path > > filesToRemove;
       {
          std::lock_guard lock(m_mapFolderFilesMutex);
@@ -196,6 +200,8 @@ public:
             m_mapFolderFiles.erase(found);
          }
       }
+
+      //std::map< std::filesystem::path, std::shared_ptr< std::set< std::filesystem::path > > > m_mapFolderFolder;
       std::shared_ptr< std::set< std::filesystem::path > > foldersToRemove;
       {
          std::lock_guard lock(m_mapFolderFolderMutex);
@@ -206,22 +212,24 @@ public:
             m_mapFolderFolder.erase(found);
          }
       }
+      bool result = false;
       {
          std::lock_guard lock(m_mapFilesMutex);
-         for (const auto& iter : filesToRemove)
+         for (const auto& iter : *(filesToRemove))
          {
             auto found = m_mapFiles.find(iter);
             if (found != m_mapFiles.end())
             {
                m_mapFiles.erase(found);
+               result = true;
             }
          }
       }
-      for (const auto& iter : foldersToRemove)
+      for (const auto& iter : *(foldersToRemove))
       {
          RemoveFolder(iter);
       }
-      return;
+      return result;
    }
 
 private:
@@ -253,10 +261,11 @@ private:
       AddFolderToFolders(trace);
    }
 
-   void AddFolderToFolders(
+   const bool AddFolderToFolders(
       const std::filesystem::path& path
       )
    {
+      bool result = false;
       std::filesystem::path tracePrev = path;
       std::filesystem::path trace = path.parent_path();
       while (tracePrev != trace)
@@ -275,21 +284,22 @@ private:
                m_mapFolderFolder[ trace ] = pSet;
             }
             pSet->insert(tracePrev);
+            result = true;
          }
    
          tracePrev = trace;
          trace = trace.parent_path();
       }
-      return;
+      return result;
    }
 
 private:
    std::mutex m_mapFilesMutex;
+   //typedef std::map< std::filesystem::path, TFileData > TMapPathFileData;
    TMapPathFileData m_mapFiles;
    std::mutex m_mapFolderFilesMutex;
    std::map< std::filesystem::path, std::shared_ptr< std::set< std::filesystem::path > > > m_mapFolderFiles;
    std::mutex m_mapFolderFolderMutex;
    std::map< std::filesystem::path, std::shared_ptr< std::set< std::filesystem::path > > > m_mapFolderFolder;
-
 
 };

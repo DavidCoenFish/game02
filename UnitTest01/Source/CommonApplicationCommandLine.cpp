@@ -1,6 +1,7 @@
 #include "UnitTestPCH.h"
 
 #include "Common/Application/CommandLine.h"
+#include "Common/Log/Log.h"
 
 //Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsNotNull( pResultType );
 //Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(9, pResultType->Get<int>() );
@@ -17,6 +18,7 @@ namespace CommonApplicationCommandLine
          Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(0, pCommandLine->GetParamCount() );
          Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual("", pCommandLine->GetParam(0).c_str() );
          Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(false, pCommandLine->GetFlag("Empty") );
+         Log::RunningUintTest();
       }
       TEST_METHOD(Simple)
       {
@@ -25,6 +27,7 @@ namespace CommonApplicationCommandLine
          Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(1, pCommandLine->GetParamCount() );
          Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual("Empty", pCommandLine->GetParam(0).c_str() );
          Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(true, pCommandLine->GetFlag("Empty") );
+         Log::RunningUintTest();
       }
       TEST_METHOD(Normal)
       {
@@ -36,6 +39,7 @@ namespace CommonApplicationCommandLine
          std::string value;
          Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(true, pCommandLine->GetValueString("bar", value) );
          Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual("foo", value.c_str() );
+         Log::RunningUintTest();
       }
       TEST_METHOD(Numeric)
       {
@@ -61,6 +65,7 @@ namespace CommonApplicationCommandLine
             int value;
             Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(false, pCommandLine->GetValueInt("d", value) );
          }
+         Log::RunningUintTest();
       }
       TEST_METHOD(Quotes)
       {
@@ -69,6 +74,7 @@ namespace CommonApplicationCommandLine
          Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual(2, pCommandLine->GetParamCount() );
          Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual("\"hello\" \"world\"", pCommandLine->GetParam(0).c_str() );
          Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual("two", pCommandLine->GetParam(1).c_str() );
+         Log::RunningUintTest();
       }
    };
 }

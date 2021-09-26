@@ -25,7 +25,7 @@ namespace CommonLog
       }
       virtual const bool AcceptsTopic(const LogTopic topic) override
       {
-         if ((int)topic == 5)
+         if (topic == LogTopic::UnitTest1)
          {
             return false;
          }
@@ -45,20 +45,20 @@ namespace CommonLog
          {
             auto pConsumer = std::make_shared<LogConsumerTest>();
             {
-               auto pLog = Log::Factory(std::vector< std::shared_ptr< ILogConsumer >>({ pConsumer }));
-               Log::AddMessage(LogTopic(3), "Hello %s", "World");
+               auto pLog = Log::Factory(std::vector< std::shared_ptr< ILogConsumer >>({ pConsumer }), false);
+               pLog->MemberAddMessage(LogTopic::UnitTest0, "Hello %s", "World");
             }
-            Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual("3:Hello World\n", pConsumer->GetData().c_str());
+            Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual("9:Hello World\n", pConsumer->GetData().c_str());
          }
          {
             auto pConsumer = std::make_shared<LogConsumerTest>();
             {
-               auto pLog = Log::Factory(std::vector< std::shared_ptr< ILogConsumer >>({ pConsumer }));
-               Log::AddMessage(LogTopic(3), "Hello %s", "World");
-               Log::AddMessage(LogTopic(4), "Goodbye %s", "Pain");
-               Log::AddMessage(LogTopic(5), "should be filtered");
+               auto pLog = Log::Factory(std::vector< std::shared_ptr< ILogConsumer >>({ pConsumer }), false);
+               pLog->MemberAddMessage(LogTopic::UnitTest0, "Hello %s", "World");
+               pLog->MemberAddMessage(LogTopic::UnitTest0, "Goodbye %s", "Pain");
+               pLog->MemberAddMessage(LogTopic::UnitTest1, "should be filtered");
             }
-            Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual("3:Hello World\n4:Goodbye Pain\n", pConsumer->GetData().c_str());
+            Microsoft::VisualStudio::CppUnitTestFramework::Assert::AreEqual("9:Hello World\n9:Goodbye Pain\n", pConsumer->GetData().c_str());
          }
       }
    };

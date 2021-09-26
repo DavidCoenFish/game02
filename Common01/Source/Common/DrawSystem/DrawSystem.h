@@ -2,6 +2,8 @@
 
 #include "Common/DrawSystem/RenderTarget/RenderTargetFormatData.h"
 #include "Common/DrawSystem/RenderTarget/RenderTargetDepthData.h"
+#include "Common/DrawSystem/Geometry/Geometry.h"
+#include "Common/DrawSystem/DeviceResources.h"
 
 class DeviceResources;
 class DrawSystemFrame;
@@ -67,6 +69,31 @@ public:
       const std::vector< float >& vertexDataRaw,
       const int floatPerVertex
       );
+
+   //was moving away from Geometry and towards GeometryGeneric as for json it is easier to load generic float data
+   template <typename TypeVertex >
+   std::shared_ptr< Geometry<TypeVertex> > MakeGeometry(
+      ID3D12GraphicsCommandList* const pCommandList,
+      const D3D_PRIMITIVE_TOPOLOGY primitiveTopology,
+      const std::vector< D3D12_INPUT_ELEMENT_DESC >& inputElementDescArray,
+      const std::vector< TypeVertex >& vertexData
+      )
+   {
+      auto pResult = std::make_shared<Geometry<TypeVertex>>(
+         this,
+         primitiveTopology,
+         inputElementDescArray,
+         vertexData
+         );
+      if (pResult && m_pDeviceResources)
+      {
+         ((IResource*)(pResult.get()))->OnDeviceRestored(
+            pCommandList,
+            m_pDeviceResources->GetD3dDevice()
+            );
+      }
+      return pResult;
+   }
 
    std::shared_ptr< ShaderTexture > MakeTexture(
       ID3D12GraphicsCommandList* const pCommandList,

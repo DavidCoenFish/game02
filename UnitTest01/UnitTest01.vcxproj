@@ -17,6 +17,7 @@
     <ClCompile Include="Source\CommonFileSystem.cpp" />
     <ClCompile Include="Source\CommonLog.cpp" />
     <ClCompile Include="Source\CommonWorkerCollection.cpp" />
+    <ClCompile Include="Source\CommonWorkerJobFinished.cpp" />
     <ClCompile Include="Source\CommonWorkerTask.cpp" />
     <ClCompile Include="Source\UnitTestGeneral.cpp" />
     <ClCompile Include="Source\UnitTestPCH.cpp">

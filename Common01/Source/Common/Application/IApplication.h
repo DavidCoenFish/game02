@@ -1,5 +1,7 @@
 #pragma once
 
+#include "json/json.hpp"
+
 class ApplicationHolder;
 class CommandLine;
 
@@ -7,25 +9,27 @@ class IApplicationParam
 {
 public:
    IApplicationParam(
-      HWND hWnd, 
       const std::shared_ptr<ApplicationHolder>& pApplicationHolder, 
       const bool bFullScreen,
       const int width,
       const int height,
-      const std::shared_ptr< CommandLine >& pCommandLine
+      const std::shared_ptr< CommandLine >& pCommandLine,
+      const std::filesystem::path& rootPath, 
+      const nlohmann::json& json
    );
-   const HWND m_hWnd; 
    const std::shared_ptr<ApplicationHolder> m_pApplicationHolder;
    const bool  m_bFullScreen;
    const int  m_width;
    const int  m_height;
    const std::shared_ptr< CommandLine >m_pCommandLine;
+   const std::filesystem::path m_rootPath;
+   const nlohmann::json m_json;
 };
 
 class IApplication
 {
 public:
-   IApplication(const IApplicationParam& applicationParam);
+   IApplication(const HWND hWnd, const IApplicationParam& applicationParam);
    virtual ~IApplication();
 
    virtual void Update();

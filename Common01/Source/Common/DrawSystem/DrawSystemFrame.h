@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Common/DrawSystem/Geometry/Geometry.h"
+
 class DrawSystem;
 class IRenderTarget;
 class Shader;
@@ -17,6 +19,12 @@ public:
    void SetRenderTarget(IRenderTarget* const pRenderTarget);
    void SetShader(Shader* const pShader);
    void Draw(GeometryGeneric* const pGeometry);
+
+   template <typename TypeVertex >
+   void Draw(Geometry<TypeVertex>* const pGeometry)
+   {
+      pGeometry->Draw(m_pCommandList);
+   }
 
 private:
    DrawSystem& m_drawSystem;

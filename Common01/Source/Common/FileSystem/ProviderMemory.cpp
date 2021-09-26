@@ -47,6 +47,11 @@ const int ProviderMemory::GetFilter()const
 void ProviderMemory::SetFileSystemVisitorProvider(IFileSystemVisitorProvider* const pVisitor)
 {
    m_pVisitor = pVisitor;
+   {
+      //we are about to set ourself as ready, do we need to tell any found files/folders already using us that we are going to change?
+      //m_pComponentFound->OnProviderChangeStatic(this);
+      //m_pComponentFound->OnProviderChangeDynamic(this);
+   }
    m_pVisitor->OnReady(this);
 }
 
@@ -67,11 +72,11 @@ void ProviderMemory::AsyncLoadStaticFile(const TLoadCallback& loadCallback, cons
    TPointerStaticFileData pData;
    if (true == m_pComponentStaticFileMap->GetFile(path, pData))
    {
-      loadCallback(true, pData->m_fileData);
+      loadCallback(false, pData->m_fileData);
    }
    else
    {
-      loadCallback(false, nullptr);
+      loadCallback(true, nullptr);
    }
    return;
 }
@@ -82,8 +87,8 @@ const bool ProviderMemory::QueryStaticFolder(const std::filesystem::path& path)
 }
 
 const bool ProviderMemory::GatherStaticFolderContents(
-   std::vector< std::filesystem::path >& childFiles,
-   std::vector< std::filesystem::path >& childFolders,
+   std::set< std::filesystem::path >& childFiles,
+   std::set< std::filesystem::path >& childFolders,
    const std::filesystem::path& path
    )
 {
@@ -118,14 +123,24 @@ void ProviderMemory::AsyncLoadDynamicFile(const TLoadCallback& loadCallback, con
    return;
 }
 
-void ProviderMemory::AsyncSaveDynamicFile(const std::filesystem::path& path, const TFileData& data)
+void ProviderMemory::AsyncSaveDynamicFile(const std::filesystem::path& path, const TFileData& data, const TPassableCallback& callback)
 {
    m_pComponentDynamicFileMap->AddFile(path, data);
+   m_pComponentFound->OnProviderChangeDynamic(this);
+   if (nullptr != callback)
+   {
+      callback(true);
+   }
 }
 
-void ProviderMemory::AsyncDeleteDynamicFile(const std::filesystem::path& path)
+void ProviderMemory::AsyncDeleteDynamicFile(const std::filesystem::path& path, const TPassableCallback& callback)
 {
-   m_pComponentDynamicFileMap->RemoveFile(path);
+   const bool result = m_pComponentDynamicFileMap->RemoveFile(path);
+   m_pComponentFound->OnProviderChangeDynamic(this);
+   if (nullptr != callback)
+   {
+      callback(result);
+   }
 }
 
 const bool ProviderMemory::QueryDynamicFolder(const std::filesystem::path& path)
@@ -134,8 +149,8 @@ const bool ProviderMemory::QueryDynamicFolder(const std::filesystem::path& path)
 }
 
 const bool ProviderMemory::GatherDynamicFolderContents(
-   std::vector< std::filesystem::path >& childFiles,
-   std::vector< std::filesystem::path >& childFolders,
+   std::set< std::filesystem::path >& childFiles,
+   std::set< std::filesystem::path >& childFolders,
    const std::filesystem::path& path
    )
 {
@@ -144,6 +159,26 @@ const bool ProviderMemory::GatherDynamicFolderContents(
       childFiles,
       childFolders
       );
+}
+
+void ProviderMemory::AsyncCreateDynamicFolder(const std::filesystem::path& path, const TPassableCallback& callback)
+{
+   const bool result = m_pComponentDynamicFileMap->AddFolder(path);
+   m_pComponentFound->OnProviderChangeDynamic(this);
+   if (nullptr != callback)
+   {
+      callback(result);
+   }
+}
+
+void ProviderMemory::AsyncDeleteDynamicFolder(const std::filesystem::path& path, const TPassableCallback& callback)
+{
+   const bool result = m_pComponentDynamicFileMap->RemoveFolder(path);
+   m_pComponentFound->OnProviderChangeDynamic(this);
+   if (nullptr != callback)
+   {
+      callback(result);
+   }
 }
 
 void ProviderMemory::AddFoundStaticFile(FoundStaticFile* const pFoundStaticFile)

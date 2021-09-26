@@ -19,7 +19,7 @@ cls & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE
 
 #define LOGGER_ALLWAYS(message) Microsoft::VisualStudio::CppUnitTestFramework::Logger::WriteMessage(message)
 
-namespace CommonUtilWorkerCollection
+namespace CommonWorkerCollection
 {
    TEST_CLASS(Basic)
    {

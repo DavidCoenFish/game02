@@ -3,100 +3,71 @@
 //
 
 #include "ApplicationPCH.h"
-#include "Common/Application/WindowHelper.h"
 #include "Common/Application/CommandLine.h"
-#include "Common/Application/IApplication.h"
-#include "Common/Application/ApplicationBasic.h"
-#include "Common/Application/ApplicationTestTriangle.h"
-#include "Common/Application/ApplicationDisplayList.h"
-#include "Common/Application/ApplicationHolder.h"
+#include "Common/Task/ITask.h"
+#include "Common/Task/TaskWindow.h"
 #include "Common/FileSystem/FileSystem.h"
 #include "Common/Log/Log.h"
 #include "Common/Log/LogConsumerConsole.h"
 #include "Common/Util/Utf8.h"
 #include "json/json.hpp"
 
-class JSONWindow
+class JSONTask
 {
 public:
-   JSONWindow()
-      : fullScreen(false)
-      , width(800)
-      , height(600)
-   {
-      //nop
-   }
-   std::string name;
-   bool fullScreen;
-   int width;
-   int height;
-   std::string factory;
-   std::string data;
+   std::string factoryKey;
+   nlohmann::json data;
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-   JSONWindow,
-   name,
-   fullScreen,
-   width,
-   height,
-   factory,
+   JSONTask,
+   factoryKey,
    data
    );
 
 struct JSONApplication
 {
-   std::vector< JSONWindow > windows;
-   //std::vector< std::string > logs;
-   //std::vector< JSONLog > Logs;
-   //std::vector< JSONOverlayRead > OverlayRead; // beter to be under application or data control?
-   //std::vector< JSONOverlayWrite > OverlayWrite; // beter to be under application or data control?
+   std::vector< JSONTask > tasks;
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    JSONApplication, 
-   windows
-   //Logs
+   tasks
    );
 
-static const std::function< IApplication*(const IApplicationParam&) > GetFactory(const std::string& factoryKey, const std::filesystem::path& rootPath, const std::string& data)
+static std::map< std::string, TTaskFactory >& GetTaskFactoryMap()
 {
-   if (factoryKey == "ApplicationBasic")
+   static std::map< std::string, TTaskFactory > s_map(
    {
-      return [](const IApplicationParam& applicationParam)
-      {
-         return new ApplicationBasic(applicationParam);
-      };
-   }
-   else if (factoryKey == "ApplicationTestTriangle")
-   {
-      return [=](const IApplicationParam& applicationParam)
-      {
-         return new ApplicationTestTriangle(applicationParam, rootPath);
-      };
-   }
-   else if (factoryKey == "ApplicationDisplayList")
-   {
-      return [=](const IApplicationParam& applicationParam)
-      {
-         return new ApplicationDisplayList(applicationParam, rootPath, data);
-      };
-   }
-   return [](const IApplicationParam& applicationParam)
-   {
-      return new IApplication(applicationParam);
-   };
+      {"Window", TaskWindow::Factory}
+   });
+   return s_map;
 }
 
+//this might not work from static lib? at least not witout something to make sure the code is not marked as dead and ignored
+void RegisterTaskFactory(const std::string& taskFactoryKey, const TTaskFactory& taskFactory)
+{
+   auto& factoryMap = GetTaskFactoryMap();
+   factoryMap[taskFactoryKey] = taskFactory;
+}
+
+//i don't want to have to know all of this in main, add a RegisterApplicationFactory? can that be done in a static lib? lets find out
+static const TTaskFactory GetTaskFactory(const std::string& taskFactoryKey)
+{
+   const auto& factoryMap = GetTaskFactoryMap();
+   auto found = factoryMap.find(taskFactoryKey);
+   if (found != factoryMap.end())
+   {
+      return found->second;
+   }
+   return nullptr;
+}
 
 static const int RunTask(HINSTANCE hInstance, int nCmdShow)
 {
-   nCmdShow;hInstance;
-#if 0
-#if defined(DSC_LOG)
-   std::vector< std::shared_ptr< ILogConsumer > > arrayLogs;
-   arrayLogs.push_back(std::make_shared<LogConsumerConsole>());
-#endif
+   auto pLog = Log::Factory(std::vector< std::shared_ptr< ILogConsumer >>({ 
+      std::make_shared< LogConsumerConsole >()
+      }));
 
    auto pCommandLine = CommandLine::Factory(Utf8::Utf16ToUtf8(GetCommandLineW()));
    if (nullptr == pCommandLine)
@@ -104,61 +75,42 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
       return -1;
    }
 
-   const auto basePath = FileSystem::GetModualDir(hInstance);
-   FileSystem::AddReadOverlay( std::make_shared< ReadOverlayDir >( 0, basePath ) );
-   FileSystem::AddReadOverlay( std::make_shared< ReadOverlayDir >( 1, FileSystem::GetTempDir() ) );
-   FileSystem::AddWriteOverlay( std::make_shared< WriteOverlayDir >( 1, FileSystem::GetTempDir() ) );
-
    int result = 0;
+   std::string task("Empty");
 
    if (2 <= pCommandLine->GetParamCount())
    {
-      std::filesystem::path path = std::filesystem::path("Task") / pCommandLine->GetParam(1);
-      std::filesystem::path applicationPath = path / "Application.json";
-      auto fileString = FileSystem::DataToString(FileSystem::ReadFileLoadData(applicationPath));
-      auto json = nlohmann::json::parse( fileString );
-      JSONApplication applicationData;
-      json.get_to(applicationData);
-
-      auto pApplicationHolder = std::make_shared<ApplicationHolder>();
-      for(const auto& item : applicationData.windows)
-      {
-         result = WindowHelper(
-            pApplicationHolder,
-            GetFactory(item.factory, path, item.data),
-            hInstance,
-            item.name,
-            item.fullScreen,
-            item.width,
-            item.height,
-            pCommandLine,
-            nCmdShow
-            );
-      }
-
-      //while we have windows, keep pushing messages
-      MSG msg = {};
-      while (true == pApplicationHolder->HasApplication())
-      {
-         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-         {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-         }
-         else
-         {
-            pApplicationHolder->Update();
-         }
-      }
+      task = pCommandLine->GetParam(1);
    }
    else
    {
       LOG_MESSAGE_ERROR("Only got [%d] param, want at least a task name", pCommandLine->GetParamCount());
    }
 
-    return result;
-#endif //0
-    return 0;
+   {
+      std::filesystem::path path = FileSystem::GetModualDir(hInstance) / "Task" / task;
+      std::filesystem::path applicationPath = path / "Application.json";
+      auto fileString = FileSystem::DataToString(FileSystem::SyncReadFile(applicationPath));
+      auto json = nlohmann::json::parse( fileString );
+      JSONApplication applicationData;
+      json.get_to(applicationData);
+
+      for (const auto& item: applicationData.tasks)
+      {
+         auto taskFactory = GetTaskFactory(item.factoryKey);
+         auto pTask = (nullptr != taskFactory) ? taskFactory(hInstance, nCmdShow, pCommandLine, path, item.data) : nullptr;
+         if (pTask)
+         {
+            result = pTask->Run();
+         }
+         if (result < 0)
+         {
+            LOG_MESSAGE_ERROR("task returner [%d], abort run", result);
+         }
+      }
+   }
+
+   return result;
 }
 
 // Entry point
@@ -167,6 +119,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
    UNREFERENCED_PARAMETER(hPrevInstance);
    UNREFERENCED_PARAMETER(lpCmdLine);
 
+#if 0
+   //push directx code down into tasks that use DirectX?
    if (!DirectX::XMVerifyCPUSupport())
    {
       return -1;
@@ -182,10 +136,13 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
       }
       return -1;
    }
-
+#endif
    const int result = RunTask(hInstance, nCmdShow);
 
+#if 0
+   //push directx code down into tasks that use DirectX?
    XGameRuntimeUninitialize();
+#endif
 
    return result;
 }

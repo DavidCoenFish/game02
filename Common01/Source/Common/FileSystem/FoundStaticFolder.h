@@ -19,30 +19,35 @@ public:
       const std::filesystem::path& path, 
       const int filter,
       const std::vector< std::weak_ptr< IFileSystemProvider > >& arrayProviders,
-      IFileSystemVisitorFound* pFileSystem
+      const std::weak_ptr< IFileSystemVisitorFound >& pFileSystem
       );
 
    FoundStaticFolder(
       const std::filesystem::path& path, 
       const int filter,
       const std::vector< std::weak_ptr< IFileSystemProvider > >& arrayProviders,
-      IFileSystemVisitorFound* pFileSystem
+      const std::weak_ptr< IFileSystemVisitorFound >& pFileSystem
       );
    ~FoundStaticFolder();
-
-   //when the function was called, the file existed
-   const bool GetExist() const;
 
    const int GetFilter() const;
    void OnProviderChange(IFileSystemProvider* const pProvider);
 
+   //when the function was called, the file existed
+   const bool GetExist() const;
+
+   void GatherStaticFolderContents(
+      const std::filesystem::path& path, 
+      std::set<std::filesystem::path>& childFiles, 
+      std::set<std::filesystem::path>& childFolders
+      );
 
 private:
    //constant after ctor
-   std::filesystem::path m_path;
-   int m_filter;
-   std::vector< std::weak_ptr< IFileSystemProvider > > m_arrayProvider;
-   IFileSystemVisitorFound* m_pFileSystem;
+   const std::filesystem::path m_path;
+   const int m_filter;
+   const std::vector< std::weak_ptr< IFileSystemProvider > > m_arrayProvider;
+   const std::weak_ptr< IFileSystemVisitorFound > m_pFileSystem;
 
    //can change any thread
    mutable std::mutex m_foundMutex;

@@ -19,6 +19,12 @@
     <Filter Include="Task\DisplayList">
       <UniqueIdentifier>{3212a2f8-08c5-4d19-a644-33a44dbec0bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Task\MultipleEmptyWindow">
+      <UniqueIdentifier>{d7550a5b-10c0-46f0-852a-6e3a667c1360}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Task\TestTriangleJson">
+      <UniqueIdentifier>{8b21a776-967d-4646-92d1-3972fd10c5c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ApplicationPCH.h">
@@ -61,6 +67,12 @@
     <CopyFileToFolders Include="Task\DisplayList\Data0.json">
       <Filter>Task\DisplayList</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\MultipleEmptyWindow\Application.json">
+      <Filter>Task\MultipleEmptyWindow</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\TestTriangleJson\Application.json">
+      <Filter>Task\TestTriangleJson</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <None Include="Application01.props" />
@@ -77,6 +89,12 @@
     </FxCompile>
     <FxCompile Include="Task\DisplayList\VertexShader.hlsl">
       <Filter>Task\DisplayList</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\TestTriangleJson\PixelShader.hlsl">
+      <Filter>Task\TestTriangleJson</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\TestTriangleJson\VertexShader.hlsl">
+      <Filter>Task\TestTriangleJson</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
