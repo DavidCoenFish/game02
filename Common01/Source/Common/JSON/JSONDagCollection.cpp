@@ -4,38 +4,37 @@
 #include "Common/DAG/DagCollection.h"
 #include "Common/Log/Log.h"
 
-//std::map<std::string, std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)>>& GetValueFactoryMap()
-//{
-//   static std::map<std::string, std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)>> s_map;
-//   return s_map;
-//}
-//
-//void JSONDagCollection::RegisterValue(const std::string& type, const std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)>& factory)
-//{
-//   auto& map = GetValueFactoryMap();
-//   map[type] = factory;
-//}
-//
-//std::map<std::string, std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)>>& GetCalculateFactoryMap()
-//{
-//   static std::map<std::string, std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)>> s_map;
-//   return s_map;
-//}
-//
-//void JSONDagCollection::RegisterCalculate(const std::string& function, const std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)>& factory)
-//{
-//   auto& map = GetCalculateFactoryMap();
-//   map[function] = factory;
-//}
-//
+
 std::shared_ptr< DagCollection > JSONDagCollection::Factory(
-   const JSONDagCollection& jsonDagCollection,
+   const std::string& fileName,
+   const std::function<const std::string(const std::string& fileName)>& dealFileCallback,
    const std::vector< std::pair< std::string, std::shared_ptr< iDagNode > > >& inbuiltDagValues,
    const std::map<std::string, ValueFactory>& valueFactoryMap,
    const std::map<std::string, ValueFactory>& calculateFactoryMap
    )
 {
    std::shared_ptr< DagCollection > pResult = std::make_shared< DagCollection >();
+   for (const auto& item : inbuiltDagValues)
+   {
+      pResult->AddDagNode(item.first, item.second);
+   }
+   AppendCollection(pResult, fileName, dealFileCallback, valueFactoryMap, calculateFactoryMap);
+   return pResult;
+}
+
+void JSONDagCollection::AppendCollection(
+   const std::shared_ptr< DagCollection >& pDagCollection,
+   const std::string& fileName,
+   const std::function<const std::string(const std::string& fileName)>& dealFileCallback,
+   const std::map<std::string, ValueFactory>& valueFactoryMap,
+   const std::map<std::string, ValueFactory>& calculateFactoryMap
+   )
+{
+   const auto data = dealFileCallback(fileName);
+   auto json = nlohmann::json::parse( data );
+   JSONDagCollection jsonDagCollection;
+   json.get_to(jsonDagCollection);
+
    for (const auto& item : jsonDagCollection.valueArray)
    {
       auto found = valueFactoryMap.find(item.type);
@@ -45,12 +44,7 @@ std::shared_ptr< DagCollection > JSONDagCollection::Factory(
          continue;
       }
       auto pNode = found->second(item.data);
-      pResult->AddDagNode(item.name, pNode);
-   }
-
-   for (const auto& item : inbuiltDagValues)
-   {
-      pResult->AddDagNode(item.first, item.second);
+      pDagCollection->AddDagNode(item.name, pNode);
    }
 
    for (const auto& item : jsonDagCollection.calculateArray)
@@ -62,23 +56,23 @@ std::shared_ptr< DagCollection > JSONDagCollection::Factory(
          continue;
       }
       auto pNode = found->second(item.data);
-      pResult->AddDagNode(item.name, pNode);
+      pDagCollection->AddDagNode(item.name, pNode);
 
       for (const auto& link : item.stackInput)
       {
-         auto* pLinkInput = pResult->GetDagNode(link);
+         auto* pLinkInput = pDagCollection->GetDagNode(link);
          if (nullptr == pLinkInput)
          {
             LOG_MESSAGE_ERROR("Failed to link nodes:%s %s", item.name.c_str(), link.c_str());
             continue;
          }
-         pResult->LinkPush(pLinkInput, pNode.get());
+         pDagCollection->LinkPush(pLinkInput, pNode.get());
       }
 
       for (int index = 0; index < (int)item.orderedInput.size(); ++index)
       {
          const auto name = item.orderedInput[index];
-         auto* pLinkInput = pResult->GetDagNode(name);
+         auto* pLinkInput = pDagCollection->GetDagNode(name);
          if (nullptr == pLinkInput)
          {
             if (false == name.empty())
@@ -88,9 +82,18 @@ std::shared_ptr< DagCollection > JSONDagCollection::Factory(
             //null indexed input is ok....
             continue;
          }
-         pResult->LinkIndex(index, pLinkInput, pNode.get());
+         pDagCollection->LinkIndex(index, pLinkInput, pNode.get());
       }
    }
 
-   return pResult;
+   for (const auto& item : jsonDagCollection.fileArray)
+   {
+      AppendCollection(
+         pDagCollection, 
+         item,
+         dealFileCallback,
+         valueFactoryMap,
+         calculateFactoryMap
+         );
+   }
 }

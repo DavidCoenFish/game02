@@ -4,7 +4,7 @@
 
 class HeapWrapperItem;
 
-class ShaderResourceInfo
+struct ShaderResourceInfo
 {
 public:
    static std::shared_ptr< ShaderResourceInfo > FactorySampler(

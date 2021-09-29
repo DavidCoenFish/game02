@@ -14,11 +14,13 @@ class HeapWrapperItem;
 class CustomCommandList;
 class Shader;
 struct ShaderPipelineStateData;
-class ShaderConstantInfo;
-class ShaderResourceInfo;
-class ShaderConstantBuffer;
+struct ShaderConstantInfo;
+struct ShaderResourceInfo;
+struct ShaderConstantBuffer;
 class GeometryGeneric;
 class ShaderTexture;
+class RenderTargetTexture;
+class JSONDrawSystem;
 namespace DirectX
 {
    class GraphicsMemory;
@@ -28,6 +30,8 @@ namespace DirectX
 class DrawSystem
 {
 public:
+   static std::unique_ptr< DrawSystem> Factory(const HWND hWnd, const JSONDrawSystem& json);
+
    DrawSystem(
       const HWND hWnd,
       const unsigned int backBufferCount = 2,
@@ -95,7 +99,7 @@ public:
       return pResult;
    }
 
-   std::shared_ptr< ShaderTexture > MakeTexture(
+   std::shared_ptr< ShaderTexture > MakeShaderTexture(
       ID3D12GraphicsCommandList* const pCommandList,
       const std::shared_ptr< HeapWrapperItem >& shaderResource,
       const D3D12_RESOURCE_DESC& desc, 
@@ -103,6 +107,14 @@ public:
       const std::vector<uint8_t>& data
       );
 
+   std::shared_ptr< RenderTargetTexture > MakeRenderTargetTexture(
+      ID3D12GraphicsCommandList* const pCommandList,
+      const std::vector< RenderTargetFormatData >& targetFormatDataArray,
+      const RenderTargetDepthData& targetDepthData,
+      const int width,
+      const int height,
+      const bool bResizeWithScreen = false
+      );
 
    std::shared_ptr<CustomCommandList> CreateCustomCommandList();
    void CustomCommandListFinish(ID3D12GraphicsCommandList* pCommandList);

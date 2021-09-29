@@ -59,14 +59,23 @@ struct JSONDagCollection
 
    std::vector<JSONDagValue> valueArray;
    std::vector<JSONDagCalculate> calculateArray;
+   std::vector<std::string> fileArray;
 
    static std::shared_ptr< DagCollection > Factory(
-      const JSONDagCollection& jsonDagCollection,
+      const std::string& fileName,
+      const std::function<const std::string(const std::string& fileName)>& dealFileCallback,
       const std::vector< std::pair< std::string, std::shared_ptr< iDagNode > > >& inbuiltDagValues,
       const std::map<std::string, ValueFactory>& valueFactoryMap,
       const std::map<std::string, ValueFactory>& calculateFactoryMap
-      //const std::map<std::string, CalculateFunction>& calculateFunctionMap
       );
+   static void AppendCollection(
+      const std::shared_ptr< DagCollection >& pDagCollection,
+      const std::string& fileName,
+      const std::function<const std::string(const std::string& fileName)>& dealFileCallback,
+      const std::map<std::string, ValueFactory>& valueFactoryMap,
+      const std::map<std::string, ValueFactory>& calculateFactoryMap
+      );
+
    //static void RegisterValue(const std::string& type, const std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)>& factory);
    //static void RegisterCalculate(const std::string& function, const std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)>& factory);
 };
@@ -74,5 +83,6 @@ struct JSONDagCollection
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    JSONDagCollection, 
    valueArray,
-   calculateArray
+   calculateArray,
+   fileArray
    );

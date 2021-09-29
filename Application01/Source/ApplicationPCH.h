@@ -5,6 +5,8 @@
 
 #include <Common.h>
 #include <XGameRuntime.h>
+#include "HostDefine.h"
+
 /*
 #pragma once
 

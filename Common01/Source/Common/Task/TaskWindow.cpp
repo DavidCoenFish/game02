@@ -3,8 +3,10 @@
 #include "Common/Task/TaskWindow.h"
 #include "Common/Application/WindowHelper.h"
 #include "Common/Application/ApplicationHolder.h"
+#include "Common/Application/ApplicationDisplayList.h"
 #include "Common/Application/ApplicationTriangle.h"
 #include "Common/Application/ApplicationTriangleJson.h"
+#include "Common/Application/ApplicationTriangleMove.h"
 #include "Common/Application/IApplication.h"
 
 class JSONWindow
@@ -56,13 +58,15 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
 //};
 //static CallThing s_CallThing;
 
-const TApplicationFactory GetApplicationFactory(const std::string& factoryKey)
+const TApplicationFactory GetApplicationFactory(const std::string& factory)
 {
    static std::map<std::string, TApplicationFactory> s_factoryMap({
       {"Triangle", ApplicationTriangle::Factory},
       {"TriangleJson", ApplicationTriangleJson::Factory},
+      {"TriangleMove", ApplicationTriangleMove::Factory},
+      {"DisplayList", ApplicationDisplayList::Factory},
       });
-   const auto found = s_factoryMap.find(factoryKey);
+   const auto found = s_factoryMap.find(factory);
    if (found != s_factoryMap.end())
    {
       return found->second;

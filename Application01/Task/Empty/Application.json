@@ -1,7 +1,7 @@
 {
    "tasks":[
       {
-         "factoryKey": "Window",
+         "factory": "Window",
          "data": [
             {
                "name": "Empty",

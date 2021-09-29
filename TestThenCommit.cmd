@@ -1,6 +1,8 @@
 @ECHO OFF
 PUSHD %~dp0
 
+cls
+
 echo %time% %~nx0 %~1
 
 SET MISSING_AUTOMATRON=

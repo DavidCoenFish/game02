@@ -1,20 +1,26 @@
 {
-   "windows": [
+   "tasks": [
       {
-         "name": "DisplayList",
-         "fullScreen": false,
-         "width": 800,
-         "height": 600,
-         "factory": "ApplicationDisplayList",
-         "data": "Data0.json"
-      },
-      {
-         "name": "DisplayList2",
-         "fullScreen": false,
-         "width": 800,
-         "height": 600,
-         "factory": "ApplicationDisplayList",
-         "data": "Data0.json"
+         "factory": "Window",
+         "data": [
+            {
+               "name": "DisplayList",
+               "fullScreen": false,
+               "width": 800,
+               "height": 600,
+               "factory": "DisplayList",
+               "data": {
+                  "file": "Data0.json",
+                  "drawSystem": {
+                     "targetFormatData": {
+                        "format": "DXGI_FORMAT_B8G8R8A8_UNORM",
+                        "clearOnSet": true,
+                        "clearColor": [ 0.5, 0.5, 0.5, 1.0 ]
+                     }
+                  }
+               }
+            }
+         ]
       }
    ]
 }

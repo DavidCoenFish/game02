@@ -1,6 +1,6 @@
 #pragma once
 
-class ShaderConstantInfo
+struct ShaderConstantInfo
 {
 public:
    explicit ShaderConstantInfo(
@@ -21,8 +21,8 @@ public:
       return *pData;
    }
 
+//public for json reflection
 private:
-   const D3D12_SHADER_VISIBILITY m_visiblity;
+   D3D12_SHADER_VISIBILITY m_visiblity;
    std::vector< uint8_t > m_data;
-
 };

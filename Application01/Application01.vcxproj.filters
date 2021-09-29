@@ -25,17 +25,36 @@
     <Filter Include="Task\TestTriangleJson">
       <UniqueIdentifier>{8b21a776-967d-4646-92d1-3972fd10c5c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Task\TestTriangleMove">
+      <UniqueIdentifier>{bb9d23f3-a209-4a04-b93e-fdc0a74ee5b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Task\DisplayListBurn00">
+      <UniqueIdentifier>{5cb1bf3b-ad77-4960-9c85-8d88b9cdc1c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script">
+      <UniqueIdentifier>{1f8e7a32-d8b2-413f-a516-ec68a0727607}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ApplicationPCH.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Build.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HostDefine.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\ApplicationPCH.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Build.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -73,9 +92,50 @@
     <CopyFileToFolders Include="Task\TestTriangleJson\Application.json">
       <Filter>Task\TestTriangleJson</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\TestTriangleMove\Application.json">
+      <Filter>Task\TestTriangleMove</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\DisplayListBurn00\Application.json">
+      <Filter>Task\DisplayListBurn00</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\DisplayListBurn00\DagGrid.json">
+      <Filter>Task\DisplayListBurn00</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\DisplayListBurn00\DagMaster.json">
+      <Filter>Task\DisplayListBurn00</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\DisplayListBurn00\DagPresent.json">
+      <Filter>Task\DisplayListBurn00</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <None Include="Application01.props" />
+    <None Include="Script\prebuild.cmd">
+      <Filter>Script</Filter>
+    </None>
+    <None Include="Script\util_make_build_version.cmd">
+      <Filter>Script</Filter>
+    </None>
+    <None Include="Script\util_make_build_description.cmd">
+      <Filter>Script</Filter>
+    </None>
+    <None Include="Script\util_make_build_date.cmd">
+      <Filter>Script</Filter>
+    </None>
+    <None Include="Script\util_make_resource.cmd">
+      <Filter>Script</Filter>
+    </None>
+    <None Include="Script\util_search_replace.cmd">
+      <Filter>Script</Filter>
+    </None>
+    <None Include="Script\util_make_host_define.cmd">
+      <Filter>Script</Filter>
+    </None>
+    <None Include="Application01.rc.template" />
+    <None Include="MicrosoftGame.Config.template" />
+    <None Include="Script\util_make_microsoft_game_config.cmd">
+      <Filter>Script</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Task\TestTriangle\PixelShader.hlsl">
@@ -96,5 +156,26 @@
     <FxCompile Include="Task\TestTriangleJson\VertexShader.hlsl">
       <Filter>Task\TestTriangleJson</Filter>
     </FxCompile>
+    <FxCompile Include="Task\TestTriangleMove\PixelShader.hlsl">
+      <Filter>Task\TestTriangleMove</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\TestTriangleMove\VertexShader.hlsl">
+      <Filter>Task\TestTriangleMove</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\DisplayListBurn00\PixelShaderGrid.hlsl">
+      <Filter>Task\DisplayListBurn00</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\DisplayListBurn00\PixelShaderPresent.hlsl">
+      <Filter>Task\DisplayListBurn00</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\DisplayListBurn00\VertexShaderGrid.hlsl">
+      <Filter>Task\DisplayListBurn00</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\DisplayListBurn00\VertexShaderPresent.hlsl">
+      <Filter>Task\DisplayListBurn00</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Application01.rc" />
   </ItemGroup>
 </Project>

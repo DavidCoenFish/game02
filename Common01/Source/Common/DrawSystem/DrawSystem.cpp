@@ -7,8 +7,23 @@
 #include "Common/DrawSystem/HeapWrapper/HeapWrapper.h"
 #include "Common/DrawSystem/HeapWrapper/HeapWrapperItem.h"
 #include "Common/DrawSystem/Shader/Shader.h"
+#include "Common/DrawSystem/Shader/ShaderTexture.h"
+#include "Common/DrawSystem/RenderTarget/RenderTargetTexture.h"
 #include "Common/DrawSystem/Geometry/GeometryGeneric.h"
 #include "Common/DirectXTK12/GraphicsMemory.h"
+#include "Common/JSON/JSONDrawSystem.h"
+
+std::unique_ptr< DrawSystem > DrawSystem::Factory(const HWND hWnd, const JSONDrawSystem& json)
+{
+   return std::make_unique< DrawSystem >(
+      hWnd,
+      json.backBufferCount,
+      json.d3dFeatureLevel,
+      json.options,
+      json.targetFormatData,
+      json.targetDepthData
+      );
+}
 
 DrawSystem::DrawSystem(
    const HWND hWnd,
@@ -115,6 +130,59 @@ std::shared_ptr< GeometryGeneric > DrawSystem::MakeGeometryGeneric(
    }
    return pResult;
 }
+
+std::shared_ptr< ShaderTexture > DrawSystem::MakeShaderTexture(
+   ID3D12GraphicsCommandList* const pCommandList,
+   const std::shared_ptr< HeapWrapperItem >& shaderResource,
+   const D3D12_RESOURCE_DESC& desc, 
+   const D3D12_SHADER_RESOURCE_VIEW_DESC& shaderResourceViewDesc,
+   const std::vector<uint8_t>& data
+   )
+{
+   auto pResult = std::make_shared<ShaderTexture>(
+      this,
+      shaderResource,
+      desc, 
+      shaderResourceViewDesc,
+      data
+      );
+   if (pResult && m_pDeviceResources)
+   {
+      ((IResource*)(pResult.get()))->OnDeviceRestored(
+         pCommandList,
+         m_pDeviceResources->GetD3dDevice()
+         );
+   }
+   return pResult;
+}
+
+std::shared_ptr< RenderTargetTexture > DrawSystem::MakeRenderTargetTexture(
+   ID3D12GraphicsCommandList* const pCommandList,
+   const std::vector< RenderTargetFormatData >& targetFormatDataArray,
+   const RenderTargetDepthData& targetDepthData,
+   const int width,
+   const int height,
+   const bool bResizeWithScreen
+   )
+{
+   auto pResult = std::make_shared<RenderTargetTexture>(
+      this,
+      targetFormatDataArray,
+      targetDepthData,
+      width,
+      height,
+      bResizeWithScreen
+      );
+   if (pResult && m_pDeviceResources)
+   {
+      ((IResource*)(pResult.get()))->OnDeviceRestored(
+         pCommandList,
+         m_pDeviceResources->GetD3dDevice()
+         );
+   }
+   return pResult;
+}
+
 
 std::shared_ptr<CustomCommandList> DrawSystem::CreateCustomCommandList()
 {

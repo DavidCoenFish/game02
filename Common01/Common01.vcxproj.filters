@@ -294,6 +294,15 @@
     <ClCompile Include="Source\Common\Application\ApplicationTriangleJson.cpp">
       <Filter>Source\Common\Application</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Common\Application\ApplicationTriangleMove.cpp">
+      <Filter>Source\Common\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\JSON\JSONShaderConstantInfo.cpp">
+      <Filter>Source\Common\JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Application\ApplicationDisplayList.cpp">
+      <Filter>Source\Common\Application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CommonPCH.h">
@@ -540,6 +549,15 @@
       <Filter>Source\Common\Application</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Application\ApplicationTriangleJson.h">
+      <Filter>Source\Common\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Application\ApplicationTriangleMove.h">
+      <Filter>Source\Common\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\JSON\JSONShaderConstantInfo.h">
+      <Filter>Source\Common\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Application\ApplicationDisplayList.h">
       <Filter>Source\Common\Application</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,7 +4,7 @@
     <CommandLineArgs>
     </CommandLineArgs>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>TestTriangle</LocalDebuggerCommandArguments>
-    <RemoteDebuggerCommandArguments>TestTriangle</RemoteDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>DisplayList</LocalDebuggerCommandArguments>
+    <RemoteDebuggerCommandArguments>DisplayList</RemoteDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

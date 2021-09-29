@@ -23,8 +23,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Desktop.x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Common\Application\ApplicationDisplayList.cpp" />
     <ClCompile Include="Source\Common\Application\ApplicationTriangle.cpp" />
     <ClCompile Include="Source\Common\Application\ApplicationTriangleJson.cpp" />
+    <ClCompile Include="Source\Common\Application\ApplicationTriangleMove.cpp" />
     <ClCompile Include="Source\Common\Application\CommandLine.cpp" />
     <ClCompile Include="Source\Common\Application\IApplication.cpp" />
     <ClCompile Include="Source\Common\Application\ApplicationHolder.cpp" />
@@ -83,6 +85,7 @@
     <ClCompile Include="Source\Common\JSON\JSONInputElementDesc.cpp" />
     <ClCompile Include="Source\Common\JSON\JSONRenderTarget.cpp" />
     <ClCompile Include="Source\Common\JSON\JSONShader.cpp" />
+    <ClCompile Include="Source\Common\JSON\JSONShaderConstantInfo.cpp" />
     <ClCompile Include="Source\Common\JSON\JSONVector.cpp" />
     <ClCompile Include="Source\Common\Log\ILogConsumer.cpp" />
     <ClCompile Include="Source\Common\Log\Log.cpp" />
@@ -104,8 +107,10 @@
   <ItemGroup>
     <ClInclude Include="Source\Common.h" />
     <ClInclude Include="Source\CommonPCH.h" />
+    <ClInclude Include="Source\Common\Application\ApplicationDisplayList.h" />
     <ClInclude Include="Source\Common\Application\ApplicationTriangle.h" />
     <ClInclude Include="Source\Common\Application\ApplicationTriangleJson.h" />
+    <ClInclude Include="Source\Common\Application\ApplicationTriangleMove.h" />
     <ClInclude Include="Source\Common\Application\CommandLine.h" />
     <ClInclude Include="Source\Common\Application\IApplication.h" />
     <ClInclude Include="Source\Common\Application\ApplicationHolder.h" />
@@ -165,6 +170,7 @@
     <ClInclude Include="Source\Common\JSON\JSONInputElementDesc.h" />
     <ClInclude Include="Source\Common\JSON\JSONRenderTarget.h" />
     <ClInclude Include="Source\Common\JSON\JSONShader.h" />
+    <ClInclude Include="Source\Common\JSON\JSONShaderConstantInfo.h" />
     <ClInclude Include="Source\Common\JSON\JSONVector.h" />
     <ClInclude Include="Source\Common\Log\ILogConsumer.h" />
     <ClInclude Include="Source\Common\Log\Log.h" />

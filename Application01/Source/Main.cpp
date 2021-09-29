@@ -3,6 +3,7 @@
 //
 
 #include "ApplicationPCH.h"
+#include "Build.h"
 #include "Common/Application/CommandLine.h"
 #include "Common/Task/ITask.h"
 #include "Common/Task/TaskWindow.h"
@@ -11,19 +12,6 @@
 #include "Common/Log/LogConsumerConsole.h"
 #include "Common/Util/Utf8.h"
 #include "json/json.hpp"
-
-class JSONTask
-{
-public:
-   std::string factoryKey;
-   nlohmann::json data;
-};
-
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-   JSONTask,
-   factoryKey,
-   data
-   );
 
 struct JSONApplication
 {
@@ -69,6 +57,8 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
       std::make_shared< LogConsumerConsole >()
       }));
 
+   LOG_MESSAGE("Build %s %s %s", Build::GetBuildVersion(), Build::GetBuildTime(), Build::GetBuildDescription());
+
    auto pCommandLine = CommandLine::Factory(Utf8::Utf16ToUtf8(GetCommandLineW()));
    if (nullptr == pCommandLine)
    {
@@ -97,7 +87,7 @@ static const int RunTask(HINSTANCE hInstance, int nCmdShow)
 
       for (const auto& item: applicationData.tasks)
       {
-         auto taskFactory = GetTaskFactory(item.factoryKey);
+         auto taskFactory = GetTaskFactory(item.factory);
          auto pTask = (nullptr != taskFactory) ? taskFactory(hInstance, nCmdShow, pCommandLine, path, item.data) : nullptr;
          if (pTask)
          {

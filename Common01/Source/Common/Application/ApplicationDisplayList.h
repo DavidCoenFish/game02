@@ -10,7 +10,9 @@ class ApplicationDisplayList : public IApplication
 {
    typedef IApplication BaseType;
 public:
-   ApplicationDisplayList(const IApplicationParam& applicationParam, const std::filesystem::path& rootPath, const std::string& data);
+   static IApplication* const Factory(const HWND hWnd, const IApplicationParam& applicationParam);
+
+   ApplicationDisplayList(const HWND hWnd, const IApplicationParam& applicationParam);
    virtual ~ApplicationDisplayList();
 
 private:
@@ -20,9 +22,13 @@ private:
 private:
    std::unique_ptr< DrawSystem > m_pDrawSystem;
    std::shared_ptr< DagCollection > m_pDagCollection;
+   std::shared_ptr< iDagNode > m_pDagTimeAccumulate;
    std::shared_ptr< iDagNode > m_pDagFrameCount;
    std::shared_ptr< iDagNode > m_pDagBackBuffer;
    std::shared_ptr< iDagNode > m_pDagDrawSystemFrame;
    std::shared_ptr< iDagNode > m_pDagRender;
+
+   bool m_timePointValid;
+   std::chrono::system_clock::time_point m_timePoint;
 
 };

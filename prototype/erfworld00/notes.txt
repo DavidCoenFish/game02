@@ -316,7 +316,7 @@ gobwin knob. lv 1 infantry & twolls. lv 2 spidews & warlords. lv 3. dwagons
 
    book 2-43
 natural allies know the will of their tribe's chief by natural thinkamancy
-tribes have  no purse and keep no shmuckers. when in alliance, the allied side pops ration for them from it's treasury
+tribes have no purse and keep no shmuckers. when in alliance, the allied side pops ration for them from it's treasury
 feral tribes hunt/gather/farm/mine
 if given shmuckers, spend to promotion or equipment
 
@@ -324,7 +324,7 @@ if given shmuckers, spend to promotion or equipment
 doombats, scout range of 20 hex, thinkamancer extend indefinitely, cost of thinkagram
 
    book 2-56
-linkup (thinkamancer-hat magician-data a mancer) made item to get intiotion about combat match-ups (power?)
+linkup (thinkamancer-hat magician-data a mancer) made item to get info about combat match-ups (power?)
 
    book 2-65
 linkup (thinkamancer-turnamancer-?) spell that can for another side to end it's turn, 2 days juice
@@ -385,7 +385,7 @@ can have a heavy warlord
 transylvito "drinkin' yer blood in place of rations'
 
    book 3-9
-prisiber, escape rules. 1% [nb guards, nb captor units in hex, lv city, additional precutions, lv and special of prisoner]
+prisoner, escape rules. 1% [nb guards, nb captor units in hex, lv city, additional precutions, lv and special of prisoner]
 fugitive. free from shackles when they leave hex, for a pseudo side with turn before captor. have move and can engage, casters can cast. steal or forage min upkeep or recatured.
 repaturations. stack with unit of own side.
 fugitive encountering a third side can fight or be catured, and returned/ransomed to anyone.

@@ -4,9 +4,9 @@
 #include "Common/DrawSystem/Shader/ShaderPipelineStateData.h"
 #include "Common/DrawSystem/Shader/ShaderConstantInfo.h"
 
-class ShaderConstantInfo;
-class ShaderResourceInfo;
-class ShaderConstantBuffer;
+struct ShaderConstantInfo;
+struct ShaderResourceInfo;
+struct ShaderConstantBuffer;
 
 class Shader : public IResource
 {
@@ -38,7 +38,7 @@ public:
          const void* const pData = m_arrayShaderConstantsInfo[index]->GetBufferData();
          return (*((CONSTANTS*)pData));
       }
-      CONSTANTS result;
+      static CONSTANTS result;
       return result;
    }
 

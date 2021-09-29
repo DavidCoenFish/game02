@@ -3,6 +3,8 @@
 @ECHO OFF
 PUSHD %~dp0
 
+cls
+
 echo %~nx0 %~1 %~2
 
 FOR /F "skip=1 tokens=1-6" %%G IN ('WMIC Path Win32_LocalTime Get Day^,Hour^,Minute^,Month^,Second^,Year /Format:table') DO (
@@ -33,6 +35,7 @@ SET DESTINATION=E:\Backup\%TIMESTAMP%_game02
 ::)
 
 ::/L list and dont copy
-robocopy . %DESTINATION% /S /XD .git .vs /NS /NC /NFL /NDL /NP /NJH
+::/NJH no job header
+robocopy . %DESTINATION% /S /XD .git .vs /NS /NC /NFL /NDL /NP 
 
 

@@ -8,18 +8,21 @@
 #include "Common/DrawSystem/Shader/ShaderPipelineStateData.h"
 #include "Common/DrawSystem/Geometry/GeometryGeneric.h"
 #include "Common/DrawSystem/Shader/Shader.h"
+#include "Common/Json/JSONDrawSystem.h"
 #include "Common/Json/JSONGeometry.h"
 #include "Common/Json/JSONShader.h"
 
 class JSONData
 {
 public:
+   JSONDrawSystem drawSystem;
    JSONShader shader; 
    JSONGeometry geometry;
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    JSONData,
+   drawSystem,
    shader,
    geometry
    );
@@ -34,10 +37,11 @@ ApplicationTriangleJson::ApplicationTriangleJson(const HWND hWnd, const IApplica
    : IApplication(hWnd, applicationParam)
 {
    LOG_MESSAGE("ApplicationTriangleJson ctor %p", this);
-   m_pDrawSystem = std::make_unique< DrawSystem>(hWnd);
 
    JSONData data;
    applicationParam.m_json.get_to(data);
+
+   m_pDrawSystem = DrawSystem::Factory(hWnd, data.drawSystem);
 
    auto pCommandList = m_pDrawSystem->CreateCustomCommandList();
    auto pVertexShaderData = FileSystem::SyncReadFile(applicationParam.m_rootPath / data.shader.vertexShader);

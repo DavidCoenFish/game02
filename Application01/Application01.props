@@ -27,6 +27,9 @@
     <CopyFileToFolders>
       <DestinationFolders>$(OutDirFullPath)%(RelativeDir)</DestinationFolders>
     </CopyFileToFolders>
+    <PreBuildEvent>
+      <Command>$(ProjectDir)script\prebuild.cmd "$(Configuration)" "$(Platform)" 0 0 "$(ProjectName)" "$(TargetName)"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="DscBuildDir">

@@ -34,7 +34,7 @@ void from_json(const nlohmann::json& j, RenderTargetDepthData& p);
 
 struct JSONRenderTarget
 {
-   std::vector< RenderTargetFormatData > targetBufferDataArray;
+   std::vector< RenderTargetFormatData > targetFormatDataArray;
    RenderTargetDepthData targetDepthData;
    int width;
    int height;
@@ -43,7 +43,7 @@ struct JSONRenderTarget
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    JSONRenderTarget, 
-   targetBufferDataArray,
+   targetFormatDataArray,
    targetDepthData,
    width,
    height,
