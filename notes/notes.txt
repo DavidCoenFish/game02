@@ -1,3 +1,9 @@
+todo:
+   task TestTexture
+   task TestTextureJson
+   cleanup d3dx12 code to use less DirectXTK12, manage resouce lifespan
+   multithreaded dag?
+
 dag render target or shader nodes
    do we have them as calculate nodes, 
    or get as many static values as possible as a value node, and use calculate node to hook up run time data

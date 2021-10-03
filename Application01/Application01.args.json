@@ -11,6 +11,14 @@
       "Command": "MultipleEmptyWindow"
     },
     {
+      "Id": "1084b9de-80ed-45fb-b1e9-d5ff865cb4bd",
+      "Command": "TestTexture"
+    },
+    {
+      "Id": "9f353cf1-ab01-4e9a-97a5-f99d9a698a9e",
+      "Command": "TestTextureJson"
+    },
+    {
       "Id": "53189eee-64de-4198-8a77-1f8c138f3cba",
       "Command": "TestTriangle"
     },

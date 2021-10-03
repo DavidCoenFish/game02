@@ -34,6 +34,12 @@
     <Filter Include="Script">
       <UniqueIdentifier>{1f8e7a32-d8b2-413f-a516-ec68a0727607}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Task\TestTexture">
+      <UniqueIdentifier>{00901434-30f2-41e9-8c3f-67042813a35a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Task\TestTextureJson">
+      <UniqueIdentifier>{30c2d5f2-8e70-4b3d-b0c9-0d38d379d17b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ApplicationPCH.h">
@@ -107,6 +113,12 @@
     <CopyFileToFolders Include="Task\DisplayListBurn00\DagPresent.json">
       <Filter>Task\DisplayListBurn00</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\TestTexture\Application.json">
+      <Filter>Task\TestTexture</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\TestTextureJson\Application.json">
+      <Filter>Task\TestTextureJson</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <None Include="Application01.props" />
@@ -173,6 +185,18 @@
     </FxCompile>
     <FxCompile Include="Task\DisplayListBurn00\VertexShaderPresent.hlsl">
       <Filter>Task\DisplayListBurn00</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\TestTexture\PixelShader.hlsl">
+      <Filter>Task\TestTexture</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\TestTexture\VertexShader.hlsl">
+      <Filter>Task\TestTexture</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\TestTextureJson\PixelShader.hlsl">
+      <Filter>Task\TestTextureJson</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\TestTextureJson\VertexShader.hlsl">
+      <Filter>Task\TestTextureJson</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

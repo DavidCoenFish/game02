@@ -39,6 +39,9 @@
     <ClCompile Include="Source\CommonWorkerJobFinished.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\AVUITFieldScopeLock.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\UnitTestPCH.h">

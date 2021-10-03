@@ -4,6 +4,8 @@
 #include "Common/Application/WindowHelper.h"
 #include "Common/Application/ApplicationHolder.h"
 #include "Common/Application/ApplicationDisplayList.h"
+#include "Common/Application/ApplicationTexture.h"
+#include "Common/Application/ApplicationTextureJson.h"
 #include "Common/Application/ApplicationTriangle.h"
 #include "Common/Application/ApplicationTriangleJson.h"
 #include "Common/Application/ApplicationTriangleMove.h"
@@ -37,7 +39,7 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    data
    );
 
-//works if we have live code referencing this class?
+//works if we have live code referencing this class? at which point just as easy to have awareness of headers?
 //extern void RegisterTaskFactory(const std::string& taskFactoryKey, const TTaskFactory& taskFactory);
 //class CallThing
 //{
@@ -61,10 +63,12 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
 const TApplicationFactory GetApplicationFactory(const std::string& factory)
 {
    static std::map<std::string, TApplicationFactory> s_factoryMap({
+      {"DisplayList", ApplicationDisplayList::Factory},
+      {"Texture", ApplicationTexture::Factory},
+      {"TextureJson", ApplicationTextureJson::Factory},
       {"Triangle", ApplicationTriangle::Factory},
       {"TriangleJson", ApplicationTriangleJson::Factory},
       {"TriangleMove", ApplicationTriangleMove::Factory},
-      {"DisplayList", ApplicationDisplayList::Factory},
       });
    const auto found = s_factoryMap.find(factory);
    if (found != s_factoryMap.end())
