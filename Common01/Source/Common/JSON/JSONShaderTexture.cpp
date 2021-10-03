@@ -16,9 +16,70 @@
 //    D3D12_TEXTURE_LAYOUT Layout;
 //    D3D12_RESOURCE_FLAGS Flags;
 //    } 	D3D12_RESOURCE_DESC;
-//void from_json(const nlohmann::json& j, D3D12_RESOURCE_DESC& p)
-//{
-//}
+void to_json(nlohmann::json& j, const D3D12_RESOURCE_DESC& p)
+{
+   j; p;
+}
+void from_json(const nlohmann::json& j, D3D12_RESOURCE_DESC& p)
+{
+   memset(&p, 0, sizeof(D3D12_RESOURCE_DESC));
+   if(j.contains("Dimension"))
+   { 
+      from_json(j.at("Dimension"), p.Dimension); 
+   }
+#if 1
+   p.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+#else
+   if(j.contains("Alignment"))
+   { 
+      //D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT
+      if (j.at("Alignment").is_string())
+      {
+         std::string value;
+         //from_json(j.at("Shader4ComponentMapping"), value); 
+         j.at("Alignment").get_to(value);
+         if (value == "D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT")
+         {
+            p.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+         }
+         //other defines?
+      }
+   }
+#endif
+   if(j.contains("Width"))
+   { 
+      j.at("Width").get_to(p.Width); 
+   }
+   if(j.contains("Height"))
+   { 
+      j.at("Height").get_to(p.Height); 
+   }
+   if(j.contains("DepthOrArraySize"))
+   { 
+      j.at("DepthOrArraySize").get_to(p.DepthOrArraySize); 
+   }
+   if(j.contains("MipLevels"))
+   { 
+      j.at("MipLevels").get_to(p.MipLevels); 
+   }
+   if(j.contains("Format"))
+   { 
+      from_json(j.at("Format"), p.Format); 
+   }
+   if(j.contains("SampleDesc"))
+   { 
+      from_json(j.at("SampleDesc"), p.SampleDesc); 
+   }
+   if(j.contains("Layout"))
+   { 
+      j.at("Layout").get_to(p.Layout); 
+   }
+   if(j.contains("Flags"))
+   { 
+      j.at("Flags").get_to(p.Flags); 
+   }
+}
+
 
 
 //typedef struct D3D12_TEX2D_SRV
@@ -70,6 +131,9 @@ void from_json(const nlohmann::json& j, D3D12_SHADER_RESOURCE_VIEW_DESC& p)
    { 
       from_json(j.at("ViewDimension"), p.ViewDimension); 
    }
+#if 1
+   p.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+#else
    if(j.contains("Shader4ComponentMapping"))
    {
       if (j.at("Shader4ComponentMapping").is_string())
@@ -88,6 +152,7 @@ void from_json(const nlohmann::json& j, D3D12_SHADER_RESOURCE_VIEW_DESC& p)
          //other encode
       }
    }
+#endif
    if (j.contains("Texture2D"))
    {
       from_json(j.at("Texture2D"), p.Texture2D); 

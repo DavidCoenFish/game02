@@ -15,7 +15,7 @@
 #include "Common/Json/JSONShader.h"
 #include "Common/Json/JSONShaderTexture.h"
 
-class JSONData
+class JSONDataATJ
 {
 public:
    JSONDrawSystem drawSystem;
@@ -25,7 +25,7 @@ public:
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-   JSONData,
+   JSONDataATJ,
    drawSystem,
    texture,
    shader,
@@ -42,7 +42,7 @@ ApplicationTextureJson::ApplicationTextureJson(const HWND hWnd, const IApplicati
    : IApplication(hWnd, applicationParam)
 {
    LOG_MESSAGE("ApplicationTextureJson  ctor %p", this);
-   JSONData data;
+   JSONDataATJ data;
    applicationParam.m_json.get_to(data);
 
    m_pDrawSystem = DrawSystem::Factory(hWnd, data.drawSystem);

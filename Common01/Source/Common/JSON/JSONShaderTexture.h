@@ -16,20 +16,21 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    Quality
    );
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-   D3D12_RESOURCE_DESC,
-   Dimension,
-   Alignment,
-   Width,
-   Height,
-   DepthOrArraySize,
-   MipLevels,
-   Format,
-   SampleDesc,
-   Layout,
-   Flags
-   );
-//void from_json(const nlohmann::json& j, D3D12_RESOURCE_DESC& p);
+//NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+//   D3D12_RESOURCE_DESC,
+//   Dimension,
+//   Alignment,
+//   Width,
+//   Height,
+//   DepthOrArraySize,
+//   MipLevels,
+//   Format,
+//   SampleDesc,
+//   Layout,
+//   Flags
+//   );
+void to_json(nlohmann::json& j, const D3D12_RESOURCE_DESC& p);
+void from_json(const nlohmann::json& j, D3D12_RESOURCE_DESC& p);
 
 //DXGI_FORMAT         Format;
 //D3D12_SRV_DIMENSION ViewDimension;

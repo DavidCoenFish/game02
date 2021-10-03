@@ -21,8 +21,8 @@
                      "desc": {
                         "Dimension": "D3D12_RESOURCE_DIMENSION_TEXTURE2D",
                         "Alignment": "D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT",
-                        "Width": 256,
-                        "Height": 256,
+                        "Width": 2,
+                        "Height": 2,
                         "DepthOrArraySize": 1,
                         "MipLevels": 1,
                         "Format": "DXGI_FORMAT_B8G8R8A8_UNORM",
@@ -37,31 +37,16 @@
                         "Format": "DXGI_FORMAT_B8G8R8A8_UNORM",
                         "ViewDimension": "D3D12_SRV_DIMENSION_TEXTURE2D",
                         "Shader4ComponentMapping": " D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING",
-                        "D3D12_TEX2D_SRV": {
-                           "MipLevels":1
+                        "Texture2D": {
+                           "MipLevels": 1
                         }
                      },
                      "data":[
                         255,0,0,255,
-                        255,0,0,255,
-                        255,0,0,255,
-                        255,0,0,255,
-
                         0,255,0,255,
-                        0,255,0,255,
-                        0,255,0,255,
-                        0,255,0,255,
-
                         0,0,255,255,
-                        0,0,255,255,
-                        0,0,255,255,
-                        0,0,255,255,
-
-                        255,0,0,255,
-                        255,0,0,255,
-                        255,0,0,255,
-                        255,0,0,255
-                        ]
+                        255,0,255,255
+                     ]
                   },
                   "shader": {
                      "pipelineState": {
@@ -94,26 +79,12 @@
                            "format": "DXGI_FORMAT_R32G32_FLOAT"
                         }
                      ],
-                     "floatPerVertex": 6,
+                     "floatPerVertex": 4,
                      "vertexData": [
-                        0.0,
-                        0.5,
-                        1.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.5,
-                        -0.5,
-                        0.0,
-                        1.0,
-                        0.0,
-                        1.0,
-                        -0.5,
-                        -0.5,
-                        0.0,
-                        0.0,
-                        1.0,
-                        1.0
+                        0.0, 0.5, 0.5, 0.0,
+
+                        0.5, -0.5, 1.0, 1.0,
+                        -0.5, -0.5, 0.0, 1.0
                      ],
                      "topology": "D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST"
                   }
