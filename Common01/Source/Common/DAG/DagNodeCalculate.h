@@ -2,8 +2,6 @@
 
 #include "Common/dag/idagnode.h"
 
-//TYPE could be a std::shared_ptr< whatever >?
-
 class iDagValue;
 
 class DagNodeCalculate : public iDagNode

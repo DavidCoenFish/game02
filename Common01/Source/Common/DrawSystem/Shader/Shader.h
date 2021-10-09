@@ -7,6 +7,7 @@
 struct ShaderConstantInfo;
 struct ShaderResourceInfo;
 struct ShaderConstantBuffer;
+class HeapWrapperItem;
 
 class Shader : public IResource
 {
@@ -29,13 +30,17 @@ public:
       const int frameIndex
       );
 
+   void SetShaderResourceViewHandle( const int index, const std::shared_ptr< HeapWrapperItem >& pShaderResourceViewHandle );
+   void SetConstantBufferData( const int index, const std::vector<float>& data );
+
    template <typename CONSTANTS>
    CONSTANTS& GetConstant( const int index)
    {
       if ((0 <= index) && (index < m_arrayShaderConstantsInfo.size()))
       {
-         assert(sizeof(CONSTANTS) == m_arrayShaderConstantsInfo[index]->GetBufferSize());
-         const void* const pData = m_arrayShaderConstantsInfo[index]->GetBufferData();
+         auto& shaderConstantInfo = *m_arrayShaderConstantsInfo[index];
+         assert(sizeof(CONSTANTS) == shaderConstantInfo.GetBufferSize());
+         const void* const pData = shaderConstantInfo.GetBufferData();
          return (*((CONSTANTS*)pData));
       }
       static CONSTANTS result;

@@ -65,7 +65,7 @@
                      },
                      "resourceInfo": [
                         {
-                           "ShaderVisibility": "D3D12_SHADER_VISIBILITY_PIXEL",
+                           "shaderVisibility": "D3D12_SHADER_VISIBILITY_PIXEL",
                            "dataSamplerDesc": "true"
                         }
                      ],

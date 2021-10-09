@@ -4,7 +4,7 @@
     <CommandLineArgs>
     </CommandLineArgs>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>TestTextureJson</LocalDebuggerCommandArguments>
-    <RemoteDebuggerCommandArguments>TestTextureJson</RemoteDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>TestTextureDag</LocalDebuggerCommandArguments>
+    <RemoteDebuggerCommandArguments>TestTextureDag</RemoteDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

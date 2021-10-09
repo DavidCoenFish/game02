@@ -321,6 +321,26 @@ void Shader::SetActivate(
    }
 }
 
+void Shader::SetShaderResourceViewHandle( const int index, const std::shared_ptr< HeapWrapperItem >& pShaderResourceViewHandle )
+{
+   if ((0 <= index) && (index < (int)m_arrayShaderResourceInfo.size()))
+   {
+      m_arrayShaderResourceInfo[index]->SetShaderResourceViewHandle( pShaderResourceViewHandle );
+   }
+   return;
+}
+
+void Shader::SetConstantBufferData( const int index, const std::vector<float>& data )
+{
+   if ((0 <= index) && (index < (int)m_arrayShaderConstantsInfo.size()))
+   {
+      auto& shaderConstantInfo = *m_arrayShaderConstantsInfo[index];
+      const void* const pData = &data[0];
+      shaderConstantInfo.UpdateData(pData, sizeof(float) * data.size());
+   }
+   return;
+}
+
 void Shader::OnDeviceLost()
 {
    m_rootSignature.Reset();

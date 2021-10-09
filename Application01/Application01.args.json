@@ -3,6 +3,14 @@
   "Id": "470231f0-9e07-40d4-bad1-a45eb0710811",
   "Items": [
     {
+      "Id": "00f2eceb-af2b-440f-bbe3-d2d9a6dacb27",
+      "Command": "TestTextureDag"
+    },
+    {
+      "Id": "0011d49a-006d-47ce-8568-bf5113a80d39",
+      "Command": "TestTriangleDag"
+    },
+    {
       "Id": "d369b04d-d49e-4a6b-a438-f350745eebc3",
       "Command": "Empty"
     },

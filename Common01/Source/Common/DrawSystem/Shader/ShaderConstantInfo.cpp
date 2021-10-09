@@ -11,7 +11,7 @@ ShaderConstantInfo::ShaderConstantInfo(
 {
 }
 
-void ShaderConstantInfo::UpdateData(void* const pData, const size_t dataSize)
+void ShaderConstantInfo::UpdateData(const void* const pData, const size_t dataSize)
 {
    dataSize;
    assert(dataSize == m_data.size());

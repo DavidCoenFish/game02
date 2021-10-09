@@ -12,7 +12,7 @@
 #include "Common/Json/JSONGeometry.h"
 #include "Common/Json/JSONShader.h"
 
-class JSONData
+class JSONData1
 {
 public:
    JSONDrawSystem drawSystem;
@@ -21,7 +21,7 @@ public:
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-   JSONData,
+   JSONData1,
    drawSystem,
    shader,
    geometry
@@ -48,7 +48,7 @@ ApplicationTriangleMove::ApplicationTriangleMove(const HWND hWnd, const IApplica
 {
    LOG_MESSAGE("ApplicationTriangleMove ctor %p", this);
 
-   JSONData data;
+   JSONData1 data;
    applicationParam.m_json.get_to(data);
 
    m_pDrawSystem = DrawSystem::Factory(hWnd, data.drawSystem);

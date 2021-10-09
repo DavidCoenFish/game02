@@ -130,9 +130,9 @@ void from_json(const nlohmann::json& j, JSONShaderResourceInfo& p)
    {
       p.useSampler = true;
       D3D12_SHADER_VISIBILITY ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-      if (j.contains("ShaderVisibility"))
+      if (j.contains("shaderVisibility"))
       {
-         j.at("ShaderVisibility").get_to(ShaderVisibility); 
+         j.at("shaderVisibility").get_to(ShaderVisibility); 
       }
       p.staticSamplerDesc =  D3D12_STATIC_SAMPLER_DESC{
          D3D12_FILTER_MIN_MAG_MIP_POINT, //D3D12_FILTER Filter;
@@ -154,9 +154,9 @@ void from_json(const nlohmann::json& j, JSONShaderResourceInfo& p)
    {
       p.useSampler = true;
       D3D12_SHADER_VISIBILITY ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-      if (j.contains("ShaderVisibility"))
+      if (j.contains("shaderVisibility"))
       {
-         j.at("ShaderVisibility").get_to(ShaderVisibility); 
+         j.at("shaderVisibility").get_to(ShaderVisibility); 
       }
       p.staticSamplerDesc =  D3D12_STATIC_SAMPLER_DESC{
          D3D12_FILTER_MIN_MAG_MIP_LINEAR, //D3D12_FILTER Filter;
@@ -178,9 +178,9 @@ void from_json(const nlohmann::json& j, JSONShaderResourceInfo& p)
    {
       p.useSampler = true;
       D3D12_SHADER_VISIBILITY ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-      if (j.contains("ShaderVisibility"))
+      if (j.contains("shaderVisibility"))
       {
-         j.at("ShaderVisibility").get_to(ShaderVisibility); 
+         j.at("shaderVisibility").get_to(ShaderVisibility); 
       }
       p.staticSamplerDesc =  D3D12_STATIC_SAMPLER_DESC{
          D3D12_FILTER_ANISOTROPIC,

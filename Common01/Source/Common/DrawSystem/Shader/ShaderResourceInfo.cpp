@@ -88,12 +88,15 @@ void ShaderResourceInfo::Activate(
    const int rootParamIndex
    )
 {
-   auto heap = m_pShaderResourceViewHandle->GetHeap();
-   pCommandList->SetDescriptorHeaps(1, &heap);
-   pCommandList->SetGraphicsRootDescriptorTable(
-      rootParamIndex, 
-      m_pShaderResourceViewHandle->GetGPUHandle()
-      );
+   if (m_pShaderResourceViewHandle)
+   {
+      auto heap = m_pShaderResourceViewHandle->GetHeap();
+      pCommandList->SetDescriptorHeaps(1, &heap);
+      pCommandList->SetGraphicsRootDescriptorTable(
+         rootParamIndex, 
+         m_pShaderResourceViewHandle->GetGPUHandle()
+         );
+   }
 
    return;
 }

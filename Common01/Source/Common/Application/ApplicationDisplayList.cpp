@@ -8,10 +8,13 @@
 #include "Common/DrawSystem/Shader/ShaderPipelineStateData.h"
 #include "Common/DrawSystem/Geometry/GeometryGeneric.h"
 #include "Common/DrawSystem/Shader/Shader.h"
+#include "Common/DrawSystem/Shader/ShaderTexture.h"
+#include "Common/DrawSystem/RenderTarget/RenderTargetTexture.h"
 #include "Common/DrawSystem/DrawSystemFrame.h"
 #include "Common/JSON/JSONDrawSystem.h"
 #include "Common/JSON/JSONDagCollection.h"
 #include "Common/JSON/JSONShader.h"
+#include "Common/JSON/JSONShaderTexture.h"
 #include "Common/JSON/JSONGeometry.h"
 #include "Common/JSON/JSONRenderTarget.h"
 #include "Common/DAG/DagCollection.h"
@@ -27,11 +30,24 @@ public:
    JSONDrawSystem drawSystem;
    std::string file;
 };
-
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    JSONData,
    drawSystem,
    file
+   );
+
+class JSONHeapWrapperFromRenderTargetData
+{
+public:
+   bool useDepth;
+   bool useShaderResource;
+   int shaderResourceIndex;
+};
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+   JSONHeapWrapperFromRenderTargetData,
+   useDepth,
+   useShaderResource,
+   shaderResourceIndex
    );
 
 std::shared_ptr< std::vector<uint8_t> > LoadFile(const std::filesystem::path& rootPath, const std::string& fileName)
@@ -53,6 +69,35 @@ IApplication* const ApplicationDisplayList::Factory(const HWND hWnd, const IAppl
    return new ApplicationDisplayList(hWnd, applicationParam);
 }
 
+template <typename TYPE>
+NodeCalculateFactory MakeStackFactory()
+{
+   return [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
+      data;
+      auto pResult = DagNodeCalculate::Factory([=](const std::vector< iDagNode* >& stackInput, const std::vector< iDagNode* >& indexInput, const std::shared_ptr< iDagValue >& pValue) -> std::shared_ptr< iDagValue >{
+         stackInput; indexInput; pValue;
+         auto pLocalValue = std::dynamic_pointer_cast<DagValue< std::vector< TYPE > >>(pValue);
+         if (nullptr == pLocalValue)
+         {
+            pLocalValue = DagValue< std::vector< TYPE > >::Factory(std::vector< TYPE >());
+         }
+         std::vector< TYPE > resultData;
+         for (const auto& item : stackInput )
+         {
+            auto pTemp = item ? std::dynamic_pointer_cast< DagValue< TYPE > >(item->GetValue()) : nullptr;
+            if (nullptr == pTemp)
+            {
+               continue;
+            }
+            resultData.push_back(pTemp->GetRef());
+         }
+         pLocalValue->SetRef(resultData);
+         return pLocalValue;
+      });
+      return pResult;
+   };
+}
+
 ApplicationDisplayList::ApplicationDisplayList(const HWND hWnd, const IApplicationParam& applicationParam)
    : IApplication(hWnd, applicationParam)
    , m_timePointValid(false)
@@ -66,21 +111,6 @@ ApplicationDisplayList::ApplicationDisplayList(const HWND hWnd, const IApplicati
    m_pDrawSystem = DrawSystem::Factory(hWnd, jsonData.drawSystem);
 
    std::map<std::string, NodeValueFactory> mapValue;
-   mapValue["Shader"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
-      JSONShader jsonShader;
-      data.get_to(jsonShader);
-      auto pCommandList = m_pDrawSystem->CreateCustomCommandList();
-      auto pShader = m_pDrawSystem->MakeShader(
-         pCommandList->GetCommandList(),
-         jsonShader.pipelineState,
-         LoadFile(applicationParam.m_rootPath, jsonShader.vertexShader),
-         LoadFile(applicationParam.m_rootPath, jsonShader.geometryShader),
-         LoadFile(applicationParam.m_rootPath, jsonShader.pixelShader)
-         );
-      auto pValue = DagValue<std::shared_ptr< Shader >>::Factory(pShader);
-      auto pResult = DagNodeValue::Factory( pValue );
-      return pResult;
-   };
    mapValue["Geometry"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
       JSONGeometry jsonGeometry;
       data.get_to(jsonGeometry);
@@ -112,48 +142,177 @@ ApplicationDisplayList::ApplicationDisplayList(const HWND hWnd, const IApplicati
       auto pResult = DagNodeValue::Factory( pValue );
       return pResult;
    };
+   mapValue["Texture"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
+      JSONShaderTexture jsonShaderTexture;
+      data.get_to(jsonShaderTexture);
+      auto pCommandList = m_pDrawSystem->CreateCustomCommandList();
+      auto pShaderTexture = m_pDrawSystem->MakeShaderTexture(
+         pCommandList->GetCommandList(),
+         m_pDrawSystem->MakeHeapWrapperCbvSrvUav(),
+         jsonShaderTexture.desc,
+         jsonShaderTexture.shaderResourceViewDesc,
+         jsonShaderTexture.data
+         );
+      auto pValue = DagValue<std::shared_ptr< ShaderTexture >>::Factory(pShaderTexture);
+      auto pResult = DagNodeValue::Factory( pValue );
+      return pResult;
+   };
+   mapValue["Float"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
+      float value = 0.0f;
+      data.get_to(value);
+      auto pValue = DagValue<float>::Factory(value);
+      auto pResult = DagNodeValue::Factory( pValue );
+      return pResult;
+   };
 
    std::map<std::string, NodeCalculateFactory> mapCalculate;
-   //mapCalculate["Shader"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
-   //   //0.input array of shader 
-   //   //1.input array of array of const buffer floats 
-   //};
 
-   mapCalculate["GeometryList"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
+   //indexInput
+   //  0.std::shared_ptr< ShaderTexture >
+   //output std::shared_ptr< HeapWrapperItem >
+   mapCalculate["HeapWrapperFromTexture"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
       data;
       auto pResult = DagNodeCalculate::Factory([=](const std::vector< iDagNode* >& stackInput, const std::vector< iDagNode* >& indexInput, const std::shared_ptr< iDagValue >& pValue) -> std::shared_ptr< iDagValue >{
          stackInput; indexInput; pValue;
-         auto pLocalValue = std::dynamic_pointer_cast<DagValue< std::vector< std::shared_ptr< GeometryGeneric > > >>(pValue);
+         auto pLocalValue = std::dynamic_pointer_cast<DagValue< std::shared_ptr< HeapWrapperItem > > >(pValue);
          if (nullptr == pLocalValue)
          {
-            //pLocalValue = std::make_shared< DagValue< std::vector< std::shared_ptr< Geometry > > > >();
-            pLocalValue = DagValue< std::vector< std::shared_ptr< GeometryGeneric > > >::Factory(std::vector< std::shared_ptr< GeometryGeneric > >());
+            pLocalValue = DagValue< std::shared_ptr< HeapWrapperItem > >::Factory(nullptr);
          }
-         std::vector< std::shared_ptr< GeometryGeneric > > resultData;
-         for (const auto& item : stackInput )
+
+         const auto pDagHeapWrapperItem = 0 < indexInput.size() ? std::dynamic_pointer_cast< DagValue< std::shared_ptr< ShaderTexture > > >(indexInput[0]->GetValue()) : nullptr;
+         const auto pShaderTexture = pDagHeapWrapperItem ? pDagHeapWrapperItem->GetRef() : nullptr;
+         std::shared_ptr< HeapWrapperItem > pHeapWrapperItem;
+         if ( nullptr != pShaderTexture)
          {
-            auto pTemp = item ? std::dynamic_pointer_cast< DagValue< std::shared_ptr< GeometryGeneric > > >(item->GetValue()) : nullptr;
-            if (nullptr == pTemp)
-            {
-               continue;
-            }
-            resultData.push_back(pTemp->GetRef());
+            pHeapWrapperItem = pShaderTexture->GetHeapWrapperItem();
          }
-         pLocalValue->SetRef(resultData);
+
+         pLocalValue->SetRef(pHeapWrapperItem);
+
          return pLocalValue;
       });
       return pResult;
    };
 
+   //indexInput
+   //  0.std::shared_ptr< RenderTargetTexture >
+   //output std::shared_ptr< HeapWrapperItem >
+   mapCalculate["HeapWrapperFromRenderTarget"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
+      JSONHeapWrapperFromRenderTargetData jsonHeapWrapperFromRenderTargetData;
+      data.get_to(jsonHeapWrapperFromRenderTargetData);
+      auto pResult = DagNodeCalculate::Factory([=](const std::vector< iDagNode* >& stackInput, const std::vector< iDagNode* >& indexInput, const std::shared_ptr< iDagValue >& pValue) -> std::shared_ptr< iDagValue >{
+         stackInput; indexInput; pValue;
+         auto pLocalValue = std::dynamic_pointer_cast<DagValue< std::shared_ptr< HeapWrapperItem > > >(pValue);
+         if (nullptr == pLocalValue)
+         {
+            pLocalValue = DagValue< std::shared_ptr< HeapWrapperItem > >::Factory(nullptr);
+         }
+
+         const auto pDag = 0 < indexInput.size() ? std::dynamic_pointer_cast< DagValue< std::shared_ptr< RenderTargetTexture > > >(indexInput[0]->GetValue()) : nullptr;
+         const auto pRenderTargetTexture = pDag ? pDag->GetRef() : nullptr;
+         std::shared_ptr< HeapWrapperItem > pHeapWrapperItem;
+         if ( nullptr != pRenderTargetTexture)
+         {
+            if (true == jsonHeapWrapperFromRenderTargetData.useDepth)
+            {
+               pHeapWrapperItem = pRenderTargetTexture->GetDepthShaderResourceHeapWrapperItem();
+            }
+            else if (true == jsonHeapWrapperFromRenderTargetData.useShaderResource)
+            {
+               pHeapWrapperItem = pRenderTargetTexture->GetShaderResourceHeapWrapperItem(jsonHeapWrapperFromRenderTargetData.shaderResourceIndex);
+            }
+         }
+
+         pLocalValue->SetRef(pHeapWrapperItem);
+
+         return pLocalValue;
+      });
+      return pResult;
+   };
+
+   //stackInput [std::shared_ptr< HeapWrapperItem >]
+   //output std::vector< std::shared_ptr< HeapWrapperItem > >
+   mapCalculate["StackHeapWrapper"] = MakeStackFactory<std::shared_ptr<HeapWrapperItem>>();
+
+   //stackInput [float]
+   //output std::vector< float >
+   mapCalculate["StackFloat"] = MakeStackFactory<float>();
+
+   //stackInput [std::vector< float >]
+   //output std::vector< std::vector< float > >
+   mapCalculate["StackVectorFloat"] = MakeStackFactory<std::vector< float >>();
+
+   //indexInput
+   //  0.std::vector< std::shared_ptr< HeapWrapperItem > >
+   //  1.std::vector< std::vector< float > >
+   //output std::shared_ptr< Shader >
+   mapCalculate["Shader"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
+      JSONShader jsonShader;
+      data.get_to(jsonShader);
+      auto pCommandList = m_pDrawSystem->CreateCustomCommandList();
+      auto pShader = m_pDrawSystem->MakeShader(
+         pCommandList->GetCommandList(),
+         jsonShader.pipelineState,
+         LoadFile(applicationParam.m_rootPath, jsonShader.vertexShader),
+         LoadFile(applicationParam.m_rootPath, jsonShader.geometryShader),
+         LoadFile(applicationParam.m_rootPath, jsonShader.pixelShader),
+         TransformShaderResourceInfo(jsonShader.resourceInfo),
+         TransformShaderConstantInfo(jsonShader.constantInfo)
+         );
+      auto pResult = DagNodeCalculate::Factory([=](const std::vector< iDagNode* >& stackInput, const std::vector< iDagNode* >& indexInput, const std::shared_ptr< iDagValue >& pValue) -> std::shared_ptr< iDagValue >{
+         stackInput; indexInput; pValue;
+         auto pLocalValue = std::dynamic_pointer_cast<DagValue< std::shared_ptr< Shader > > >(pValue);
+         if (nullptr == pLocalValue)
+         {
+            pLocalValue = DagValue< std::shared_ptr< Shader > >::Factory(pShader);
+         }
+
+         const auto pArrayHeapWrapperItem = 0 < indexInput.size() ? std::dynamic_pointer_cast< DagValue< std::vector< std::shared_ptr< HeapWrapperItem > > > >(indexInput[0]->GetValue()) : nullptr;
+         const auto pArrayConstantBuffer = 1 < indexInput.size() ? std::dynamic_pointer_cast< DagValue< std::vector< std::vector< float > > > >(indexInput[1]->GetValue()) : nullptr;
+
+         if (nullptr != pArrayHeapWrapperItem)
+         {
+            const std::vector< std::shared_ptr< HeapWrapperItem > >& arrayHeapWrapperItem = pArrayHeapWrapperItem->GetRef();
+            for (int index = 0; index < (int)arrayHeapWrapperItem.size(); ++index)
+            {
+               pShader->SetShaderResourceViewHandle( index, arrayHeapWrapperItem[index] );
+            }
+         }
+         if (nullptr != pArrayConstantBuffer)
+         {
+            const std::vector< std::vector< float > >& arrayConstantBuffer = pArrayConstantBuffer->GetRef();
+            for (int index = 0; index < (int)arrayConstantBuffer.size(); ++index)
+            {
+               pShader->SetConstantBufferData( index, arrayConstantBuffer[index] );
+            }
+         }
+
+         return pLocalValue;
+      });
+      return pResult;
+   };
+
+   //stackInput 
+   // std::shared_ptr< GeometryGeneric >
+   //output 
+   //  std::vector< std::shared_ptr< GeometryGeneric > >
+   mapCalculate["StackGeometry"] = MakeStackFactory<std::shared_ptr< GeometryGeneric >>();
+
+   //indexInput
+   //  0.std::shared_ptr< Shader >
+   //  1.std::vector< std::shared_ptr< GeometryGeneric > >
+   //output 
+   //  std::pair< std::shared_ptr< Shader >, std::vector< std::shared_ptr< GeometryGeneric > > >
    mapCalculate["Draw"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
       data;
-      auto pResult = DagNodeCalculate::Factory([=](const std::vector< iDagNode* >& stackInput, const std::vector< iDagNode* >& orderedInput, const std::shared_ptr< iDagValue >& pValue) -> std::shared_ptr< iDagValue >{
-         stackInput; orderedInput; pValue;
+      auto pResult = DagNodeCalculate::Factory([=](const std::vector< iDagNode* >& stackInput, const std::vector< iDagNode* >& indexInput, const std::shared_ptr< iDagValue >& pValue) -> std::shared_ptr< iDagValue >{
+         stackInput; indexInput; pValue;
          typedef std::pair< std::shared_ptr< Shader >, std::vector< std::shared_ptr< GeometryGeneric > > > PairData;
          auto pLocalValue = std::dynamic_pointer_cast<DagValue< PairData > >(pValue);
 
-         const auto pShader = std::dynamic_pointer_cast< DagValue< std::shared_ptr< Shader > > >(orderedInput[0]->GetValue());
-         const auto pGeometryList = std::dynamic_pointer_cast< DagValue< std::vector< std::shared_ptr< GeometryGeneric > > > >(orderedInput[1]->GetValue());
+         const auto pShader = std::dynamic_pointer_cast< DagValue< std::shared_ptr< Shader > > >(indexInput[0]->GetValue());
+         const auto pGeometryList = std::dynamic_pointer_cast< DagValue< std::vector< std::shared_ptr< GeometryGeneric > > > >(indexInput[1]->GetValue());
          PairData newValue( pShader->GetRef(), pGeometryList->GetRef() );
          if (nullptr == pLocalValue)
          {
@@ -169,45 +328,28 @@ ApplicationDisplayList::ApplicationDisplayList(const HWND hWnd, const IApplicati
       return pResult;
    };
 
-   mapCalculate["DrawList"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
-      data;
-      auto pResult = DagNodeCalculate::Factory([=](const std::vector< iDagNode* >& stackInput, const std::vector< iDagNode* >& orderedInput, const std::shared_ptr< iDagValue >& pValue) -> std::shared_ptr< iDagValue >{
-         stackInput; orderedInput; pValue;
-         typedef std::pair< std::shared_ptr< Shader >, std::vector< std::shared_ptr< GeometryGeneric > > > PairData;
-         typedef std::vector< PairData > PairArray;
-         auto pLocalValue = std::dynamic_pointer_cast<DagValue< PairArray >>(pValue);
-         if (nullptr == pLocalValue)
-         {
-            PairArray dummy;
-            pLocalValue = DagValue< PairArray >::Factory(PairArray());
-         }
-         PairArray resultData;
-         for (const auto& item : stackInput )
-         {
-            //auto pTemp = std::dynamic_pointer_cast< DagValue< std::shared_ptr< Geometry > > >(item);
-            auto pTemp = item ? std::dynamic_pointer_cast< DagValue< PairData > >(item->GetValue()) : nullptr;
-            if (nullptr == pTemp)
-            {
-               continue;
-            }
-            resultData.push_back(pTemp->GetRef());
-         }
-         pLocalValue->SetRef(resultData);
-         return pLocalValue;
-      });
-      return pResult;
-   };
+   //stackInput
+   //  std::pair< std::shared_ptr< Shader >, std::vector< std::shared_ptr< GeometryGeneric > > >
+   //output
+   //  std::vector< std::pair< std::shared_ptr< Shader >, std::vector< std::shared_ptr< GeometryGeneric > > > >
+   mapCalculate["StackDraw"] = MakeStackFactory<std::pair<std::shared_ptr<Shader>, std::vector<std::shared_ptr<GeometryGeneric>>>>();
 
+   //indexInput
+   //  0.DrawSystemFrame
+   //  1.IRenderTarget
+   //  2.std::pair< std::shared_ptr< Shader >, std::vector< std::shared_ptr< GeometryGeneric > > >
+   //output 
+   //  IRenderTarget* (same as input 1)
    mapCalculate["RenderList"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
       data;
-      auto pResult = DagNodeCalculate::Factory([=](const std::vector< iDagNode* >& stackInput, const std::vector< iDagNode* >& orderedInput, const std::shared_ptr< iDagValue >& pValue) -> std::shared_ptr< iDagValue >{
-         stackInput; orderedInput; pValue;
+      auto pResult = DagNodeCalculate::Factory([=](const std::vector< iDagNode* >& stackInput, const std::vector< iDagNode* >& indexInput, const std::shared_ptr< iDagValue >& pValue) -> std::shared_ptr< iDagValue >{
+         stackInput; indexInput; pValue;
          typedef std::pair< std::shared_ptr< Shader >, std::vector< std::shared_ptr< GeometryGeneric > > > PairData;
          typedef std::vector< PairData > PairArray;
 
-         const auto pDAGDrawSystemFrame = std::dynamic_pointer_cast< DagValue< DrawSystemFrame* > >(orderedInput[1]->GetValue());
-         const auto pDAGRenderTarget = std::dynamic_pointer_cast< DagValue< IRenderTarget* > >(orderedInput[2]->GetValue());
-         const auto pDAGDrawList = std::dynamic_pointer_cast< DagValue< PairArray > >(orderedInput[3]->GetValue());
+         const auto pDAGDrawSystemFrame = std::dynamic_pointer_cast< DagValue< DrawSystemFrame* > >(indexInput[0]->GetValue());
+         const auto pDAGRenderTarget = std::dynamic_pointer_cast< DagValue< IRenderTarget* > >(indexInput[1]->GetValue());
+         const auto pDAGDrawList = std::dynamic_pointer_cast< DagValue< PairArray > >(indexInput[2]->GetValue());
 
          DrawSystemFrame* pDrawSystemFrame = pDAGDrawSystemFrame ? pDAGDrawSystemFrame->Get() : nullptr;
          IRenderTarget* pRenderTarget = pDAGRenderTarget ? pDAGRenderTarget->Get() : nullptr;

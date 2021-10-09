@@ -40,6 +40,12 @@
     <Filter Include="Task\TestTextureJson">
       <UniqueIdentifier>{30c2d5f2-8e70-4b3d-b0c9-0d38d379d17b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Task\TestTriangleDag">
+      <UniqueIdentifier>{6e0e1cb3-a340-4c06-b775-cc08d8187c70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Task\TestTextureDag">
+      <UniqueIdentifier>{627be12b-2096-4b11-a19e-9d8e34663b0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ApplicationPCH.h">
@@ -119,6 +125,18 @@
     <CopyFileToFolders Include="Task\TestTextureJson\Application.json">
       <Filter>Task\TestTextureJson</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\TestTriangleDag\Application.json">
+      <Filter>Task\TestTriangleDag</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\TestTriangleDag\Data0.json">
+      <Filter>Task\TestTriangleDag</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\TestTextureDag\Data0.json">
+      <Filter>Task\TestTextureDag</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\TestTextureDag\Application.json">
+      <Filter>Task\TestTextureDag</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <None Include="Application01.props" />
@@ -197,6 +215,18 @@
     </FxCompile>
     <FxCompile Include="Task\TestTextureJson\VertexShader.hlsl">
       <Filter>Task\TestTextureJson</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\TestTriangleDag\PixelShader.hlsl">
+      <Filter>Task\TestTriangleDag</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\TestTriangleDag\VertexShader.hlsl">
+      <Filter>Task\TestTriangleDag</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\TestTextureDag\PixelShader.hlsl">
+      <Filter>Task\TestTextureDag</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\TestTextureDag\VertexShader.hlsl">
+      <Filter>Task\TestTextureDag</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

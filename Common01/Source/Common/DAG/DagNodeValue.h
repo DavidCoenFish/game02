@@ -2,7 +2,10 @@
 
 #include "common/dag/idagnode.h"
 
-//TYPE could be a std::shared_ptr< whatever >?
+/*
+combine DagValue and DagNodeValue, or would that result in too much in the resultant class
+DagNodeValue holds the DagValue and deals with the links/ dirty
+*/
 
 class iDagValue;
 
