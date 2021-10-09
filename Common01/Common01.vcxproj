@@ -88,6 +88,7 @@
     <ClCompile Include="Source\Common\JSON\JSONRenderTarget.cpp" />
     <ClCompile Include="Source\Common\JSON\JSONShader.cpp" />
     <ClCompile Include="Source\Common\JSON\JSONShaderConstantInfo.cpp" />
+    <ClCompile Include="Source\Common\JSON\JSONShaderResourceInfo.cpp" />
     <ClCompile Include="Source\Common\JSON\JSONShaderTexture.cpp" />
     <ClCompile Include="Source\Common\JSON\JSONVector.cpp" />
     <ClCompile Include="Source\Common\Log\ILogConsumer.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="Source\Common\JSON\JSONRenderTarget.h" />
     <ClInclude Include="Source\Common\JSON\JSONShader.h" />
     <ClInclude Include="Source\Common\JSON\JSONShaderConstantInfo.h" />
+    <ClInclude Include="Source\Common\JSON\JSONShaderResourceInfo.h" />
     <ClInclude Include="Source\Common\JSON\JSONShaderTexture.h" />
     <ClInclude Include="Source\Common\JSON\JSONVector.h" />
     <ClInclude Include="Source\Common\Log\ILogConsumer.h" />

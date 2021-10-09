@@ -14,6 +14,8 @@
 #include "Common/Json/JSONGeometry.h"
 #include "Common/Json/JSONShader.h"
 #include "Common/Json/JSONShaderTexture.h"
+#include "Common/Json/JSONShaderConstantInfo.h"
+#include "Common/Json/JSONShaderResourceInfo.h"
 
 class JSONDataATJ
 {
@@ -41,7 +43,7 @@ IApplication* const ApplicationTextureJson::Factory(const HWND hWnd, const IAppl
 ApplicationTextureJson::ApplicationTextureJson(const HWND hWnd, const IApplicationParam& applicationParam)
    : IApplication(hWnd, applicationParam)
 {
-   LOG_MESSAGE("ApplicationTextureJson  ctor %p", this);
+   LOG_MESSAGE("ApplicationTextureJson ctor %p", this);
    JSONDataATJ data;
    applicationParam.m_json.get_to(data);
 
@@ -57,15 +59,22 @@ ApplicationTextureJson::ApplicationTextureJson(const HWND hWnd, const IApplicati
       );
    auto pVertexShaderData = FileSystem::SyncReadFile(applicationParam.m_rootPath / data.shader.vertexShader);
    auto pPixelShaderData = FileSystem::SyncReadFile(applicationParam.m_rootPath / data.shader.pixelShader);
-   std::vector< std::shared_ptr< ShaderResourceInfo > > arrayTexture;
-   arrayTexture.push_back( ShaderResourceInfo::FactorySampler( m_pTexture->GetHeapWrapperItem(), D3D12_SHADER_VISIBILITY_PIXEL ) );
+   auto arrayTexture = TransformShaderResourceInfo(data.shader.resourceInfo);
+   auto arrayConstant = TransformShaderConstantInfo(data.shader.constantInfo);
+   
+   if (0 < arrayTexture.size())
+   {
+      arrayTexture[0]->SetShaderResourceViewHandle(m_pTexture->GetHeapWrapperItem());
+   }
+
    m_pShader = m_pDrawSystem->MakeShader(
       pCommandList->GetCommandList(),
       data.shader.pipelineState,
       pVertexShaderData,
       nullptr,
       pPixelShaderData,
-      arrayTexture
+      arrayTexture,
+      arrayConstant
       );
    m_pGeometry = m_pDrawSystem->MakeGeometryGeneric(
       pCommandList->GetCommandList(),

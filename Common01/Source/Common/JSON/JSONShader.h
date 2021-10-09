@@ -3,6 +3,7 @@
 #include "json/json.hpp"
 #include "Common/DrawSystem/Shader/ShaderPipelineStateData.h"
 #include "Common/JSON/JSONDrawSystemEnum.h"
+#include "Common/JSON/JSONShaderResourceInfo.h"
 #include "Common/JSON/JSONShaderConstantInfo.h"
 
 void to_json(nlohmann::json& j, const ShaderPipelineStateData& p);
@@ -14,6 +15,7 @@ struct JSONShader
    std::string vertexShader;
    std::string geometryShader;
    std::string pixelShader;
+   std::vector< JSONShaderResourceInfo > resourceInfo; 
    std::vector< JSONShaderConstantInfo > constantInfo; 
 };
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
@@ -22,5 +24,6 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    vertexShader,
    geometryShader,
    pixelShader,
+   resourceInfo,
    constantInfo
    );

@@ -69,10 +69,10 @@ ApplicationTexture::ApplicationTexture(const HWND hWnd, const IApplicationParam&
          {
             for (int x = 0; x < 256; ++x)
             {
-               uint8_t red = x;
-               uint8_t green = y;
-               uint8_t blue = (0 != (y & 0x10)) == (0 != (x & 0x10)) ? 255 : 0;
-               uint8_t alpha = 255;
+               uint8_t red = (uint8_t)x;
+               uint8_t green = (uint8_t)y;
+               uint8_t blue = (uint8_t)((0 != (y & 0x10)) == (0 != (x & 0x10)) ? 255 : 0);
+               uint8_t alpha = (uint8_t)255;
                data.push_back(red);
                data.push_back(green);
                data.push_back(blue);

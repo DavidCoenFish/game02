@@ -63,6 +63,12 @@
                         "topologyType": "D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE",
                         "renderTargetFormat": [ "DXGI_FORMAT_B8G8R8A8_UNORM" ]
                      },
+                     "resourceInfo": [
+                        {
+                           "ShaderVisibility": "D3D12_SHADER_VISIBILITY_PIXEL",
+                           "dataSamplerDesc": "true"
+                        }
+                     ],
                      "constantInfo": [
                      ],
                      "vertexShader": "VertexShader.cso",

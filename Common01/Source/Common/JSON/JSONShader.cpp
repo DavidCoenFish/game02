@@ -58,22 +58,22 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    BackFace
    );
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-   D3D12_STATIC_SAMPLER_DESC,
-   Filter,
-   AddressU,
-   AddressV,
-   AddressW,
-   MipLODBias,
-   MaxAnisotropy,
-   ComparisonFunc,
-   BorderColor,
-   MinLOD,
-   MaxLOD,
-   ShaderRegister,
-   RegisterSpace,
-   ShaderVisibility
-   );
+//NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+//   D3D12_STATIC_SAMPLER_DESC,
+//   Filter,
+//   AddressU,
+//   AddressV,
+//   AddressW,
+//   MipLODBias,
+//   MaxAnisotropy,
+//   ComparisonFunc,
+//   BorderColor,
+//   MinLOD,
+//   MaxLOD,
+//   ShaderRegister,
+//   RegisterSpace,
+//   ShaderVisibility
+//   );
 
 void to_json(nlohmann::json& j, const ShaderPipelineStateData& p)
 {

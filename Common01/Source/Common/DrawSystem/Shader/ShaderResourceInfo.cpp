@@ -4,7 +4,7 @@
 #include "Common/DrawSystem/HeapWrapper/HeapWrapperItem.h"
 
 std::shared_ptr< ShaderResourceInfo > ShaderResourceInfo::FactorySampler(
-   const std::shared_ptr< HeapWrapperItem >& shaderResourceViewHandle,
+   const std::shared_ptr< HeapWrapperItem >& pShaderResourceViewHandle,
    const D3D12_SHADER_VISIBILITY visiblity,
    const bool bMipMap
    )
@@ -26,13 +26,13 @@ std::shared_ptr< ShaderResourceInfo > ShaderResourceInfo::FactorySampler(
    };
 
    return std::make_shared< ShaderResourceInfo >(
-      shaderResourceViewHandle,
+      pShaderResourceViewHandle,
       staticSamplerDesc
       );
 }
 
 std::shared_ptr< ShaderResourceInfo > ShaderResourceInfo::FactoryDataSampler(
-   const std::shared_ptr< HeapWrapperItem >& shaderResourceViewHandle,
+   const std::shared_ptr< HeapWrapperItem >& pShaderResourceViewHandle,
    const D3D12_SHADER_VISIBILITY visiblity
    )
 {
@@ -52,31 +52,31 @@ std::shared_ptr< ShaderResourceInfo > ShaderResourceInfo::FactoryDataSampler(
       visiblity      //D3D12_SHADER_VISIBILITY_PIXEL //D3D12_SHADER_VISIBILITY ShaderVisibility;
    };
    return std::make_shared< ShaderResourceInfo >(
-      shaderResourceViewHandle,
+      pShaderResourceViewHandle,
       staticSamplerDesc
       );
 }
 
 std::shared_ptr< ShaderResourceInfo > ShaderResourceInfo::FactoryNoSampler(
-   const std::shared_ptr< HeapWrapperItem >& shaderResourceViewHandle,
+   const std::shared_ptr< HeapWrapperItem >& pShaderResourceViewHandle,
    const D3D12_SHADER_VISIBILITY visiblity
    )
 {
    D3D12_STATIC_SAMPLER_DESC staticSamplerDesc   {};
    staticSamplerDesc.ShaderVisibility = visiblity;
    return std::make_shared< ShaderResourceInfo >(
-      shaderResourceViewHandle,
+      pShaderResourceViewHandle,
       staticSamplerDesc,
       false
       );
 }
 
 ShaderResourceInfo::ShaderResourceInfo(
-   const std::shared_ptr< HeapWrapperItem >& shaderResourceViewHandle,
+   const std::shared_ptr< HeapWrapperItem >& pShaderResourceViewHandle,
    const D3D12_STATIC_SAMPLER_DESC& staticSamplerDesc,
    const bool bUseSampler
    )
-   : m_shaderResourceViewHandle(shaderResourceViewHandle)
+   : m_pShaderResourceViewHandle(pShaderResourceViewHandle)
    , m_staticSamplerDesc(staticSamplerDesc)
    , m_bUseSampler(bUseSampler)
 {
@@ -88,15 +88,22 @@ void ShaderResourceInfo::Activate(
    const int rootParamIndex
    )
 {
-   auto heap = m_shaderResourceViewHandle->GetHeap();
+   auto heap = m_pShaderResourceViewHandle->GetHeap();
    pCommandList->SetDescriptorHeaps(1, &heap);
    pCommandList->SetGraphicsRootDescriptorTable(
       rootParamIndex, 
-      m_shaderResourceViewHandle->GetGPUHandle()
+      m_pShaderResourceViewHandle->GetGPUHandle()
       );
 
    return;
 }
+
+void ShaderResourceInfo::SetShaderResourceViewHandle(const std::shared_ptr< HeapWrapperItem >& pShaderResourceViewHandle)
+{
+   m_pShaderResourceViewHandle = pShaderResourceViewHandle;
+   return;
+}
+
 
 const D3D12_SHADER_VISIBILITY ShaderResourceInfo::GetVisiblity() const
 {

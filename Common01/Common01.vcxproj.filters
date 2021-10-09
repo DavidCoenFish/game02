@@ -312,6 +312,9 @@
     <ClCompile Include="Source\Common\JSON\JSONShaderTexture.cpp">
       <Filter>Source\Common\JSON</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Common\JSON\JSONShaderResourceInfo.cpp">
+      <Filter>Source\Common\JSON</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CommonPCH.h">
@@ -576,6 +579,9 @@
       <Filter>Source\Common\Application</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\JSON\JSONShaderTexture.h">
+      <Filter>Source\Common\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\JSON\JSONShaderResourceInfo.h">
       <Filter>Source\Common\JSON</Filter>
     </ClInclude>
   </ItemGroup>
