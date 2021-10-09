@@ -31,8 +31,16 @@
 *.out
 *.app
 
-#Visual studio
+# Visual studio
 .vs/
 bin/
 obj/
 
+# version
+BuildTime.txt
+BuildVersion.txt
+BuildDescription.txt
+BuildVersionMajor.txt
+BuildVersionMinor.txt
+BuildVersionPatch.txt
+BuildVersionStore.txt
