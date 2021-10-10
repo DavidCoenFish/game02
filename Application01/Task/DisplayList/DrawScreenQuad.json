@@ -16,10 +16,10 @@
             ],
             "floatPerVertex": 4,
             "vertexData": [
-               __X_HIGH__, __Y_LOW__,  1.0, 0.0,
-               __X_LOW__,  __Y_LOW__,  0.0, 0.0,
-               __X_HIGH__, __Y_HIGH__, 1.0, 1.0,
-               __X_LOW__,  __Y_HIGH__, 0.0, 1.0
+               __X_HIGH__, __Y_LOW__,  1.0, 1.0,
+               __X_LOW__,  __Y_LOW__,  0.0, 1.0,
+               __X_HIGH__, __Y_HIGH__, 1.0, 0.0,
+               __X_LOW__,  __Y_HIGH__, 0.0, 0.0
             ],
             "topology": "D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP"
          }

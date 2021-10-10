@@ -49,8 +49,32 @@
             "__Y_HIGH__": "-0.0",
             "__INPUT__": "StackHeapWrapperRenderTargetGreen"
          }
-      }
+      },
 
+      {
+         "file": "RenderTargetTriangle.json",
+         "searchReplace": {
+            "__BASE_NAME__": "RenderTargetTriangle"
+         }
+      },
+      {
+         "file": "StackHeapWrapperRenderTarget.json",
+         "searchReplace": {
+            "__BASE_NAME__": "StackHeapWrapperRenderTargetTriangle",
+            "__INPUT__": "RenderTargetTriangle"
+         }
+      },
+      {
+         "file": "DrawScreenQuad.json",
+         "searchReplace": {
+            "__BASE_NAME__": "DrawScreenQuad2",
+            "__X_LOW__": "-1.0",
+            "__X_HIGH__": "-0.5",
+            "__Y_LOW__": "0.0",
+            "__Y_HIGH__": "0.5",
+            "__INPUT__": "StackHeapWrapperRenderTargetTriangle"
+         }
+      }
    ],
    "valueArray": [
    ],
@@ -60,7 +84,8 @@
          "type": "StackDraw",
          "stackInput": [
             "DrawScreenQuad0",
-            "DrawScreenQuad1"
+            "DrawScreenQuad1",
+            "DrawScreenQuad2"
          ]
       },
       {

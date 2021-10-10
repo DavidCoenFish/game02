@@ -146,6 +146,9 @@
     <CopyFileToFolders Include="Task\DisplayList\RenderTargetWash.json">
       <Filter>Task\DisplayList</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\DisplayList\RenderTargetTriangle.json">
+      <Filter>Task\DisplayList</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <None Include="Application01.props" />
@@ -236,6 +239,12 @@
     </FxCompile>
     <FxCompile Include="Task\TestTextureDag\VertexShader.hlsl">
       <Filter>Task\TestTextureDag</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\DisplayList\PixelShaderRenderTargetTriangle.hlsl">
+      <Filter>Task\DisplayList</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\DisplayList\VertexShaderRenderTargetTriangle.hlsl">
+      <Filter>Task\DisplayList</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
