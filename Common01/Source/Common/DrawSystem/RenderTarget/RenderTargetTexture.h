@@ -25,6 +25,9 @@ public:
    std::shared_ptr< HeapWrapperItem > GetDepthResourceHeapWrapperItem() const;
    std::shared_ptr< HeapWrapperItem > GetDepthShaderResourceHeapWrapperItem() const;
 
+   const int GetWidth() const;
+   const int GetHeight() const;
+
 private:
    virtual void OnDeviceLost() override;
    virtual void OnDeviceRestored(

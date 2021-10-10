@@ -164,6 +164,13 @@ ApplicationDisplayList::ApplicationDisplayList(const HWND hWnd, const IApplicati
       auto pResult = DagNodeValue::Factory( pValue );
       return pResult;
    };
+   mapValue["FloatArray"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
+      std::vector<float> value;
+      data.get_to(value);
+      auto pValue = DagValue<std::vector<float>>::Factory(value);
+      auto pResult = DagNodeValue::Factory( pValue );
+      return pResult;
+   };
 
    std::map<std::string, NodeCalculateFactory> mapCalculate;
 
@@ -196,9 +203,10 @@ ApplicationDisplayList::ApplicationDisplayList(const HWND hWnd, const IApplicati
    };
 
    //indexInput
-   //  0.std::shared_ptr< RenderTargetTexture >
+   //  //0.std::shared_ptr< RenderTargetTexture >, or IRenderTarget?
+   //  0.IRenderTarget
    //output std::shared_ptr< HeapWrapperItem >
-   mapCalculate["HeapWrapperFromRenderTarget"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
+   mapCalculate["HeapWrapperFromIRenderTarget"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
       JSONHeapWrapperFromRenderTargetData jsonHeapWrapperFromRenderTargetData;
       data.get_to(jsonHeapWrapperFromRenderTargetData);
       auto pResult = DagNodeCalculate::Factory([=](const std::vector< iDagNode* >& stackInput, const std::vector< iDagNode* >& indexInput, const std::shared_ptr< iDagValue >& pValue) -> std::shared_ptr< iDagValue >{
@@ -209,8 +217,9 @@ ApplicationDisplayList::ApplicationDisplayList(const HWND hWnd, const IApplicati
             pLocalValue = DagValue< std::shared_ptr< HeapWrapperItem > >::Factory(nullptr);
          }
 
-         const auto pDag = 0 < indexInput.size() ? std::dynamic_pointer_cast< DagValue< std::shared_ptr< RenderTargetTexture > > >(indexInput[0]->GetValue()) : nullptr;
-         const auto pRenderTargetTexture = pDag ? pDag->GetRef() : nullptr;
+         const auto pDag = 0 < indexInput.size() ? std::dynamic_pointer_cast< DagValue< IRenderTarget* > >(indexInput[0]->GetValue()) : nullptr;
+         const IRenderTarget* pIRenderTarget = pDag ? pDag->Get() : nullptr;
+         const RenderTargetTexture* pRenderTargetTexture = dynamic_cast<const RenderTargetTexture*>(pIRenderTarget);
          std::shared_ptr< HeapWrapperItem > pHeapWrapperItem;
          if ( nullptr != pRenderTargetTexture)
          {
@@ -225,6 +234,58 @@ ApplicationDisplayList::ApplicationDisplayList(const HWND hWnd, const IApplicati
          }
 
          pLocalValue->SetRef(pHeapWrapperItem);
+
+         return pLocalValue;
+      });
+      return pResult;
+   };
+
+   //indexInput
+   //  0.std::shared_ptr< RenderTargetTexture >, or IRenderTarget?
+   //output std::vector< float >
+   mapCalculate["WidthHeightFromIRenderTarget"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
+      data;
+      auto pResult = DagNodeCalculate::Factory([=](const std::vector< iDagNode* >& stackInput, const std::vector< iDagNode* >& indexInput, const std::shared_ptr< iDagValue >& pValue) -> std::shared_ptr< iDagValue >{
+         stackInput; indexInput; pValue;
+         auto pLocalValue = std::dynamic_pointer_cast<DagValue<std::vector<float>>>(pValue);
+         if (nullptr == pLocalValue)
+         {
+            pLocalValue = DagValue< std::vector< float > >::Factory(std::vector< float >());
+         }
+
+         std::vector< float > output({0.0f, 0.0f});
+         const auto pDag = 0 < indexInput.size() ? std::dynamic_pointer_cast< DagValue< IRenderTarget* > >(indexInput[0]->GetValue()) : nullptr;
+         const IRenderTarget* pIRenderTarget = pDag ? pDag->Get() : nullptr;
+         const RenderTargetTexture* pRenderTargetTexture = dynamic_cast<const RenderTargetTexture*>(pIRenderTarget);
+         if ( nullptr != pRenderTargetTexture)
+         {
+            output[0] = (float)(pRenderTargetTexture->GetWidth());
+            output[1] = (float)(pRenderTargetTexture->GetHeight());
+         }
+
+         pLocalValue->SetRef(output);
+
+         return pLocalValue;
+      });
+      return pResult;
+   };
+
+   //indexInput
+   //  0.std::shared_ptr< RenderTargetTexture >
+   //output IRenderTarget
+   mapCalculate["IRenderTargetFromRenderTargetTexture"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
+      data;
+      auto pResult = DagNodeCalculate::Factory([=](const std::vector< iDagNode* >& stackInput, const std::vector< iDagNode* >& indexInput, const std::shared_ptr< iDagValue >& pValue) -> std::shared_ptr< iDagValue >{
+         stackInput; indexInput; pValue;
+         auto pLocalValue = std::dynamic_pointer_cast<DagValue<IRenderTarget*>>(pValue);
+         if (nullptr == pLocalValue)
+         {
+            pLocalValue = DagValue<IRenderTarget*>::Factory(nullptr);
+         }
+
+         auto pDag = 0 < indexInput.size() ? std::dynamic_pointer_cast< DagValue< std::shared_ptr< RenderTargetTexture > > >(indexInput[0]->GetValue()) : nullptr;
+         RenderTargetTexture* pRenderTargetTexture = pDag ? pDag->Get().get() : nullptr;
+         pLocalValue->Set(pRenderTargetTexture);
 
          return pLocalValue;
       });
@@ -349,6 +410,7 @@ ApplicationDisplayList::ApplicationDisplayList(const HWND hWnd, const IApplicati
 
          const auto pDAGDrawSystemFrame = std::dynamic_pointer_cast< DagValue< DrawSystemFrame* > >(indexInput[0]->GetValue());
          const auto pDAGRenderTarget = std::dynamic_pointer_cast< DagValue< IRenderTarget* > >(indexInput[1]->GetValue());
+         //const auto pDAGRenderTargetTexture = std::dynamic_pointer_cast< DagValue< std::shared_ptr<RenderTargetTexture> > >(pValue);
          const auto pDAGDrawList = std::dynamic_pointer_cast< DagValue< PairArray > >(indexInput[2]->GetValue());
 
          DrawSystemFrame* pDrawSystemFrame = pDAGDrawSystemFrame ? pDAGDrawSystemFrame->Get() : nullptr;

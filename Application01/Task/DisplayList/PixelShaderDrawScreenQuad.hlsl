@@ -7,10 +7,10 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 
-struct Interpolants
+struct Interpolant
 {
-    float4 position : SV_Position;
-    float4 color    : COLOR0;
+    float4 position     : SV_Position;
+    float2 uv           : TEXCOORD0;
 };
 
 struct Pixel
@@ -18,9 +18,12 @@ struct Pixel
     float4 color    : SV_TARGET0;
 };
 
-Pixel main( Interpolants In )
+Texture2D txDiffuse : register(t0);
+SamplerState samLinear : register(s0);
+
+Pixel main( Interpolant input )
 {
     Pixel Out;
-    Out.color = In.color;
+    Out.color = txDiffuse.Sample(samLinear, input.uv);
     return Out;
 }

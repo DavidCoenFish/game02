@@ -19,18 +19,6 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    data
    );
 
-//struct JSONDagOrderedInput
-//{
-//   std::string input;
-//   int inputIndex;
-//};
-//
-//NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-//   JSONDagOrderedInput, 
-//   input,
-//   inputIndex
-//   );
-
 struct JSONDagCalculate
 {
    std::string name;
@@ -51,6 +39,16 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    data
    );
 
+struct JSONDagFile
+{
+   std::string file;
+   nlohmann::json searchReplace;
+};
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+   JSONDagFile, 
+   file,
+   searchReplace
+   );
 
 struct JSONDagCollection
 {
@@ -58,8 +56,9 @@ struct JSONDagCollection
    typedef std::function< std::shared_ptr< iDagValue >(const std::vector< iDagNode* >&, const std::vector< iDagNode* >&, const std::shared_ptr< iDagValue >&) > CalculateFunction;
 
    std::vector<JSONDagValue> valueArray;
+   std::vector<JSONDagFile> fileArray;
    std::vector<JSONDagCalculate> calculateArray;
-   std::vector<std::string> fileArray;
+   //std::vector<std::string> fileArray;
 
    static std::shared_ptr< DagCollection > Factory(
       const std::string& fileName,
@@ -83,6 +82,6 @@ struct JSONDagCollection
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
    JSONDagCollection, 
    valueArray,
-   calculateArray,
-   fileArray
+   fileArray,
+   calculateArray
    );

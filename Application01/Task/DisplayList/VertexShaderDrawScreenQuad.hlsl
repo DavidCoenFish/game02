@@ -9,17 +9,20 @@
 
 struct Vertex
 {
-    float4 position     : Position;
-    float4 color        : COLOR0;
+    float2 position     : Position;
+    float2 uv           : TEXCOORD0;
 };
 
-struct Interpolants
+struct Interpolant
 {
     float4 position     : SV_Position;
-    float4 color        : COLOR0;
+    float2 uv           : TEXCOORD0;
 };
 
-Interpolants main( Vertex In )
+Interpolant main( Vertex input )
 {
-    return In;
+   Interpolant output;
+   output.position = float4(input.position.x, input.position.y, 0.0f, 1.0f);
+   output.uv = input.uv;
+   return output;
 }

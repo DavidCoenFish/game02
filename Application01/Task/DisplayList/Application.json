@@ -10,7 +10,7 @@
                "height": 600,
                "factory": "DisplayList",
                "data": {
-                  "file": "Data0.json",
+                  "file": "DisplayListMaster.json",
                   "drawSystem": {
                      "targetFormatData": {
                         "format": "DXGI_FORMAT_B8G8R8A8_UNORM",

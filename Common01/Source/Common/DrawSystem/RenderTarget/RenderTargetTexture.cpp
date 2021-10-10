@@ -123,6 +123,15 @@ std::shared_ptr< HeapWrapperItem > RenderTargetTexture::GetDepthShaderResourceHe
    return nullptr;
 }
 
+const int RenderTargetTexture::GetWidth() const
+{
+   return m_width;
+}
+const int RenderTargetTexture::GetHeight() const
+{
+   return m_height;
+}
+
 void RenderTargetTexture::OnDeviceLost()
 {
    for (auto iter : m_targetResourceArray)

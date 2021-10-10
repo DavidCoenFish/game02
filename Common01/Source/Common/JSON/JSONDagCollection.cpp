@@ -4,37 +4,53 @@
 #include "Common/DAG/DagCollection.h"
 #include "Common/Log/Log.h"
 
+typedef std::function<std::shared_ptr< iDagNode >(const nlohmann::json& data)> ValueFactory;
 
-std::shared_ptr< DagCollection > JSONDagCollection::Factory(
-   const std::string& fileName,
-   const std::function<const std::string(const std::string& fileName)>& dealFileCallback,
-   const std::vector< std::pair< std::string, std::shared_ptr< iDagNode > > >& inbuiltDagValues,
-   const std::map<std::string, ValueFactory>& valueFactoryMap,
-   const std::map<std::string, ValueFactory>& calculateFactoryMap
-   )
-{
-   std::shared_ptr< DagCollection > pResult = std::make_shared< DagCollection >();
-   for (const auto& item : inbuiltDagValues)
+//https://stackoverflow.com/questions/7724011/in-c-whats-the-fastest-way-to-replace-all-occurrences-of-a-substring-within
+static void replaceStringAll(std::string& str, const std::string& old, const std::string& new_s) {
+   if(!old.empty())
    {
-      pResult->AddDagNode(item.first, item.second);
+      size_t pos = str.find(old);
+      while ((pos = str.find(old, pos)) != std::string::npos) 
+      {
+         str=str.replace(pos, old.length(), new_s);
+         pos += new_s.length();
+      }
    }
-   AppendCollection(pResult, fileName, dealFileCallback, valueFactoryMap, calculateFactoryMap);
-   return pResult;
+   return;
 }
 
-void JSONDagCollection::AppendCollection(
+static void DealItem(JSONDagCollection& jsonChild, const JSONDagFile& item, const std::function<const std::string(const std::string& fileName)>& dealFileCallback)
+{
+   std::string data = dealFileCallback(item.file);
+   if (item.searchReplace.is_object())
+   {
+      nlohmann::json::object_t object;
+      item.searchReplace.get_to(object);
+      for(const auto& iter : object)
+      {
+         if (false == iter.second.is_string())
+         {
+            continue;
+         }
+         std::string value;
+         iter.second.get_to(value);
+         replaceStringAll(data, iter.first, value);
+      }
+   }
+
+   auto json = nlohmann::json::parse( data );
+   json.get_to(jsonChild);
+}
+
+static void AppendCollectionInternal(
    const std::shared_ptr< DagCollection >& pDagCollection,
-   const std::string& fileName,
+   const JSONDagCollection& jsonDagCollection,
    const std::function<const std::string(const std::string& fileName)>& dealFileCallback,
    const std::map<std::string, ValueFactory>& valueFactoryMap,
    const std::map<std::string, ValueFactory>& calculateFactoryMap
    )
 {
-   const auto data = dealFileCallback(fileName);
-   auto json = nlohmann::json::parse( data );
-   JSONDagCollection jsonDagCollection;
-   json.get_to(jsonDagCollection);
-
    for (const auto& item : jsonDagCollection.valueArray)
    {
       auto found = valueFactoryMap.find(item.type);
@@ -45,6 +61,20 @@ void JSONDagCollection::AppendCollection(
       }
       auto pNode = found->second(item.data);
       pDagCollection->AddDagNode(item.name, pNode);
+   }
+
+   for (const auto& item : jsonDagCollection.fileArray)
+   {
+      JSONDagCollection jsonChild;
+      DealItem(jsonChild, item, dealFileCallback);
+
+      AppendCollectionInternal(
+         pDagCollection, 
+         jsonChild,
+         dealFileCallback,
+         valueFactoryMap,
+         calculateFactoryMap
+         );
    }
 
    for (const auto& item : jsonDagCollection.calculateArray)
@@ -85,15 +115,44 @@ void JSONDagCollection::AppendCollection(
          pDagCollection->LinkIndex(index, pLinkInput, pNode.get());
       }
    }
-
-   for (const auto& item : jsonDagCollection.fileArray)
-   {
-      AppendCollection(
-         pDagCollection, 
-         item,
-         dealFileCallback,
-         valueFactoryMap,
-         calculateFactoryMap
-         );
-   }
 }
+
+std::shared_ptr< DagCollection > JSONDagCollection::Factory(
+   const std::string& fileName,
+   const std::function<const std::string(const std::string& fileName)>& dealFileCallback,
+   const std::vector< std::pair< std::string, std::shared_ptr< iDagNode > > >& inbuiltDagValues,
+   const std::map<std::string, ValueFactory>& valueFactoryMap,
+   const std::map<std::string, ValueFactory>& calculateFactoryMap
+   )
+{
+   std::shared_ptr< DagCollection > pResult = std::make_shared< DagCollection >();
+   for (const auto& item : inbuiltDagValues)
+   {
+      pResult->AddDagNode(item.first, item.second);
+   }
+   AppendCollection(pResult, fileName, dealFileCallback, valueFactoryMap, calculateFactoryMap);
+   return pResult;
+}
+
+void JSONDagCollection::AppendCollection(
+   const std::shared_ptr< DagCollection >& pDagCollection,
+   const std::string& fileName,
+   const std::function<const std::string(const std::string& fileName)>& dealFileCallback,
+   const std::map<std::string, ValueFactory>& valueFactoryMap,
+   const std::map<std::string, ValueFactory>& calculateFactoryMap
+   )
+{
+   const auto data = dealFileCallback(fileName);
+   auto json = nlohmann::json::parse( data );
+   JSONDagCollection jsonDagCollection;
+   json.get_to(jsonDagCollection);
+
+   AppendCollectionInternal(
+      pDagCollection,
+      jsonDagCollection,
+      dealFileCallback,
+      valueFactoryMap,
+      calculateFactoryMap
+      );
+}
+
