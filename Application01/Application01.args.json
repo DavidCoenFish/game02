@@ -3,6 +3,14 @@
   "Id": "470231f0-9e07-40d4-bad1-a45eb0710811",
   "Items": [
     {
+      "Id": "6756a291-e761-4ae0-8e77-687f03781022",
+      "Command": "ComputeShader"
+    },
+    {
+      "Id": "1465c824-a4bc-44aa-801f-5035d11f3cca",
+      "Command": "DisplayListSimple"
+    },
+    {
       "Id": "00f2eceb-af2b-440f-bbe3-d2d9a6dacb27",
       "Command": "TestTextureDag"
     },

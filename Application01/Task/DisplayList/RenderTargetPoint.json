@@ -20,7 +20,7 @@
                0.5, -0.5,   0.0, 1.0, 0.0, 1.0, 
                -0.5, -0.5,  0.0, 0.0, 1.0, 1.0 
             ],
-            "topology": "D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST"
+            "topology": "D3D_PRIMITIVE_TOPOLOGY_POINTLIST"
          }
       },
       {
@@ -34,8 +34,8 @@
                }
             ],
             "targetDepthData": null,
-            "width": 200,
-            "height": 150,
+            "width": 64,
+            "height": 64,
             "resizeWithScreen": false
          }
       }
@@ -56,7 +56,7 @@
                      "format": "DXGI_FORMAT_R32G32B32A32_FLOAT"
                   }
                ],
-               "topologyType": "D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE",
+               "topologyType": "D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT",
                "renderTargetFormat": [ "DXGI_FORMAT_B8G8R8A8_UNORM" ]
             },
             "vertexShader": "VertexShaderRenderTargetTriangle.cso",

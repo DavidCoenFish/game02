@@ -4,7 +4,7 @@
     <CommandLineArgs>
     </CommandLineArgs>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>DisplayList</LocalDebuggerCommandArguments>
-    <RemoteDebuggerCommandArguments>DisplayList</RemoteDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>ComputeShader</LocalDebuggerCommandArguments>
+    <RemoteDebuggerCommandArguments>ComputeShader</RemoteDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

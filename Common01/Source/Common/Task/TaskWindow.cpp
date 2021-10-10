@@ -3,6 +3,7 @@
 #include "Common/Task/TaskWindow.h"
 #include "Common/Application/WindowHelper.h"
 #include "Common/Application/ApplicationHolder.h"
+#include "Common/Application/ApplicationComputeShader.h"
 #include "Common/Application/ApplicationDisplayList.h"
 #include "Common/Application/ApplicationTexture.h"
 #include "Common/Application/ApplicationTextureJson.h"
@@ -63,6 +64,7 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
 const TApplicationFactory GetApplicationFactory(const std::string& factory)
 {
    static std::map<std::string, TApplicationFactory> s_factoryMap({
+      {"ComputeShader", ApplicationComputeShader::Factory},
       {"DisplayList", ApplicationDisplayList::Factory},
       {"Texture", ApplicationTexture::Factory},
       {"TextureJson", ApplicationTextureJson::Factory},

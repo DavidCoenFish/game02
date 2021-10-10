@@ -46,6 +46,12 @@
     <Filter Include="Task\TestTextureDag">
       <UniqueIdentifier>{627be12b-2096-4b11-a19e-9d8e34663b0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Task\DisplayListSimple">
+      <UniqueIdentifier>{33d8a53d-9722-4451-ae8f-73c107e1f818}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Task\ComputeShader">
+      <UniqueIdentifier>{12ecac22-14bb-4fdf-8211-611e7f3b8ec7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ApplicationPCH.h">
@@ -149,6 +155,30 @@
     <CopyFileToFolders Include="Task\DisplayList\RenderTargetTriangle.json">
       <Filter>Task\DisplayList</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\DisplayListSimple\Application.json">
+      <Filter>Task\DisplayListSimple</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\DisplayListSimple\DisplayListMaster.json">
+      <Filter>Task\DisplayListSimple</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\DisplayListSimple\DrawScreenQuad.json">
+      <Filter>Task\DisplayListSimple</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\DisplayListSimple\RenderTargetTriangle.json">
+      <Filter>Task\DisplayListSimple</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\DisplayListSimple\RenderTargetWash.json">
+      <Filter>Task\DisplayListSimple</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\DisplayListSimple\StackHeapWrapperRenderTarget.json">
+      <Filter>Task\DisplayListSimple</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\DisplayList\RenderTargetPoint.json">
+      <Filter>Task\DisplayList</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\ComputeShader\Application.json">
+      <Filter>Task\ComputeShader</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <None Include="Application01.props" />
@@ -245,6 +275,33 @@
     </FxCompile>
     <FxCompile Include="Task\DisplayList\VertexShaderRenderTargetTriangle.hlsl">
       <Filter>Task\DisplayList</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\DisplayListSimple\PixelShaderDrawScreenQuad.hlsl">
+      <Filter>Task\DisplayListSimple</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\DisplayListSimple\PixelShaderRenderTargetTriangle.hlsl">
+      <Filter>Task\DisplayListSimple</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\DisplayListSimple\VertexShaderDrawScreenQuad.hlsl">
+      <Filter>Task\DisplayListSimple</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\DisplayListSimple\VertexShaderRenderTargetTriangle.hlsl">
+      <Filter>Task\DisplayListSimple</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\ComputeShader\ComputeShader.hlsl">
+      <Filter>Task\ComputeShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\ComputeShader\PixelShaderTriangleMove.hlsl">
+      <Filter>Task\ComputeShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\ComputeShader\VertexShaderTriangleMove.hlsl">
+      <Filter>Task\ComputeShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\ComputeShader\PixelShaderParticle.hlsl">
+      <Filter>Task\ComputeShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\ComputeShader\VertexShaderParticle.hlsl">
+      <Filter>Task\ComputeShader</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

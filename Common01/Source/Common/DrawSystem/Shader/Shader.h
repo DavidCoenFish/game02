@@ -19,7 +19,8 @@ public:
       const std::shared_ptr< std::vector<uint8_t> >& pGeometryShaderData,
       const std::shared_ptr< std::vector<uint8_t> >& pPixelShaderData,
       const std::vector< std::shared_ptr< ShaderResourceInfo > >& arrayShaderResourceInfo = std::vector< std::shared_ptr< ShaderResourceInfo > >(),
-      const std::vector< std::shared_ptr< ShaderConstantInfo > >& arrayShaderConstantsInfo = std::vector< std::shared_ptr< ShaderConstantInfo > >()
+      const std::vector< std::shared_ptr< ShaderConstantInfo > >& arrayShaderConstantsInfo = std::vector< std::shared_ptr< ShaderConstantInfo > >(),
+      const std::shared_ptr< std::vector<uint8_t> >& pComputeShaderData = std::shared_ptr< std::vector<uint8_t> >()
       );
    virtual ~Shader();
 
@@ -62,6 +63,7 @@ private:
    std::shared_ptr< std::vector<uint8_t> > m_pPixelShaderData;
    std::vector< std::shared_ptr< ShaderResourceInfo > > m_arrayShaderResourceInfo;
    std::vector< std::shared_ptr< ShaderConstantInfo > > m_arrayShaderConstantsInfo;
+   std::shared_ptr< std::vector<uint8_t> > m_pComputeShaderData;
 
    std::vector< std::shared_ptr< ShaderConstantBuffer > > m_arrayShaderConstantBuffer;
    Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;

@@ -34,8 +34,8 @@
                }
             ],
             "targetDepthData": null,
-            "width": 200,
-            "height": 150,
+            "width": 512,
+            "height": 512,
             "resizeWithScreen": false
          }
       }

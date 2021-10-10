@@ -267,7 +267,8 @@ Shader::Shader(
    const std::shared_ptr< std::vector<uint8_t> >& pGeometryShaderData,
    const std::shared_ptr< std::vector<uint8_t> >& pPixelShaderData,
    const std::vector< std::shared_ptr< ShaderResourceInfo > >& arrayShaderResourceInfo,
-   const std::vector< std::shared_ptr< ShaderConstantInfo > >& arrayShaderConstantsInfo
+   const std::vector< std::shared_ptr< ShaderConstantInfo > >& arrayShaderConstantsInfo,
+   const std::shared_ptr< std::vector<uint8_t> >& pComputeShaderData
    )
    : IResource(pDrawSystem)
    , m_pipelineStateData(pipelineStateData)
@@ -276,6 +277,7 @@ Shader::Shader(
    , m_pPixelShaderData(pPixelShaderData)
    , m_arrayShaderResourceInfo(arrayShaderResourceInfo)
    , m_arrayShaderConstantsInfo(arrayShaderConstantsInfo)
+   , m_pComputeShaderData(pComputeShaderData)
 {
    for (auto& iter : m_arrayShaderConstantsInfo)
    {
