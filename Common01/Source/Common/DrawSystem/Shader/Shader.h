@@ -2,11 +2,12 @@
 
 #include "Common/DrawSystem/IResource.h"
 #include "Common/DrawSystem/Shader/ShaderPipelineStateData.h"
-#include "Common/DrawSystem/Shader/ShaderConstantInfo.h"
+#include "Common/DrawSystem/Shader/ConstantBufferInfo.h"
 
-struct ShaderConstantInfo;
+struct ConstantBufferInfo;
 struct ShaderResourceInfo;
-struct ShaderConstantBuffer;
+struct ConstantBuffer;
+struct UnorderedAccessInfo;
 class HeapWrapperItem;
 
 class Shader : public IResource
@@ -19,8 +20,9 @@ public:
       const std::shared_ptr< std::vector<uint8_t> >& pGeometryShaderData,
       const std::shared_ptr< std::vector<uint8_t> >& pPixelShaderData,
       const std::vector< std::shared_ptr< ShaderResourceInfo > >& arrayShaderResourceInfo = std::vector< std::shared_ptr< ShaderResourceInfo > >(),
-      const std::vector< std::shared_ptr< ShaderConstantInfo > >& arrayShaderConstantsInfo = std::vector< std::shared_ptr< ShaderConstantInfo > >(),
-      const std::shared_ptr< std::vector<uint8_t> >& pComputeShaderData = std::shared_ptr< std::vector<uint8_t> >()
+      const std::vector< std::shared_ptr< ConstantBufferInfo > >& arrayShaderConstantsInfo = std::vector< std::shared_ptr< ConstantBufferInfo > >(),
+      const std::shared_ptr< std::vector<uint8_t> >& pComputeShaderData = std::shared_ptr< std::vector<uint8_t> >(),
+      const std::vector< std::shared_ptr< UnorderedAccessInfo > >& arrayUnorderedAccessInfo = std::vector< std::shared_ptr< UnorderedAccessInfo > >()
       );
    virtual ~Shader();
 
@@ -32,6 +34,7 @@ public:
       );
 
    void SetShaderResourceViewHandle( const int index, const std::shared_ptr< HeapWrapperItem >& pShaderResourceViewHandle );
+   void SetUnorderedAccessViewHandle( const int index, const std::shared_ptr< HeapWrapperItem >& pUnorderedAccessViewHandle );
    void SetConstantBufferData( const int index, const std::vector<float>& data );
 
    template <typename CONSTANTS>
@@ -53,7 +56,7 @@ private:
 
    virtual void OnDeviceRestored(
       ID3D12GraphicsCommandList* const,
-      ID3D12Device* const pDevice
+      ID3D12Device2* const pDevice
       ) override;
 
 private:
@@ -62,10 +65,11 @@ private:
    std::shared_ptr< std::vector<uint8_t> > m_pGeometryShaderData;
    std::shared_ptr< std::vector<uint8_t> > m_pPixelShaderData;
    std::vector< std::shared_ptr< ShaderResourceInfo > > m_arrayShaderResourceInfo;
-   std::vector< std::shared_ptr< ShaderConstantInfo > > m_arrayShaderConstantsInfo;
+   std::vector< std::shared_ptr< ConstantBufferInfo > > m_arrayShaderConstantsInfo;
    std::shared_ptr< std::vector<uint8_t> > m_pComputeShaderData;
+   std::vector< std::shared_ptr< UnorderedAccessInfo > > m_arrayUnorderedAccessInfo;
 
-   std::vector< std::shared_ptr< ShaderConstantBuffer > > m_arrayShaderConstantBuffer;
+   std::vector< std::shared_ptr< ConstantBuffer > > m_arrayConstantBuffer;
    Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
    Microsoft::WRL::ComPtr<ID3D12PipelineState> m_pipelineState;
 

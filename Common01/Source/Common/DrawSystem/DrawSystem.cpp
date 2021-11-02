@@ -7,7 +7,9 @@
 #include "Common/DrawSystem/HeapWrapper/HeapWrapper.h"
 #include "Common/DrawSystem/HeapWrapper/HeapWrapperItem.h"
 #include "Common/DrawSystem/Shader/Shader.h"
-#include "Common/DrawSystem/Shader/ShaderTexture.h"
+#include "Common/DrawSystem/Shader/ShaderResource.h"
+#include "Common/DrawSystem/Shader/UnorderedAccess.h"
+#include "Common/DrawSystem/Shader/UnorderedAccessInfo.h"
 #include "Common/DrawSystem/RenderTarget/RenderTargetTexture.h"
 #include "Common/DrawSystem/Geometry/GeometryGeneric.h"
 #include "Common/DirectXTK12/GraphicsMemory.h"
@@ -84,7 +86,9 @@ std::shared_ptr< Shader > DrawSystem::MakeShader(
    const std::shared_ptr< std::vector<uint8_t> >& pGeometryShaderData,
    const std::shared_ptr< std::vector<uint8_t> >& pPixelShaderData,
    const std::vector< std::shared_ptr< ShaderResourceInfo > >& arrayShaderResourceInfo,
-   const std::vector< std::shared_ptr< ShaderConstantInfo > >& arrayShaderConstantsInfo
+   const std::vector< std::shared_ptr< ConstantBufferInfo > >& arrayShaderConstantsInfo,
+   const std::shared_ptr< std::vector<uint8_t> >& pComputeShaderData,
+   const std::vector< std::shared_ptr< UnorderedAccessInfo > >& arrayUnorderedAccessInfo
    )
 {
    auto pResult = std::make_shared<Shader>(
@@ -94,7 +98,9 @@ std::shared_ptr< Shader > DrawSystem::MakeShader(
       pGeometryShaderData,
       pPixelShaderData,
       arrayShaderResourceInfo,
-      arrayShaderConstantsInfo
+      arrayShaderConstantsInfo,
+      pComputeShaderData,
+      arrayUnorderedAccessInfo
       );
    if (pResult && m_pDeviceResources)
    {
@@ -131,7 +137,7 @@ std::shared_ptr< GeometryGeneric > DrawSystem::MakeGeometryGeneric(
    return pResult;
 }
 
-std::shared_ptr< ShaderTexture > DrawSystem::MakeShaderTexture(
+std::shared_ptr< ShaderResource > DrawSystem::MakeShaderResource(
    ID3D12GraphicsCommandList* const pCommandList,
    const std::shared_ptr< HeapWrapperItem >& shaderResource,
    const D3D12_RESOURCE_DESC& desc, 
@@ -139,12 +145,35 @@ std::shared_ptr< ShaderTexture > DrawSystem::MakeShaderTexture(
    const std::vector<uint8_t>& data
    )
 {
-   auto pResult = std::make_shared<ShaderTexture>(
+   auto pResult = std::make_shared<ShaderResource>(
       this,
       shaderResource,
       desc, 
       shaderResourceViewDesc,
       data
+      );
+   if (pResult && m_pDeviceResources)
+   {
+      ((IResource*)(pResult.get()))->OnDeviceRestored(
+         pCommandList,
+         m_pDeviceResources->GetD3dDevice()
+         );
+   }
+   return pResult;
+}
+
+std::shared_ptr< UnorderedAccess > DrawSystem::MakeUnorderedAccess(
+   ID3D12GraphicsCommandList* const pCommandList,
+   const std::shared_ptr< HeapWrapperItem >& pHeapWrapperItem,
+   const D3D12_RESOURCE_DESC& desc, 
+   const D3D12_UNORDERED_ACCESS_VIEW_DESC& unorderedAccessViewDesc
+   )
+{
+   auto pResult = std::make_shared<UnorderedAccess>(
+      this,
+      pHeapWrapperItem,
+      desc, 
+      unorderedAccessViewDesc
       );
    if (pResult && m_pDeviceResources)
    {

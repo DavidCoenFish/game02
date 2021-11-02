@@ -8,20 +8,20 @@
 #include "Common/DrawSystem/Shader/ShaderPipelineStateData.h"
 #include "Common/DrawSystem/Geometry/GeometryGeneric.h"
 #include "Common/DrawSystem/Shader/Shader.h"
-#include "Common/DrawSystem/Shader/ShaderTexture.h"
+#include "Common/DrawSystem/Shader/ShaderResource.h"
 #include "Common/DrawSystem/Shader/ShaderResourceInfo.h"
 #include "Common/Json/JSONDrawSystem.h"
 #include "Common/Json/JSONGeometry.h"
 #include "Common/Json/JSONShader.h"
-#include "Common/Json/JSONShaderTexture.h"
-#include "Common/Json/JSONShaderConstantInfo.h"
+#include "Common/Json/JSONShaderResource.h"
+#include "Common/Json/JSONConstantBufferInfo.h"
 #include "Common/Json/JSONShaderResourceInfo.h"
 
 class JSONDataATJ
 {
 public:
    JSONDrawSystem drawSystem;
-   JSONShaderTexture texture;
+   JSONShaderResource texture;
    JSONShader shader; 
    JSONGeometry geometry;
 };
@@ -50,7 +50,7 @@ ApplicationTextureJson::ApplicationTextureJson(const HWND hWnd, const IApplicati
    m_pDrawSystem = DrawSystem::Factory(hWnd, data.drawSystem);
 
    auto pCommandList = m_pDrawSystem->CreateCustomCommandList();
-   m_pTexture = m_pDrawSystem->MakeShaderTexture(
+   m_pTexture = m_pDrawSystem->MakeShaderResource(
       pCommandList->GetCommandList(),
       m_pDrawSystem->MakeHeapWrapperCbvSrvUav(),
       data.texture.desc,
@@ -60,7 +60,7 @@ ApplicationTextureJson::ApplicationTextureJson(const HWND hWnd, const IApplicati
    auto pVertexShaderData = FileSystem::SyncReadFile(applicationParam.m_rootPath / data.shader.vertexShader);
    auto pPixelShaderData = FileSystem::SyncReadFile(applicationParam.m_rootPath / data.shader.pixelShader);
    auto arrayTexture = TransformShaderResourceInfo(data.shader.resourceInfo);
-   auto arrayConstant = TransformShaderConstantInfo(data.shader.constantInfo);
+   auto arrayConstant = TransformConstantBufferInfo(data.shader.constantInfo);
    
    if (0 < arrayTexture.size())
    {

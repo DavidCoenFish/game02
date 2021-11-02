@@ -65,3 +65,9 @@ void DrawSystemFrame::Draw(GeometryGeneric* const pGeometry)
 {
    pGeometry->Draw(m_pCommandList);
 }
+
+void DrawSystemFrame::Dispatch(uint32_t numGroupsX, uint32_t numGroupsY, uint32_t numGroupsZ)
+{
+   m_pCommandList->Dispatch(numGroupsX, numGroupsY, numGroupsZ);
+}
+

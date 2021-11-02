@@ -35,6 +35,10 @@
       "Command": "TestTextureJson"
     },
     {
+      "Id": "30fde3f0-3d3e-470e-990b-422a56845205",
+      "Command": "TestTextureMove"
+    },
+    {
       "Id": "53189eee-64de-4198-8a77-1f8c138f3cba",
       "Command": "TestTriangle"
     },

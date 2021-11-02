@@ -3,7 +3,7 @@
 #include "json/json.hpp"
 #include "Common/DrawSystem/Shader/ShaderPipelineStateData.h"
 #include "Common/JSON/JSONDrawSystemEnum.h"
-#include "Common/JSON/JSONShaderConstantInfo.h"
+#include "Common/JSON/JSONConstantBufferInfo.h"
 
 //typedef struct DXGI_SAMPLE_DESC
 //{
@@ -65,7 +65,7 @@ void from_json(const nlohmann::json& j, D3D12_RESOURCE_DESC& p);
 void to_json(nlohmann::json& j, const D3D12_SHADER_RESOURCE_VIEW_DESC& p);
 void from_json(const nlohmann::json& j, D3D12_SHADER_RESOURCE_VIEW_DESC& p);
 
-struct JSONShaderTexture
+struct JSONShaderResource
 {
    D3D12_RESOURCE_DESC desc;
    D3D12_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
@@ -73,7 +73,7 @@ struct JSONShaderTexture
 };
 //NLOHMANN_DEFINE_TYPE_INTRUSIVE
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-   JSONShaderTexture,
+   JSONShaderResource,
    desc,
    shaderResourceViewDesc,
    data

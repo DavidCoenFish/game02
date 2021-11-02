@@ -4,12 +4,13 @@ class HeapWrapperItem;
 
 /*
 shader constant is reflection of a stuct with visiblity in the shader
+pData has ownership in ConstantBufferInfo
 */
 //either derrive off iResource, or be told by parent that DeviceLost/DeviceRestored
-struct ShaderConstantBuffer
+struct ConstantBuffer
 {
 public:
-   ShaderConstantBuffer(
+   ConstantBuffer(
       const int frameCount, 
       const size_t constantBufferSize,
       const std::shared_ptr< HeapWrapperItem >& pHeapWrapperItem,
@@ -29,6 +30,7 @@ public:
 
    //void SetRootParamIndex( const int index ) { m_rootParamIndex = index; }
    const D3D12_SHADER_VISIBILITY GetVisiblity() const { return m_visiblity; }
+   const int GetNum32BitValues() const;
 
 private:
    static const size_t MAX_BACK_BUFFER_COUNT = 3;

@@ -26,7 +26,7 @@ void IResource::OnResizeBefore()
 }
 void IResource::OnResizeAfter(
    ID3D12GraphicsCommandList* const,
-   ID3D12Device* const,
+   ID3D12Device2* const,
    const int,
    const int
    )

@@ -7,7 +7,7 @@ class HeapWrapperItem
 {
 public:
    static std::shared_ptr<HeapWrapperItem> Factory(
-      ID3D12Device* const pDevice,
+      ID3D12Device2* const pDevice,
       const std::shared_ptr<HeapWrapper>& pHeapWrapper,
       const int length = 1
       );

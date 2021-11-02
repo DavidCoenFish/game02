@@ -1,8 +1,8 @@
 #include "CommonPCH.h"
 
-#include "Common/DrawSystem/Shader/ShaderConstantInfo.h"
+#include "Common/DrawSystem/Shader/ConstantBufferInfo.h"
 
-ShaderConstantInfo::ShaderConstantInfo(
+ConstantBufferInfo::ConstantBufferInfo(
    const std::vector< uint8_t >& data,
    const D3D12_SHADER_VISIBILITY visiblity
    )
@@ -11,7 +11,7 @@ ShaderConstantInfo::ShaderConstantInfo(
 {
 }
 
-void ShaderConstantInfo::UpdateData(const void* const pData, const size_t dataSize)
+void ConstantBufferInfo::UpdateData(const void* const pData, const size_t dataSize)
 {
    dataSize;
    assert(dataSize == m_data.size());

@@ -4,10 +4,13 @@
 
 class HeapWrapperItem;
 
-class ShaderTexture : public IResource
+/*
+was ShaderTexture
+*/
+class ShaderResource : public IResource
 {
 public:
-   ShaderTexture(
+   ShaderResource(
       DrawSystem* const pDrawSystem,
       const std::shared_ptr< HeapWrapperItem >& shaderResource,
       const D3D12_RESOURCE_DESC& desc, 
@@ -45,7 +48,7 @@ private:
    virtual void OnDeviceLost() override;
    virtual void OnDeviceRestored(
       ID3D12GraphicsCommandList* const pCommandList,
-      ID3D12Device* const pDevice
+      ID3D12Device2* const pDevice
       ) override;
 
 private:

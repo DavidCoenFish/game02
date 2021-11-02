@@ -354,7 +354,7 @@ void DeviceResources::Prepare(
    }
    return;
 }
-ID3D12Device* const DeviceResources::GetD3dDevice()
+ID3D12Device2* const DeviceResources::GetD3dDevice()
 {
    return m_pDevice.Get();
 }

@@ -4,7 +4,7 @@
     <CommandLineArgs>
     </CommandLineArgs>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>ComputeShader</LocalDebuggerCommandArguments>
-    <RemoteDebuggerCommandArguments>ComputeShader</RemoteDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>TestTextureMove</LocalDebuggerCommandArguments>
+    <RemoteDebuggerCommandArguments>TestTextureMove</RemoteDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

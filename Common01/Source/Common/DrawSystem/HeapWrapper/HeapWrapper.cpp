@@ -63,7 +63,7 @@ ID3D12DescriptorHeap* const HeapWrapper::GetHeap(const int index)
 }
 
 const int HeapWrapper::GetFreeIndex(
-   ID3D12Device* const pDevice, 
+   ID3D12Device2* const pDevice, 
    const int length)
 {
    int trace = 0;
@@ -107,7 +107,7 @@ void HeapWrapper::OnDeviceLost()
 
 void HeapWrapper::OnDeviceRestored(
    ID3D12GraphicsCommandList* const,
-   ID3D12Device* const pDevice
+   ID3D12Device2* const pDevice
    )
 {
    for (auto iter : m_arrayPage)

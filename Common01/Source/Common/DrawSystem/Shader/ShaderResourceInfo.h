@@ -31,6 +31,10 @@ public:
       ID3D12GraphicsCommandList* const pCommandList,
       const int rootParamIndex
       );
+   //void ActivateSampler( 
+   //   ID3D12GraphicsCommandList* const pCommandList,
+   //   const int rootParamIndex
+   //   );
    void SetShaderResourceViewHandle(const std::shared_ptr< HeapWrapperItem >& pShaderResourceViewHandle);
    const bool GetUseSampler() const { return m_bUseSampler; }
    const D3D12_STATIC_SAMPLER_DESC& GetStaticSamplerDesc() const { return m_staticSamplerDesc; }
@@ -39,6 +43,7 @@ public:
 private:
    bool m_bUseSampler;
    std::shared_ptr< HeapWrapperItem > m_pShaderResourceViewHandle;
+   //std::shared_ptr< HeapWrapperItem > m_pSamplerHandle;
    D3D12_STATIC_SAMPLER_DESC m_staticSamplerDesc;
 
 };

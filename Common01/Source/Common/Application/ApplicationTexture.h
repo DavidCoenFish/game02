@@ -5,7 +5,7 @@
 class ApplicationHolder;
 class DrawSystem;
 class Shader;
-class ShaderTexture;
+class ShaderResource;
 class GeometryGeneric;
 
 class ApplicationTexture : public IApplication
@@ -24,7 +24,7 @@ private:
 private:
    std::unique_ptr< DrawSystem > m_pDrawSystem;
    std::shared_ptr< Shader > m_pShader;
-   std::shared_ptr< ShaderTexture > m_pTexture;
+   std::shared_ptr< ShaderResource > m_pTexture;
    struct Vertex
    {
       DirectX::XMFLOAT2 m_position;

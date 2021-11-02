@@ -6,7 +6,7 @@
 std::shared_ptr<HeapWrapperPage> HeapWrapperPage::Factory(
    const int frameCount,
    const D3D12_DESCRIPTOR_HEAP_DESC& desc,
-   ID3D12Device* const pDevice
+   ID3D12Device2* const pDevice
    )
 {
    auto pResult = std::make_shared< HeapWrapperPage >(frameCount, desc.NumDescriptors);
@@ -41,7 +41,7 @@ void HeapWrapperPage::OnDeviceLost()
    }
 }
 
-void HeapWrapperPage::OnDeviceRestored(const D3D12_DESCRIPTOR_HEAP_DESC& desc, ID3D12Device* const pDevice)
+void HeapWrapperPage::OnDeviceRestored(const D3D12_DESCRIPTOR_HEAP_DESC& desc, ID3D12Device2* const pDevice)
 {
    if (nullptr == pDevice)
    {

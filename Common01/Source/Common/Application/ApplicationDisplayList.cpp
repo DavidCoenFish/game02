@@ -8,13 +8,13 @@
 #include "Common/DrawSystem/Shader/ShaderPipelineStateData.h"
 #include "Common/DrawSystem/Geometry/GeometryGeneric.h"
 #include "Common/DrawSystem/Shader/Shader.h"
-#include "Common/DrawSystem/Shader/ShaderTexture.h"
+#include "Common/DrawSystem/Shader/ShaderResource.h"
 #include "Common/DrawSystem/RenderTarget/RenderTargetTexture.h"
 #include "Common/DrawSystem/DrawSystemFrame.h"
 #include "Common/JSON/JSONDrawSystem.h"
 #include "Common/JSON/JSONDagCollection.h"
 #include "Common/JSON/JSONShader.h"
-#include "Common/JSON/JSONShaderTexture.h"
+#include "Common/JSON/JSONShaderResource.h"
 #include "Common/JSON/JSONGeometry.h"
 #include "Common/JSON/JSONRenderTarget.h"
 #include "Common/DAG/DagCollection.h"
@@ -143,17 +143,17 @@ ApplicationDisplayList::ApplicationDisplayList(const HWND hWnd, const IApplicati
       return pResult;
    };
    mapValue["Texture"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
-      JSONShaderTexture jsonShaderTexture;
-      data.get_to(jsonShaderTexture);
+      JSONShaderResource jsonShaderResource;
+      data.get_to(jsonShaderResource);
       auto pCommandList = m_pDrawSystem->CreateCustomCommandList();
-      auto pShaderTexture = m_pDrawSystem->MakeShaderTexture(
+      auto pShaderResource = m_pDrawSystem->MakeShaderResource(
          pCommandList->GetCommandList(),
          m_pDrawSystem->MakeHeapWrapperCbvSrvUav(),
-         jsonShaderTexture.desc,
-         jsonShaderTexture.shaderResourceViewDesc,
-         jsonShaderTexture.data
+         jsonShaderResource.desc,
+         jsonShaderResource.shaderResourceViewDesc,
+         jsonShaderResource.data
          );
-      auto pValue = DagValue<std::shared_ptr< ShaderTexture >>::Factory(pShaderTexture);
+      auto pValue = DagValue<std::shared_ptr< ShaderResource >>::Factory(pShaderResource);
       auto pResult = DagNodeValue::Factory( pValue );
       return pResult;
    };
@@ -175,7 +175,7 @@ ApplicationDisplayList::ApplicationDisplayList(const HWND hWnd, const IApplicati
    std::map<std::string, NodeCalculateFactory> mapCalculate;
 
    //indexInput
-   //  0.std::shared_ptr< ShaderTexture >
+   //  0.std::shared_ptr< ShaderResource >
    //output std::shared_ptr< HeapWrapperItem >
    mapCalculate["HeapWrapperFromTexture"] = [=](const nlohmann::json& data) -> std::shared_ptr< iDagNode > {
       data;
@@ -187,12 +187,12 @@ ApplicationDisplayList::ApplicationDisplayList(const HWND hWnd, const IApplicati
             pLocalValue = DagValue< std::shared_ptr< HeapWrapperItem > >::Factory(nullptr);
          }
 
-         const auto pDagHeapWrapperItem = 0 < indexInput.size() ? std::dynamic_pointer_cast< DagValue< std::shared_ptr< ShaderTexture > > >(indexInput[0]->GetValue()) : nullptr;
-         const auto pShaderTexture = pDagHeapWrapperItem ? pDagHeapWrapperItem->GetRef() : nullptr;
+         const auto pDagHeapWrapperItem = 0 < indexInput.size() ? std::dynamic_pointer_cast< DagValue< std::shared_ptr< ShaderResource > > >(indexInput[0]->GetValue()) : nullptr;
+         const auto pShaderResource = pDagHeapWrapperItem ? pDagHeapWrapperItem->GetRef() : nullptr;
          std::shared_ptr< HeapWrapperItem > pHeapWrapperItem;
-         if ( nullptr != pShaderTexture)
+         if ( nullptr != pShaderResource)
          {
-            pHeapWrapperItem = pShaderTexture->GetHeapWrapperItem();
+            pHeapWrapperItem = pShaderResource->GetHeapWrapperItem();
          }
 
          pLocalValue->SetRef(pHeapWrapperItem);
@@ -319,7 +319,7 @@ ApplicationDisplayList::ApplicationDisplayList(const HWND hWnd, const IApplicati
          LoadFile(applicationParam.m_rootPath, jsonShader.geometryShader),
          LoadFile(applicationParam.m_rootPath, jsonShader.pixelShader),
          TransformShaderResourceInfo(jsonShader.resourceInfo),
-         TransformShaderConstantInfo(jsonShader.constantInfo)
+         TransformConstantBufferInfo(jsonShader.constantInfo)
          );
       auto pResult = DagNodeCalculate::Factory([=](const std::vector< iDagNode* >& stackInput, const std::vector< iDagNode* >& indexInput, const std::shared_ptr< iDagValue >& pValue) -> std::shared_ptr< iDagValue >{
          stackInput; indexInput; pValue;

@@ -19,6 +19,7 @@ public:
    void SetRenderTarget(IRenderTarget* const pRenderTarget);
    void SetShader(Shader* const pShader);
    void Draw(GeometryGeneric* const pGeometry);
+   void Dispatch(uint32_t numGroupsX, uint32_t numGroupsY = 1, uint32_t numGroupsZ = 1);
 
    template <typename TypeVertex >
    void Draw(Geometry<TypeVertex>* const pGeometry)

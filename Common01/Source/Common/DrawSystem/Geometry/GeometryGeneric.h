@@ -19,7 +19,7 @@ private:
    virtual void OnDeviceLost() override;
    virtual void OnDeviceRestored(
       ID3D12GraphicsCommandList* const pCommandList,
-      ID3D12Device* const pDevice
+      ID3D12Device2* const pDevice
       ) override;
 
 private:

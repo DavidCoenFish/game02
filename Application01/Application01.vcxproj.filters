@@ -52,6 +52,9 @@
     <Filter Include="Task\ComputeShader">
       <UniqueIdentifier>{12ecac22-14bb-4fdf-8211-611e7f3b8ec7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Task\TestTextureMove">
+      <UniqueIdentifier>{4bfc2862-d72f-4b05-9f6e-d2384b099292}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ApplicationPCH.h">
@@ -179,6 +182,9 @@
     <CopyFileToFolders Include="Task\ComputeShader\Application.json">
       <Filter>Task\ComputeShader</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\TestTextureMove\Application.json">
+      <Filter>Task\TestTextureMove</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <None Include="Application01.props" />
@@ -302,6 +308,18 @@
     </FxCompile>
     <FxCompile Include="Task\ComputeShader\VertexShaderParticle.hlsl">
       <Filter>Task\ComputeShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\ComputeShader\PixelShaderScreenQuad.hlsl">
+      <Filter>Task\ComputeShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\ComputeShader\VertexShaderScreenQuad.hlsl">
+      <Filter>Task\ComputeShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\TestTextureMove\PixelShader.hlsl">
+      <Filter>Task\TestTextureMove</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\TestTextureMove\VertexShader.hlsl">
+      <Filter>Task\TestTextureMove</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

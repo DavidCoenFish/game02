@@ -146,7 +146,7 @@ void RenderTargetTexture::OnDeviceLost()
 
 void RenderTargetTexture::OnDeviceRestored(
    ID3D12GraphicsCommandList* const,
-   ID3D12Device* const pDevice
+   ID3D12Device2* const pDevice
    )
 {
    m_arrayRenderTargetDescriptors.clear();
@@ -258,7 +258,7 @@ void RenderTargetTexture::OnResizeBefore()
 
 void RenderTargetTexture::OnResizeAfter(
    ID3D12GraphicsCommandList* const pCommandList,
-   ID3D12Device* const pDevice,
+   ID3D12Device2* const pDevice,
    const int screenWidth,
    const int screenHeight
    )

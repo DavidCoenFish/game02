@@ -1,10 +1,10 @@
 #include "CommonPCH.h"
 
-#include "Common/DrawSystem/Shader/ShaderConstantBuffer.h"
+#include "Common/DrawSystem/Shader/ConstantBuffer.h"
 #include "Common/DrawSystem/HeapWrapper/HeapWrapperItem.h"
 #include "Common/DrawSystem/d3dx12.h"
 
-ShaderConstantBuffer::ShaderConstantBuffer(
+ConstantBuffer::ConstantBuffer(
    const int frameCount, 
    const size_t constantBufferSize,
    const std::shared_ptr< HeapWrapperItem >& pHeapWrapperItem,
@@ -23,7 +23,7 @@ ShaderConstantBuffer::ShaderConstantBuffer(
    }
 }
 
-void ShaderConstantBuffer::DeviceLost()
+void ConstantBuffer::DeviceLost()
 {
    for (int i = 0; i < m_frameCount; ++i)
    {
@@ -33,7 +33,7 @@ void ShaderConstantBuffer::DeviceLost()
    return;
 }
 
-void ShaderConstantBuffer::DeviceRestored(ID3D12Device* const pDevice)
+void ConstantBuffer::DeviceRestored(ID3D12Device* const pDevice)
 {
    for (int i = 0; i < m_frameCount; ++i)
    {
@@ -63,7 +63,7 @@ void ShaderConstantBuffer::DeviceRestored(ID3D12Device* const pDevice)
     }
 }
 
-void ShaderConstantBuffer::Activate(
+void ConstantBuffer::Activate(
    ID3D12GraphicsCommandList* const pCommandList,
    //void* const pData, 
    const int rootParamIndex,
@@ -82,3 +82,7 @@ void ShaderConstantBuffer::Activate(
    return;
 }
 
+const int ConstantBuffer::GetNum32BitValues() const
+{
+   return (int)(m_constantBufferSize / 4);
+}

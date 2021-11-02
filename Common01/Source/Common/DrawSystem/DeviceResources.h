@@ -50,7 +50,7 @@ public:
    const bool Present();
    IRenderTarget* GetRenderTargetBackBuffer();
 
-   ID3D12Device* const GetD3dDevice();
+   ID3D12Device2* const GetD3dDevice();
    //ID3D12CommandQueue* const GetCommandQueue();
 
    ID3D12GraphicsCommandList* GetCustomCommandList();
@@ -77,7 +77,7 @@ private:
 
    Microsoft::WRL::ComPtr<IDXGIFactory6> m_pDXGIFactory;
    DWORD m_dxgiFactoryFlags;
-   Microsoft::WRL::ComPtr<ID3D12Device> m_pDevice;
+   Microsoft::WRL::ComPtr<ID3D12Device2> m_pDevice;
    Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_pCommandQueue;
 
    UINT64 m_customCommandListFenceValue;

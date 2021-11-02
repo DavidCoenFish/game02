@@ -1,5 +1,5 @@
 #include "CommonPCH.h"
-#include "Common/Application/ApplicationTriangleMove.h"
+#include "Common/Application/ApplicationTextureMove.h"
 #include "Common/Log/Log.h"
 #include "Common/DrawSystem/DrawSystem.h"
 #include "Common/DrawSystem/DrawSystemFrame.h"
@@ -8,21 +8,26 @@
 #include "Common/DrawSystem/Shader/ShaderPipelineStateData.h"
 #include "Common/DrawSystem/Geometry/GeometryGeneric.h"
 #include "Common/DrawSystem/Shader/Shader.h"
+#include "Common/DrawSystem/Shader/ShaderResource.h"
+#include "Common/DrawSystem/Shader/ShaderResourceInfo.h"
 #include "Common/Json/JSONDrawSystem.h"
 #include "Common/Json/JSONGeometry.h"
 #include "Common/Json/JSONShader.h"
+#include "Common/Json/JSONShaderResource.h"
 
-class JSONData1
+class JSONDataTextureMove
 {
 public:
    JSONDrawSystem drawSystem;
+   JSONShaderResource texture;
    JSONShader shader; 
    JSONGeometry geometry;
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
-   JSONData1,
+   JSONDataTextureMove,
    drawSystem,
+   texture,
    shader,
    geometry
    );
@@ -35,20 +40,20 @@ struct VertexConstants
    float padding2; 
 };
 
-IApplication* const ApplicationTriangleMove::Factory(const HWND hWnd, const IApplicationParam& applicationParam)
+IApplication* const ApplicationTextureMove::Factory(const HWND hWnd, const IApplicationParam& applicationParam)
 {
-   return new ApplicationTriangleMove(hWnd, applicationParam);
+   return new ApplicationTextureMove(hWnd, applicationParam);
 }
 
-ApplicationTriangleMove::ApplicationTriangleMove(const HWND hWnd, const IApplicationParam& applicationParam)
+ApplicationTextureMove::ApplicationTextureMove(const HWND hWnd, const IApplicationParam& applicationParam)
    : IApplication(hWnd, applicationParam)
    , m_timePointValid(false)
    , m_timePoint()
    , m_timeAccumulation(0.0f)
 {
-   LOG_MESSAGE("ApplicationTriangleMove ctor %p", this);
+   LOG_MESSAGE("ApplicationTextureMove ctor %p", this);
 
-   JSONData1 data;
+   JSONDataTextureMove data;
    applicationParam.m_json.get_to(data);
 
    m_pDrawSystem = DrawSystem::Factory(hWnd, data.drawSystem);
@@ -57,14 +62,30 @@ ApplicationTriangleMove::ApplicationTriangleMove(const HWND hWnd, const IApplica
    auto pVertexShaderData = FileSystem::SyncReadFile(applicationParam.m_rootPath / data.shader.vertexShader);
    auto pPixelShaderData = FileSystem::SyncReadFile(applicationParam.m_rootPath / data.shader.pixelShader);
 
+   auto arrayTexture = TransformShaderResourceInfo(data.shader.resourceInfo);
+   auto arrayConstant = TransformConstantBufferInfo(data.shader.constantInfo);
+   
+   m_pTexture = m_pDrawSystem->MakeShaderResource(
+      pCommandList->GetCommandList(),
+      m_pDrawSystem->MakeHeapWrapperCbvSrvUav(),
+      data.texture.desc,
+      data.texture.shaderResourceViewDesc,
+      data.texture.data
+      );
+
+   if (0 < arrayTexture.size())
+   {
+      arrayTexture[0]->SetShaderResourceViewHandle(m_pTexture->GetHeapWrapperItem());
+   }
+
    m_pShader = m_pDrawSystem->MakeShader(
       pCommandList->GetCommandList(),
       data.shader.pipelineState,
       pVertexShaderData,
       nullptr,
       pPixelShaderData,
-      std::vector< std::shared_ptr< ShaderResourceInfo > >(),
-      TransformConstantBufferInfo(data.shader.constantInfo)
+      arrayTexture,
+      arrayConstant
       );
    m_pGeometry = m_pDrawSystem->MakeGeometryGeneric(
       pCommandList->GetCommandList(),
@@ -75,7 +96,7 @@ ApplicationTriangleMove::ApplicationTriangleMove(const HWND hWnd, const IApplica
       );
 }
 
-ApplicationTriangleMove ::~ApplicationTriangleMove ()
+ApplicationTextureMove ::~ApplicationTextureMove ()
 {
    if (m_pDrawSystem)
    {
@@ -83,12 +104,13 @@ ApplicationTriangleMove ::~ApplicationTriangleMove ()
    }
    m_pShader.reset();
    m_pGeometry.reset();
+   m_pTexture.reset();
    m_pDrawSystem.reset();
 
-   LOG_MESSAGE("ApplicationTriangleMove  dtor %p", this);
+   LOG_MESSAGE("ApplicationTextureMove  dtor %p", this);
 }
 
-void ApplicationTriangleMove::Update()
+void ApplicationTextureMove::Update()
 {
    BaseType::Update();
 
@@ -118,7 +140,7 @@ void ApplicationTriangleMove::Update()
    }
 }
 
-void ApplicationTriangleMove::OnWindowSizeChanged(const int width, const int height)
+void ApplicationTextureMove::OnWindowSizeChanged(const int width, const int height)
 {
    BaseType::OnWindowSizeChanged(width, height);
    if (m_pDrawSystem)

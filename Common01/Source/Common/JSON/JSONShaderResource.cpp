@@ -1,5 +1,5 @@
 #include "CommonPCH.h"
-#include "Common/JSON/JSONShaderTexture.h"
+#include "Common/JSON/JSONShaderResource.h"
 #include "Common/JSON/JSONDrawSystemEnum.h"
 #include "Common/JSON/JSONInputElementDesc.h"
 

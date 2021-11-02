@@ -7,6 +7,7 @@
 #include "Common/Application/ApplicationDisplayList.h"
 #include "Common/Application/ApplicationTexture.h"
 #include "Common/Application/ApplicationTextureJson.h"
+#include "Common/Application/ApplicationTextureMove.h"
 #include "Common/Application/ApplicationTriangle.h"
 #include "Common/Application/ApplicationTriangleJson.h"
 #include "Common/Application/ApplicationTriangleMove.h"
@@ -68,6 +69,7 @@ const TApplicationFactory GetApplicationFactory(const std::string& factory)
       {"DisplayList", ApplicationDisplayList::Factory},
       {"Texture", ApplicationTexture::Factory},
       {"TextureJson", ApplicationTextureJson::Factory},
+      {"TextureMove", ApplicationTextureMove::Factory},
       {"Triangle", ApplicationTriangle::Factory},
       {"TriangleJson", ApplicationTriangleJson::Factory},
       {"TriangleMove", ApplicationTriangleMove::Factory},

@@ -32,7 +32,7 @@ public:
    ID3D12DescriptorHeap* const GetHeap(const int index);
 
    const int GetFreeIndex(
-      ID3D12Device* const pDevice, 
+      ID3D12Device2* const pDevice, 
       const int length = 1
       );
    void FreeIndex(const int index, const int length = 1);
@@ -41,7 +41,7 @@ private:
    virtual void OnDeviceLost() override;
    virtual void OnDeviceRestored(
       ID3D12GraphicsCommandList* const pCommandList,
-      ID3D12Device* const pDevice
+      ID3D12Device2* const pDevice
       ) override;
 
 private:

@@ -8,7 +8,7 @@
 #include "Common/DrawSystem/Shader/ShaderPipelineStateData.h"
 #include "Common/DrawSystem/Geometry/GeometryGeneric.h"
 #include "Common/DrawSystem/Shader/Shader.h"
-#include "Common/DrawSystem/Shader/ShaderTexture.h"
+#include "Common/DrawSystem/Shader/ShaderResource.h"
 #include "Common/DrawSystem/Shader/ShaderResourceInfo.h"
 
 IApplication* const ApplicationTexture::Factory(const HWND hWnd, const IApplicationParam& applicationParam)
@@ -80,7 +80,7 @@ ApplicationTexture::ApplicationTexture(const HWND hWnd, const IApplicationParam&
             }
          }
 
-         m_pTexture = m_pDrawSystem->MakeShaderTexture(
+         m_pTexture = m_pDrawSystem->MakeShaderResource(
             pCommandList->GetCommandList(),
             pShaderHeapWrapper,
             desc,

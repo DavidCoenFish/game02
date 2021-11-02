@@ -1,9 +1,9 @@
 #pragma once
 
-struct ShaderConstantInfo
+struct ConstantBufferInfo
 {
 public:
-   explicit ShaderConstantInfo(
+   explicit ConstantBufferInfo(
       const std::vector< uint8_t >& data = std::vector< uint8_t >(),
       const D3D12_SHADER_VISIBILITY visiblity  = D3D12_SHADER_VISIBILITY_ALL
       );

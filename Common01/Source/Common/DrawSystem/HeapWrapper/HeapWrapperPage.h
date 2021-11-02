@@ -6,7 +6,7 @@ public:
    static std::shared_ptr<HeapWrapperPage> Factory(
       const int frameCount,
       const D3D12_DESCRIPTOR_HEAP_DESC& desc,
-      ID3D12Device* const pDevice
+      ID3D12Device2* const pDevice
       );
 
    HeapWrapperPage(
@@ -18,7 +18,7 @@ public:
       );
 
    void OnDeviceLost();
-   void OnDeviceRestored(const D3D12_DESCRIPTOR_HEAP_DESC& desc, ID3D12Device* const pDevice);
+   void OnDeviceRestored(const D3D12_DESCRIPTOR_HEAP_DESC& desc, ID3D12Device2* const pDevice);
 
    const int GetFreeIndex(
       const int length = 1

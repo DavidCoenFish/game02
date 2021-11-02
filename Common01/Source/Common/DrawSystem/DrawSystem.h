@@ -14,13 +14,16 @@ class HeapWrapperItem;
 class CustomCommandList;
 class Shader;
 struct ShaderPipelineStateData;
-struct ShaderConstantInfo;
+struct ConstantBufferInfo;
 struct ShaderResourceInfo;
-struct ShaderConstantBuffer;
+struct ConstantBuffer;
+struct UnorderedAccessInfo;
 class GeometryGeneric;
-class ShaderTexture;
+class ShaderResource;
 class RenderTargetTexture;
 class JSONDrawSystem;
+class UnorderedAccess;
+
 namespace DirectX
 {
    class GraphicsMemory;
@@ -63,8 +66,10 @@ public:
       const std::shared_ptr< std::vector<uint8_t> >& pGeometryShaderData,
       const std::shared_ptr< std::vector<uint8_t> >& pPixelShaderData,
       const std::vector< std::shared_ptr< ShaderResourceInfo > >& arrayShaderResourceInfo = std::vector< std::shared_ptr< ShaderResourceInfo > >(),
-      const std::vector< std::shared_ptr< ShaderConstantInfo > >& arrayShaderConstantsInfo = std::vector< std::shared_ptr< ShaderConstantInfo > >()
-      );
+      const std::vector< std::shared_ptr< ConstantBufferInfo > >& arrayShaderConstantsInfo = std::vector< std::shared_ptr< ConstantBufferInfo > >(),
+      const std::shared_ptr< std::vector<uint8_t> >& pComputeShaderData = std::shared_ptr< std::vector<uint8_t> >(),
+      const std::vector< std::shared_ptr< UnorderedAccessInfo > >& arrayUnorderedAccessInfo = std::vector< std::shared_ptr< UnorderedAccessInfo > >()
+   );
 
    std::shared_ptr< GeometryGeneric > MakeGeometryGeneric(
       ID3D12GraphicsCommandList* const pCommandList,
@@ -99,12 +104,19 @@ public:
       return pResult;
    }
 
-   std::shared_ptr< ShaderTexture > MakeShaderTexture(
+   std::shared_ptr< ShaderResource > MakeShaderResource(
       ID3D12GraphicsCommandList* const pCommandList,
-      const std::shared_ptr< HeapWrapperItem >& shaderResource,
+      const std::shared_ptr< HeapWrapperItem >& pHeapWrapperItem,
       const D3D12_RESOURCE_DESC& desc, 
       const D3D12_SHADER_RESOURCE_VIEW_DESC& shaderResourceViewDesc,
-      const std::vector<uint8_t>& data
+      const std::vector<uint8_t>& data = std::vector<uint8_t>()
+      );
+
+   std::shared_ptr< UnorderedAccess > MakeUnorderedAccess(
+      ID3D12GraphicsCommandList* const pCommandList,
+      const std::shared_ptr< HeapWrapperItem >& pHeapWrapperItem,
+      const D3D12_RESOURCE_DESC& desc, 
+      const D3D12_UNORDERED_ACCESS_VIEW_DESC& unorderedAccessViewDesc
       );
 
    std::shared_ptr< RenderTargetTexture > MakeRenderTargetTexture(

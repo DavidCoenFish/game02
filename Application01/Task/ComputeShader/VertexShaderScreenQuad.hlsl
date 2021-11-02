@@ -10,23 +10,19 @@
 struct Vertex
 {
     float2 position     : Position;
+    float2 uv           : TEXCOORD0;
 };
 
-struct VertexOutput
+struct Interpolant
 {
     float4 position     : SV_Position;
-    float life        : COLOR0;
+    float2 uv           : TEXCOORD0;
 };
 
-Texture2D<float> txData : register( t0 );
-SamplerState samLinear : register(s0);
-
-VertexOutput main( Vertex input )
+Interpolant main( Vertex input )
 {
-   float source = txData.SampleLevel( samLinear, input.position, 0 );
-
-   VertexOutput output;
-   output.position = float4((input.position.x * 2.0) - 1.0, (input.position.y * 2.0) - 1.0, 0.0, 1.0f);
-   output.life = source; //source.w;
+   Interpolant output;
+   output.position = float4(input.position.x, input.position.y, 0.0f, 1.0f);
+   output.uv = input.uv;
    return output;
 }
