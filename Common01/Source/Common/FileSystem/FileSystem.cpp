@@ -27,8 +27,8 @@ const std::filesystem::path FileSystem::GetTempDir()
 const FileSystem::TFileData FileSystem::SyncReadFile(const std::filesystem::path& absolutePath)
 {
    std::ifstream inFile(absolutePath, std::ios::in | std::ios::binary | std::ios::ate);
-
-   if (!inFile)
+   
+   if ((!inFile) || (!inFile.good()))
    {
       throw std::exception("SyncReadFile");
    }

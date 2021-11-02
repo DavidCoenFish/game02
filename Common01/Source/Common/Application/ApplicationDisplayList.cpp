@@ -329,8 +329,8 @@ ApplicationDisplayList::ApplicationDisplayList(const HWND hWnd, const IApplicati
             pLocalValue = DagValue< std::shared_ptr< Shader > >::Factory(pShader);
          }
 
-         const auto pArrayHeapWrapperItem = 0 < indexInput.size() ? std::dynamic_pointer_cast< DagValue< std::vector< std::shared_ptr< HeapWrapperItem > > > >(indexInput[0]->GetValue()) : nullptr;
-         const auto pArrayConstantBuffer = 1 < indexInput.size() ? std::dynamic_pointer_cast< DagValue< std::vector< std::vector< float > > > >(indexInput[1]->GetValue()) : nullptr;
+         const auto pArrayHeapWrapperItem = 0 < indexInput.size() && indexInput[0] ? std::dynamic_pointer_cast< DagValue< std::vector< std::shared_ptr< HeapWrapperItem > > > >(indexInput[0]->GetValue()) : nullptr;
+         const auto pArrayConstantBuffer = 1 < indexInput.size() && indexInput[1] ? std::dynamic_pointer_cast< DagValue< std::vector< std::vector< float > > > >(indexInput[1]->GetValue()) : nullptr;
 
          if (nullptr != pArrayHeapWrapperItem)
          {

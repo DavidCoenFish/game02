@@ -55,6 +55,9 @@
     <Filter Include="Task\TestTextureMove">
       <UniqueIdentifier>{4bfc2862-d72f-4b05-9f6e-d2384b099292}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Task\DisplayListGrid">
+      <UniqueIdentifier>{92a54fb4-f9b5-4b5e-ac27-41f846790b90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ApplicationPCH.h">
@@ -185,6 +188,15 @@
     <CopyFileToFolders Include="Task\TestTextureMove\Application.json">
       <Filter>Task\TestTextureMove</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\DisplayListGrid\Application.json">
+      <Filter>Task\DisplayListGrid</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\DisplayListGrid\DisplayList.json">
+      <Filter>Task\DisplayListGrid</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Task\DisplayListGrid\ScreenQuad.json">
+      <Filter>Task\DisplayListGrid</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <None Include="Application01.props" />
@@ -213,6 +225,9 @@
     <None Include="MicrosoftGame.Config.template" />
     <None Include="Script\util_make_microsoft_game_config.cmd">
       <Filter>Script</Filter>
+    </None>
+    <None Include="Task\DisplayListGrid\Polar.hlsli">
+      <Filter>Task\DisplayListGrid</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -320,6 +335,12 @@
     </FxCompile>
     <FxCompile Include="Task\TestTextureMove\VertexShader.hlsl">
       <Filter>Task\TestTextureMove</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\DisplayListGrid\PixelShaderGrid.hlsl">
+      <Filter>Task\DisplayListGrid</Filter>
+    </FxCompile>
+    <FxCompile Include="Task\DisplayListGrid\VertexShaderGrid.hlsl">
+      <Filter>Task\DisplayListGrid</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

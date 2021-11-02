@@ -61,7 +61,7 @@ void DagNodeCalculate::StackInputPush(iDagNode* const pNode)
 void DagNodeCalculate::OrderedInputSet(const int index, iDagNode* const pNodeOrNullptr) 
 {
    assert(0 <= index);
-   if (index <= m_arrayInputIndex.size())
+   if (m_arrayInputIndex.size() <= index)
    {
       m_arrayInputIndex.resize((size_t)index + 1);
    }

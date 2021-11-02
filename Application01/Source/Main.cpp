@@ -109,30 +109,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
    UNREFERENCED_PARAMETER(hPrevInstance);
    UNREFERENCED_PARAMETER(lpCmdLine);
 
-#if 0
-   //push directx code down into tasks that use DirectX?
-   if (!DirectX::XMVerifyCPUSupport())
-   {
-      return -1;
-   }
-
-   // Initialize the GameRuntime
-   HRESULT hr = XGameRuntimeInitialize();
-   if (FAILED(hr))
-   {
-      if (hr == E_GAMERUNTIME_DLL_NOT_FOUND || hr == E_GAMERUNTIME_VERSION_MISMATCH)
-      {
-         (void)MessageBoxW(nullptr, L"Game Runtime is not installed on this system or needs updating.", L"Main", MB_ICONERROR | MB_OK);
-      }
-      return -1;
-   }
-#endif
    const int result = RunTask(hInstance, nCmdShow);
-
-#if 0
-   //push directx code down into tasks that use DirectX?
-   XGameRuntimeUninitialize();
-#endif
 
    return result;
 }

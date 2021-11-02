@@ -3,7 +3,7 @@
 
 /*
    including txt files without the build marking itself dirty consecutively seems to work?
-   want some way of getting when the build was doine into the build with out dirtying the build and forcing a rebuild....
+   want some way of getting when the build was done into the build with out dirtying the build and forcing a rebuild....
 */
 
 const char* const Build::GetBuildTime( void )

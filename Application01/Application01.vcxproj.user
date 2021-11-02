@@ -4,7 +4,12 @@
     <CommandLineArgs>
     </CommandLineArgs>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>TestTextureMove</LocalDebuggerCommandArguments>
-    <RemoteDebuggerCommandArguments>TestTextureMove</RemoteDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>DisplayListGrid</LocalDebuggerCommandArguments>
+    <RemoteDebuggerCommandArguments>DisplayListGrid</RemoteDebuggerCommandArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">
+    <LocalDebuggerCommandArguments>TestTriangleDag</LocalDebuggerCommandArguments>
+    <RemoteDebuggerCommandArguments>TestTriangleDag</RemoteDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>
